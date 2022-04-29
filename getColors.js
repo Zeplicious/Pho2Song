@@ -1,11 +1,12 @@
 const fetch = require('node-fetch')
+const secrets = require('./secrets')
 
-const apiKey = 'acc_9453363e4c057d7';
-const apiSecret = 'd99d11ffc32804763bf3075832f1dd59';
+const client_id = secrets.imagga.client_id
+const client_secret = secrets.imagga.client_secret;
 
 async function getColorsFromUrl(imageUrl){
     var url = 'https://api.imagga.com/v2/colors?image_url=' + encodeURIComponent(imageUrl);
-    var auth = apiKey+':'+apiSecret;
+    var auth = client_id+':'+client_secret;
     var authString = auth.toString();
     const response = await fetch(url, {
 	    method: 'get',

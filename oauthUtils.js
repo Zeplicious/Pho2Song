@@ -1,8 +1,9 @@
 const fetch = require('node-fetch')
 const colorUtil = require('./getColors.js')
+const secrets = require('./secrets')
 
-client_id = '375115062743-lakfnqvihlgm2rbuggptdqstiujqger4.apps.googleusercontent.com';
-client_secret = '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';
+client_id = secrets.google.client_id
+client_secret = secrets.google.client_secret;
 
 async function getToken(code){
 

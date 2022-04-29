@@ -1,11 +1,12 @@
 const express = require('express');
 const utils = require('./oauthUtils.js')
+const secrets = require('./secrets')
 const app = express();
 
 var code = "";
 
-client_id = '375115062743-lakfnqvihlgm2rbuggptdqstiujqger4.apps.googleusercontent.com';
-client_secret = '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';
+client_id = secrets.google.client_id
+client_secret = secrets.google.client_secret;
 
 redirect_uri='http://localhost:8888/callback';
 
