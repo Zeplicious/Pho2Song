@@ -49,10 +49,11 @@ async function getColors(res,token,albumId){
     for(let photo of data.mediaItems){
         
         temp=await colorUtil.getColorsFromUrl(photo.baseUrl,photo.id)
-        if(flag){
-            res.send(temp);
+        /*if(flag){
+            res.send(temp.colors);
             flag=false
-        }
+        }*/
+
         photos.push(temp)
     }
     return photos
