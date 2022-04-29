@@ -32,7 +32,7 @@ const scopes = [
 var spotifyApi = new SpotifyWebApi({
     clientId: client_id,
     clientSecret: client_secret,
-    redirectUri: 'http://localhost:8888/callback'
+    redirectUri: 'http://localhost:8888/home'
   });
 const app = express();
 
@@ -50,7 +50,7 @@ app.get('/data', (req,res)=>{
     res.send('Ecco le tue playlist:\r\n' + ret);
   });
 }); 
-app.get('/callback', (req, res) => {
+app.get('/home', (req, res) => {
   const error = req.query.error;
   const code = req.query.code;
   const state = req.query.state;
