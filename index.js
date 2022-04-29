@@ -22,11 +22,9 @@ app.get('/callback', async function (req, res) {
 	code = req.query.code;
 	utils.getToken(code)
 	.then(token => utils.getAlbums(token)
-	.then(albums => {
-		utils.getColors(token,albums[1].id)
-		console.log(albums)
-		res.send(albums)
-	}));
+	.then(albums => utils.getColors(res,token,albums[1].id)
+	.then(colors => console.log(colors)	
+	)));
 });
 
 app.listen(8888, ()=>{
