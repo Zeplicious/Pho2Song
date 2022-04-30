@@ -1,10 +1,40 @@
 {
+  "name": "pho2song",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zeplicious/Pho2Song.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zeplicious/Pho2Song/issues"
+  },
+  "homepage": "https://github.com/Zeplicious/Pho2Song#readme",
   "dependencies": {
-    "express": "^4.17.3",
+    "bcrypt": "^5.0.1",
+    "ejs": "^3.1.7",
+    "express": "^4.18.1",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.17.2",
     "got": "^12.0.4",
+    "method-override": "^3.0.0",
     "node-fetch": "^2.6.7",
     "passport": "^0.5.2",
     "passport-google-oauth20": "^2.0.0",
-    "request": "^2.88.2"
+    "passport-local": "^1.0.0",
+    "request": "^2.88.2",
+    "requestr": "^0.0.1",
+    "spotify-web-api-node": "^5.0.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.16"
   }
 }

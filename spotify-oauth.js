@@ -37,10 +37,8 @@ var spotifyApi = new SpotifyWebApi({
 const app = express();
 
 app.get('/', function(req, res) {
-  res.sendFile('/home/daniele/codeenv/primaprovaspotify/SpotifyPlaylistExport/public/index.html')
+  res.sendFile('/public/index.ejs')
 });
-
-
 
 app.get('/login', (req, res) => {
   res.redirect(spotifyApi.createAuthorizeURL(scopes));
@@ -91,7 +89,7 @@ app.get('/home', (req, res) => {
       console.error('Error getting Tokens:', error);
       res.send(`Error getting Tokens: ${error}`);
   });
-  res.sendFile('/home/daniele/codeenv/primaprovaspotify/SpotifyPlaylistExport/public/home.html');
+  res.sendFile('/public/home.ejs');
 });
   
 app.listen(8888, () =>
