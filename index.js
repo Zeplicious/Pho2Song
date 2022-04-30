@@ -13,21 +13,46 @@ const methodOverride = require('method-override')
 var SpotifyWebApi = require('spotify-web-api-node');
 const wrapper = require("./wrapper.js");
 
-const app = express();
+// ***************************************************  passport declarations *************************************************** 
+function checkAuthenticated(req, res, next){
+    /*if(req.isAuthenticated()){
+        return next()
+    }
 
-var code = "";
+    return res.redirect('/login')*/
 
-google_client_id = secrets.google.client_id
-google_client_secret = secrets.google.client_secret;
+	return next() //aggiunto per bypassare checkAuthenticated
+}
 
-spotify_client_id = secrets.spotify.client_id
-spotify_client_secret = secrets.spotify.client_secret;
-
+function checkNotAuthenticated(req, res, next){
+    /*if(req.isAuthenticated()){
+        return res.redirect('/')
+    }*/  //commentato per bypassare checkNotAuthenticated
+    return next()
+}
 const initializePassport = require('./passport-config')
 initializePassport(
     passport, 
     id => secrets.spotify.find(secrets => secrets.spotify.client_id === id)
-)
+)// da sistemare, non ha senso
+
+const app = express();
+
+
+// *************************************************** google api declarations *************************************************** 
+google_client_id = secrets.google.client_id;
+google_client_secret = secrets.google.client_secret;
+google_redirect_uri='http://localhost:8888/callback';
+
+var getCode = "https://accounts.google.com/o/oauth2/auth?client_id="+google_client_id+"&scope=https://www.googleapis.com/auth/photoslibrary.readonly&approval_prompt=force&redirect_uri="+google_redirect_uri+"&response_type=code";
+var access_token='';
+var album='';
+var code = "";
+
+// ***************************************************  spotify api declarations *************************************************** 
+spotify_client_id = secrets.spotify.client_id;
+spotify_client_secret = secrets.spotify.client_secret;
+spotify_client_uri='http://localhost:8888/home';
 
 const scopes = [
     'ugc-image-upload',
@@ -49,20 +74,14 @@ const scopes = [
     'user-read-recently-played',
     'user-follow-read',
     'user-follow-modify'
-  ];
+  ];//da ottimizzare
 
 var spotifyApi = new SpotifyWebApi({
     clientId: spotify_client_id,
     clientSecret: spotify_client_secret,
-    redirectUri: 'http://localhost:8888/home'
+    redirectUri: spotify_client_uri
 });
-
-redirect_uri='http://localhost:8888/callback';
-
-var getCode = "https://accounts.google.com/o/oauth2/auth?client_id="+google_client_id+"&scope=https://www.googleapis.com/auth/photoslibrary.readonly&approval_prompt=force&redirect_uri="+redirect_uri+"&response_type=code";
-
-var access_token='';
-var album='';
+//  ************************************************************************************************************************
 
 app.set('view-engine', 'ejs');
 app.use(express.urlencoded({ extended: false }))
@@ -76,32 +95,47 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
 
-app.get('/', checkAuthenticated, function(req, res) {
+
+// *************************************************** Listening section of the server setup *********************************************************************
+
+/*app.get('/', checkAuthenticated, function(req, res) {
 	res.sendFile('/public/index.ejs')
+	
+});*/ //inutile già presente un gestore di richieste get su '/'
+
+//questo setup fa solo da ponte, al click sul pulsante "log me in with spotify" il browser dell'utente effettua una get a /spotify-login...
+app.get('/spotify-login', checkNotAuthenticated, (req, res) => { //chiamato dal file home#.ejs
+	res.redirect(spotifyApi.createAuthorizeURL(scopes));//in callback riceviamo una GET su /home con il nostro accesscode per spotify=> home per loggati
+	//res.render('spotify-login.ejs'); per ora è inutile
 });
 
-app.get('/login', checkNotAuthenticated, function(req, res){ 
-        res.send("<br><br><button onclick='window.location.href=\""+ getCode +"\"'>Log in with Google</button>");
+//anche se non strettamente necessario per comprensibilità ho utilizzato lo stesso "flow" utilizzato per spotify
+app.get('/google-login', checkNotAuthenticated, function(req, res){  //chiamato dal file input#.ejs
+    res.redirect(getCode);//in callback riceviamo una GET su /callback (da sistemare per maggiore chiarezza) con il nostro accesscode per google photo=> input per loggati Google
 });
 
-app.get('/spotify-login', checkNotAuthenticated, (req, res) => {
-	res.redirect(spotifyApi.createAuthorizeURL(scopes));
-	res.render('spotify-login.ejs');
-});
 
-app.post('/spotify-login', checkNotAuthenticated, passport.authenticate('local', {
+
+/*app.post('/spotify-login', checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
     failuredRedirect: '/login',
     failureFlash: true
-}))
+})) //inutile */ 
   
-app.get('/data', checkAuthenticated, (req,res)=>{
+/*app.get('/data', checkAuthenticated, (req,res)=>{
 	wrapper.getMyData(spotifyApi,function(ret){
 		res.send('Ecco le tue playlist:\r\n' + ret);
 	});
-}); 
-  
-app.get('/home', (req, res) => {
+}); //per ora è inutile */
+
+
+
+//****************gestione della home******************
+
+app.get('/', (req, res) => { //home per i non loggati
+	res.render('home#.ejs')
+})
+app.get('/home', (req, res) => { //home per i loggati
 	const error = req.query.error;
 	const code = req.query.code;
 	const state = req.query.state;
@@ -110,6 +144,7 @@ app.get('/home', (req, res) => {
 	  res.send(`Callback Error: ${error}`);
 	  return;
 	}
+	//se non abbiamo errori, utilizziamo il nostro accesscode (variabile code) per ottenere access e refresh token
 	spotifyApi
 	.authorizationCodeGrant(code)
 	.then(data => {
@@ -119,14 +154,20 @@ app.get('/home', (req, res) => {
   
 		spotifyApi.setAccessToken(access_token);
 		spotifyApi.setRefreshToken(refresh_token);
-  
+		/* da qui in poi posso accedere ad ogni dato utente di spotify che voglio, aggiungere quindi:
+			-chiamata per l'analisi degli UserTaste dell'utente spotify => analisi in background dei gusti preventivamente all'utilizzo delle funzionalità (ottimizzabile)
+			-chiamata getUserId da spotify => utile per la gestione della sessione con passport
+		*/
+
+		// authenticazione finita, renderizzo la pagina
+		res.render('home.ejs');
+		//print di debug su console
 		console.log('access_token:', access_token);
 		console.log('refresh_token:', refresh_token);
-	
 		console.log(
 			`Sucessfully retreived access token. Expires in ${expires_in} s.`
 		);
-		  
+		//refresh automatico dell'accesstoken  
 		setInterval(async () => {
 		  	const data = await spotifyApi.refreshAccessToken();
 		  	const access_token = data.body['access_token'];
@@ -140,40 +181,33 @@ app.get('/home', (req, res) => {
 			console.error('Error getting Tokens:', error);
 			res.send(`Error getting Tokens: ${error}`);
 		});
-	res.sendFile('/public/home.ejs');
 });
 
-app.get('/callback', checkAuthenticated, function (req, res) {
+//****************gestione dell'input******************
+app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
+	res.render('input#.ejs')
+});
+app.get('/callback', checkAuthenticated, function (req, res) { // input dopo il login con google
 	code = req.query.code;
 	utils.getToken(code)
 	.then(token => utils.getAlbums(token)
 	.then(albums => {
 		album=albums[1].id
 		access_token=token
-		res.send("<br><br><h2>"+albums+"</h2><button onclick='window.location.href=\"http://localhost:8888/input\"'>Get colors</button>")
+		/*DA IMPLEMENTARE
+			render degli album tramite EJS
+		*/
+		res.render('input.ejs')
 	}
 	));
 });
-
-app.get('/input', checkAuthenticated, function (req,res){
+//****************gestione del risultato******************
+app.get('/result', checkAuthenticated, function (req,res){
 	utils.getColors(res,access_token,album)
 	.then(colors => res.send(colors))
 })
 
-function checkAuthenticated(req, res, next){
-    if(req.isAuthenticated()){
-        return next()
-    }
 
-    return res.redirect('/login')
-}
-
-function checkNotAuthenticated(req, res, next){
-    if(req.isAuthenticated()){
-        return res.redirect('/')
-    }
-    return next()
-}
 
 app.listen(8888, ()=>{
     console.log('Server listening on http://localhost:8888/login');
