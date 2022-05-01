@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "devStart": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "passport": "^0.5.2",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
+    "passport-spotify": "^2.0.0",
     "request": "^2.88.2",
     "requestr": "^0.0.1",
     "spotify-web-api-node": "^5.0.2"

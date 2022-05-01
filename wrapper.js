@@ -1,4 +1,4 @@
-
+var index=0;
 const fs = require('fs');
 var ret= '';
 function getMyData(spotifyApi,callback) {
@@ -11,6 +11,40 @@ function getMyData(spotifyApi,callback) {
   })().catch(e => {
     console.error(e);
   });
+}
+async function getUserTaste(spotifyApi){
+
+  var data = await spotifyApi.getMyTopTracks({limit: 50})
+  ids=Array()
+  
+  for(let track of data.body.items){
+    ids.push(track.id);
+  }
+  console.log(ids)
+  var data = await spotifyApi.getAudioFeaturesForTracks(ids)
+  ret=Array()
+  //parse dei parametri utili
+  console.log(data)
+  for(let track of data.body.audio_features){
+    ret.push(
+      {"id": track.id,
+        "danceability":track.danceability*255,
+        "energy":track.energy*255,
+        "loudness":track.danceability*255,
+      });
+  }
+  return ret
+
+
+}
+async function getSongFromColors(colors,songs){
+  //scegli una foto per i colori
+  ret=songs[index].id
+  index++;
+  
+  return ret
+
+
 }
 
 async function getUserPlaylists(spotifyApi) {
@@ -54,7 +88,10 @@ async function getPlaylistTracks(spotifyApi,playlistId, playlistName) {
   return tracks;
 }
 module.exports = {
-    getMyData,
-    getUserPlaylists,
-    getPlaylistTracks
+  getMyData,
+  getUserPlaylists,
+  getPlaylistTracks,
+  getUserTaste,
+  getSongFromColors
 }
+

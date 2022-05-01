@@ -2,6 +2,8 @@ const res = require('express/lib/response');
 const fetch = require('node-fetch')
 const colorUtil = require('./getColors.js')
 const secrets = require('./secrets')
+const wrapper = require('./wrapper.js')
+
 
 client_id = secrets.google.client_id
 client_secret = secrets.google.client_secret;
@@ -32,7 +34,7 @@ async function getAlbums(token){
     const data = await response.json();
     return  data.albums
 }
-async function getColors(res,token,albumId){
+async function getPhotos(token,albumId){
 
     let url = 'https://photoslibrary.googleapis.com/v1/mediaItems:search'
 	let headers = {'Authorization': 'Bearer '+token};
@@ -44,22 +46,11 @@ async function getColors(res,token,albumId){
 	    headers: headers
     });
     const data = await response.json();
-    let photos=Array();
-    flag=true;
-    for(let photo of data.mediaItems){
-        
-        temp=await colorUtil.getColorsFromUrl(photo.baseUrl,photo.id)
-        /*if(flag){
-            res.send(temp.colors);
-            flag=false
-        }*/
-
-        photos.push(temp)
-    }
-    return photos
+    
+    return data.mediaItems
 }
 module.exports={
     getToken,
     getAlbums,
-    getColors
+    getPhotos
 }
