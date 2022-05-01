@@ -1,6 +1,4 @@
-if(process.env.NODE_ENC !== 'production') {
-    require('dotenv').config()
-}
+require('dotenv').config
 
 const express = require('express');
 const utils = require('./oauthUtils.js')
@@ -11,30 +9,90 @@ const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
 var SpotifyWebApi = require('spotify-web-api-node');
+const SpotifyStrategy = require('passport-spotify').Strategy;
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 const wrapper = require("./wrapper.js");
 
 // ***************************************************  passport declarations *************************************************** 
-function checkAuthenticated(req, res, next){
-    /*if(req.isAuthenticated()){
+function checkAuthenticated(req, res, next){ //controllo se l'utente è autenticato
+    if(req.isAuthenticated()){
         return next()
     }
-
-    return res.redirect('/login')*/
-
-	return next() //aggiunto per bypassare checkAuthenticated
+	console.log('non autenticato: ' + req)
+    return res.redirect('/')
 }
 
-function checkNotAuthenticated(req, res, next){
-    /*if(req.isAuthenticated()){
-        return res.redirect('/')
-    }*/  //commentato per bypassare checkNotAuthenticated
+function checkNotAuthenticated(req, res, next){ //controllo se l'utente NON è autenticato
+   	if(req.isAuthenticated()){
+    	 return res.redirect('/home')
+    }
+	console.log('non autenticato: ' + req.user)
     return next()
 }
-const initializePassport = require('./passport-config')
-initializePassport(
-    passport, 
-    id => secrets.spotify.find(secrets => secrets.spotify.client_id === id)
-)// da sistemare, non ha senso
+
+var User=[]
+
+//STRATEGIA PASSPORT GOOGLE
+passport.use('google',
+	new GoogleStrategy({
+		clientID: secrets.google.client_id,
+    	clientSecret: secrets.google.client_secret,
+   	 	callbackURL: 'http://localhost:8888/google-login/callback'
+ 	},
+  	function(accessToken, refreshToken, profile, cb) {
+    	//ottengo gli album dell'utente tramite accessToken
+		utils.getAlbums(accessToken)
+			.then(albums => {
+				album=albums[1].id
+				access_token=accessToken
+		/*DA IMPLEMENTARE
+			render degli album tramite EJS
+		*/
+			})
+		return cb(null, profile)
+	})
+)
+
+//STRATEGIA PASSPORT SPOTIFY
+passport.use('spotify',
+	new SpotifyStrategy({
+			clientID: secrets.spotify.client_id,
+			clientSecret: secrets.spotify.client_secret,
+			callbackURL: 'http://localhost:8888/spotify-login/callback'
+		},	
+		function(accessToken, refreshToken, expiresIn, profile, done){
+			//Setto accessToken e refreshToken ottenuti dalla strategia passport
+			spotifyApi.setAccessToken(accessToken);
+			spotifyApi.setRefreshToken(refreshToken);
+			//Controllo se l'utente è presente nell'array User (simil database temporaneo)
+			if(!User.find( profile => profile.id === id)){
+				(err, user) => {
+					//Ottengo l'id dell'utente tramite Spotify
+					spotifyApi
+					.getMe()
+					.then(userinfo => {
+						User.push({
+							id: userinfo.id,		
+						})
+					console.log('utente inserito')
+					})
+				return done(err, user)
+				}
+			}
+			return done(null, profile);
+		}
+	)
+)
+
+//serializza Utente
+passport.serializeUser(function (user,done) {
+	done(null,user);
+})
+
+//deserializza Utente
+passport.deserializeUser(function (obj, done) {
+	done(null, obj)
+})
 
 const app = express();
 
@@ -87,11 +145,11 @@ app.set('view-engine', 'ejs');
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: 'secret',
     resave: false,
     saveUninitialized: false
 }))
-app.use(passport.initialize())
+//app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
 
@@ -104,15 +162,19 @@ app.use(methodOverride('_method'))
 });*/ //inutile già presente un gestore di richieste get su '/'
 
 //questo setup fa solo da ponte, al click sul pulsante "log me in with spotify" il browser dell'utente effettua una get a /spotify-login...
-app.get('/spotify-login', checkNotAuthenticated, (req, res) => { //chiamato dal file home#.ejs
-	res.redirect(spotifyApi.createAuthorizeURL(scopes));//in callback riceviamo una GET su /home con il nostro accesscode per spotify=> home per loggati
+app.get('/spotify-login', checkNotAuthenticated, passport.authenticate('spotify', {scope: scopes}),
+	/* (req, res) => { //chiamato dal file home#.ejs
+	console.log('ciao')*/
+	
+		//in callback riceviamo una GET su /home con il nostro accesscode per spotify=> home per loggati
 	//res.render('spotify-login.ejs'); per ora è inutile
-});
+);
 
 //anche se non strettamente necessario per comprensibilità ho utilizzato lo stesso "flow" utilizzato per spotify
-app.get('/google-login', checkNotAuthenticated, function(req, res){  //chiamato dal file input#.ejs
-    res.redirect(getCode);//in callback riceviamo una GET su /callback (da sistemare per maggiore chiarezza) con il nostro accesscode per google photo=> input per loggati Google
-});
+//Passport.authenticate per ottenere l'autorizzazione nell'utilizzare lo scope photoslibrary.readonly dell'utente
+app.get('/google-login', checkAuthenticated, passport.authenticate('google', {scope: ['https://www.googleapis.com/auth/photoslibrary.readonly', 'https://www.googleapis.com/auth/userinfo.profile']}), //function(req, res){  //chiamato dal file input#.ejs
+	//res.redirect(getCode);//in callback riceviamo una GET su /callback (da sistemare per maggiore chiarezza) con il nostro accesscode per google photo=> input per loggati Google
+/*}*/);
 
 
 
@@ -132,37 +194,44 @@ app.get('/google-login', checkNotAuthenticated, function(req, res){  //chiamato 
 
 //****************gestione della home******************
 
-app.get('/', (req, res) => { //home per i non loggati
+app.get('/', checkNotAuthenticated, (req, res) => { //home per i non loggati
 	res.render('home#.ejs')
 })
-app.get('/home', (req, res) => { //home per i loggati
-	const error = req.query.error;
+
+//passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o di successo
+app.get('/spotify-login/callback', checkNotAuthenticated, passport.authenticate('spotify', {
+	successRedirect: '/home',
+	failureRedirect: '/'
+}))
+
+app.get('/home', checkAuthenticated, (req, res) => { //home per i loggati
+	/*const error = req.query.error;
 	const code = req.query.code;
 	const state = req.query.state;
 	if (error) {	
 	  console.error('Callback Error:', error);
 	  res.send(`Callback Error: ${error}`);
 	  return;
-	}
+	}*/
 	//se non abbiamo errori, utilizziamo il nostro accesscode (variabile code) per ottenere access e refresh token
-	spotifyApi
+	/*spotifyApi
 	.authorizationCodeGrant(code)
 	.then(data => {
 		const access_token = data.body['access_token'];
 		const refresh_token = data.body['refresh_token'];
-		const expires_in = data.body['expires_in'];
+		const expires_in = data.body['expires_in'];*/
   
-		spotifyApi.setAccessToken(access_token);
-		spotifyApi.setRefreshToken(refresh_token);
+		
 		/* da qui in poi posso accedere ad ogni dato utente di spotify che voglio, aggiungere quindi:
 			-chiamata per l'analisi degli UserTaste dell'utente spotify => analisi in background dei gusti preventivamente all'utilizzo delle funzionalità (ottimizzabile)
 			-chiamata getUserId da spotify => utile per la gestione della sessione con passport
 		*/
-
+		console.log('sicuro?')
+		res.render('home.ejs')
 		// authenticazione finita, renderizzo la pagina
-		res.render('home.ejs');
+		
 		//print di debug su console
-		console.log('access_token:', access_token);
+		/*console.log('access_token:', access_token);
 		console.log('refresh_token:', refresh_token);
 		console.log(
 			`Sucessfully retreived access token. Expires in ${expires_in} s.`
@@ -173,7 +242,7 @@ app.get('/home', (req, res) => { //home per i loggati
 		  	const access_token = data.body['access_token'];
 	
 		  	console.log('The access token has been refreshed!');
-		  	console.log('access_token:', access_token);
+			console.log('access_token:', access_token);
 		  	spotifyApi.setAccessToken(access_token);
 		}, expires_in / 2 * 1000);
   
@@ -181,31 +250,43 @@ app.get('/home', (req, res) => { //home per i loggati
 			console.error('Error getting Tokens:', error);
 			res.send(`Error getting Tokens: ${error}`);
 		});
-});
+	*/});
 
 //****************gestione dell'input******************
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
 	res.render('input#.ejs')
 });
-app.get('/callback', checkAuthenticated, function (req, res) { // input dopo il login con google
-	code = req.query.code;
-	utils.getToken(code)
+
+app.get('/callback', checkAuthenticated, function (req, res) {
+	res.render('input.ejs')
+}) 
+
+//passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o successo
+app.get('/google-login/callback', checkAuthenticated, passport.authenticate('google', {
+		successRedirect: '/callback',
+		failureRedirect: '/input'
+	}),// function (req, res) { // input dopo il login con google
+	//code = req.query.code;
+	/*utils.getToken(code)
 	.then(token => utils.getAlbums(token)
 	.then(albums => {
 		album=albums[1].id
 		access_token=token
-		/*DA IMPLEMENTARE
+		DA IMPLEMENTARE
 			render degli album tramite EJS
-		*/
+		
 		res.render('input.ejs')
 	}
-	));
-});
+	));*/
+	//res.render('input.ejs')
+/*}*/);
+
 //****************gestione del risultato******************
 app.get('/result', checkAuthenticated, function (req,res){
 	utils.getColors(res,access_token,album)
 	.then(colors => res.send(colors))
 })
+
 
 
 

@@ -1,12 +1,11 @@
 const localStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
 
-function initialize(passport, getUserById){
-    const authenticateUser = async (id, password, done) => {
-        const user = getUserById(id)
+function initialize(passport, id){
+    const authenticateUser = async (id, done) => {
+        const user = id
         if(user == null){
             return done(null, false, { message: 'No user with that ID found'})
-
         }
     }
     passport.use(new localStrategy({ usernameField: 'id' }, 
