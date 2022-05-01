@@ -11,7 +11,9 @@
     <h1>Input</h1>
     <div>
         <h2>Google Foto</h2>
-        <h3>tutti gli album devono essere qui</h3>
+        <% albums.forEach(function(album){ %>
+            <li><%= album.title %></li>
+        <% }); %>
         <a href="http://localhost:8888/result"><button>Get my playlist!</button></a>
     </div>
     <div>
