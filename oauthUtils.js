@@ -46,7 +46,6 @@ async function getPhotos(token,albumId){
 	    headers: headers
     });
     const data = await response.json();
-    
     return data.mediaItems
 }
 module.exports={

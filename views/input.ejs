@@ -11,9 +11,11 @@
     <h1>Input</h1>
     <div>
         <h2>Google Foto</h2>
-        <% albums.forEach(function(album){ %>
-            <li><%= album.title %></li>
-        <% }); %>
+        <ul>
+            <% albums.forEach(function(album){ %>
+                <li><div><%=album.title%></div></li>
+            <% }); %>
+        </ul>
         <a href="http://localhost:8888/result"><button>Get my playlist!</button></a>
     </div>
     <div>

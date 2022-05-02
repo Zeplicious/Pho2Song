@@ -35,28 +35,6 @@ var User=[];
 
 
 
-//STRATEGIA PASSPORT GOOGLE
-passport.use('google',
-	new GoogleStrategy({
-		clientID: secrets.google.client_id,
-    	clientSecret: secrets.google.client_secret,
-   	 	callbackURL: 'http://localhost:8888/google-login/callback'
- 	},
-  	function(accessToken, refreshToken, profile, cb) {
-    	//ottengo gli album dell'utente tramite accessToken
-		utils.getAlbums(accessToken)
-			.then(albums => {
-				albumsAll=albums
-				album=albums[1].id
-				access_token=accessToken
-		/*DA IMPLEMENTARE
-			render degli album tramite EJS
-		*/
-			})
-		return cb(null, profile)
-	})
-)
-
 //STRATEGIA PASSPORT SPOTIFY
 passport.use('spotify',
 	new SpotifyStrategy({
@@ -110,7 +88,6 @@ var getCode = "https://accounts.google.com/o/oauth2/auth?client_id="+google_clie
 var access_token='';
 var album='';
 var code = "";
-
 // ***************************************************  spotify api declarations *************************************************** 
 spotify_client_id = secrets.spotify.client_id;
 spotify_client_secret = secrets.spotify.client_secret;
@@ -143,6 +120,24 @@ var spotifyApi = new SpotifyWebApi({
     clientSecret: spotify_client_secret,
     redirectUri: spotify_client_uri
 });
+var albums;
+
+//STRATEGIA PASSPORT GOOGLE
+passport.use('google',
+	new GoogleStrategy({
+		clientID: secrets.google.client_id,
+    	clientSecret: secrets.google.client_secret,
+   	 	callbackURL: 'http://localhost:8888/google-login/callback'
+ 	},
+  	async function(accessToken, refreshToken, profile, cb) {
+    	//ottengo gli album dell'utente tramite accessToken
+		let data=await utils.getAlbums(accessToken)
+		albums=data
+		album=albums[1].id
+		access_token=accessToken
+		return cb(null, profile)
+	})
+)
 //  ************************************************************************************************************************
 
 app.set('view-engine', 'ejs');
@@ -233,10 +228,10 @@ app.get('/home', checkAuthenticated, (req, res) => { //home per i loggati
 			-chiamata per l'analisi degli UserTaste dell'utente spotify => analisi in background dei gusti preventivamente all'utilizzo delle funzionalità (ottimizzabile)
 			-chiamata getUserId da spotify => utile per la gestione della sessione con passport
 		*/
-		console.log('sicuro?')
-		wrapper.getUserTaste(spotifyApi)
-		.then(data => userTasteInfo=data)
-		res.render('home.ejs')
+	console.log('sicuro?')
+	wrapper.getUserTaste(spotifyApi)
+	.then(data => userTasteInfo=data)
+	res.render('home.ejs')
 		// authenticazione finita, renderizzo la pagina
 		
 		//print di debug su console
@@ -265,9 +260,9 @@ app.get('/home', checkAuthenticated, (req, res) => { //home per i loggati
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
 	res.render('input#.ejs')
 });
-var albumsAll;
+
 app.get('/callback', checkAuthenticated, function (req, res) {
-	res.render('input.ejs')//,{albums: albumsAll})
+	res.render('input.ejs' ,{albums: albums})
 }) 
 
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o successo
@@ -277,7 +272,7 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 	}),// function (req, res) { // input dopo il login con google
 	//code = req.query.code;
 	/*utils.getToken(code)
-	.then(token => utils.getAlbums(token)
+	.then(token => utils.getAlbums(token) 
 	.then(albums => {
 		album=albums[1].id
 		access_token=token
@@ -296,13 +291,16 @@ async function work(res,photos){
 	for (let photo of photos){
 		let colors=await colorUtil.getColorsFromUrl(photo.baseUrl,photo.id)
 		let song=await wrapper.getSongFromColors(colors,userTasteInfo)
-		songs.push(song)
+		string='https://open.spotify.com/embed/track/'+song+'?utm_source=generator'
+		songs.push(string)
 	}
-	res.render('results.ejs',{songs: songs})
+	res.render('result.ejs',{songs: songs})
 }
 app.get('/result', checkAuthenticated, function (req,res){
 	utils.getPhotos(access_token,album)
-	.then(photos => work(res,photos))
+	.then(photos => {
+		work(res,photos)
+	})
 })
 
 
