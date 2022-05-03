@@ -1,19 +1,21 @@
 require('dotenv').config
 
 const express = require('express');
-const utils = require('./oauthUtils.js')
+
 const secrets = require('./secrets');
-const bcrypt = require('bcrypt');
 const passport = require('passport');
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+
 var SpotifyWebApi = require('spotify-web-api-node');
+
 const SpotifyStrategy = require('passport-spotify').Strategy;
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
-const wrapper = require("./wrapper.js");
-const colorUtil = require("./getColors.js");
-const { render } = require('express/lib/response');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+const spotifygoogleUtils = require("./utils/spotifyUtils.js");
+const googleUtils = require('./utils/googleUtils.js')
+const colorUtil = require("./utils/getColors.js");
 // ***************************************************  passport declarations *************************************************** 
 function checkAuthenticated(req, res, next){ //controllo se l'utente è autenticato
     if(req.isAuthenticated()){
@@ -65,7 +67,6 @@ passport.use('spotify',
 		}
 	)
 )
-
 //serializza Utente
 passport.serializeUser(function (user,done) {
 	done(null,user);
@@ -76,6 +77,23 @@ passport.deserializeUser(function (obj, done) {
 	done(null, obj)
 })
 
+//STRATEGIA PASSPORT GOOGLE
+passport.use('google',
+	new GoogleStrategy({
+		clientID: secrets.google.client_id,
+    	clientSecret: secrets.google.client_secret,
+   	 	callbackURL: 'http://localhost:8888/google-login/callback'
+ 	},
+  	async function(accessToken, refreshToken, profile, cb) {
+    	//ottengo gli album dell'utente tramite accessToken
+		let data=await googleUtils.getAlbums(accessToken)
+		albums=data
+		album=albums[1].id
+		access_token=accessToken
+		return cb(null, profile)
+	})
+)
+
 const app = express();
 
 
@@ -84,10 +102,10 @@ google_client_id = secrets.google.client_id;
 google_client_secret = secrets.google.client_secret;
 google_redirect_uri='http://localhost:8888/callback';
 
-var getCode = "https://accounts.google.com/o/oauth2/auth?client_id="+google_client_id+"&scope=https://www.googleapis.com/auth/photoslibrary.readonly&approval_prompt=force&redirect_uri="+google_redirect_uri+"&response_type=code";
+//var getCode = "https://accounts.google.com/o/oauth2/auth?client_id="+google_client_id+"&scope=https://www.googleapis.com/auth/photoslibrary.readonly&approval_prompt=force&redirect_uri="+google_redirect_uri+"&response_type=code";
 var access_token='';
 var album='';
-var code = "";
+//var code = "";
 // ***************************************************  spotify api declarations *************************************************** 
 spotify_client_id = secrets.spotify.client_id;
 spotify_client_secret = secrets.spotify.client_secret;
@@ -122,22 +140,7 @@ var spotifyApi = new SpotifyWebApi({
 });
 var albums;
 
-//STRATEGIA PASSPORT GOOGLE
-passport.use('google',
-	new GoogleStrategy({
-		clientID: secrets.google.client_id,
-    	clientSecret: secrets.google.client_secret,
-   	 	callbackURL: 'http://localhost:8888/google-login/callback'
- 	},
-  	async function(accessToken, refreshToken, profile, cb) {
-    	//ottengo gli album dell'utente tramite accessToken
-		let data=await utils.getAlbums(accessToken)
-		albums=data
-		album=albums[1].id
-		access_token=accessToken
-		return cb(null, profile)
-	})
-)
+
 //  ************************************************************************************************************************
 
 app.set('view-engine', 'ejs');
@@ -168,13 +171,36 @@ app.get('/spotify-login', checkNotAuthenticated, passport.authenticate('spotify'
 		//in callback riceviamo una GET su /home con il nostro accesscode per spotify=> home per loggati
 	//res.render('spotify-login.ejs'); per ora è inutile
 );
+app.get('/spotify-login/callback', checkNotAuthenticated, passport.authenticate('spotify', {
+	successRedirect: '/home',
+	failureRedirect: '/'
+}))
+
 
 //anche se non strettamente necessario per comprensibilità ho utilizzato lo stesso "flow" utilizzato per spotify
 //Passport.authenticate per ottenere l'autorizzazione nell'utilizzare lo scope photoslibrary.readonly dell'utente
 app.get('/google-login', checkAuthenticated, passport.authenticate('google', {scope: ['https://www.googleapis.com/auth/photoslibrary.readonly', 'https://www.googleapis.com/auth/userinfo.profile']}), //function(req, res){  //chiamato dal file input#.ejs
 	//res.redirect(getCode);//in callback riceviamo una GET su /callback (da sistemare per maggiore chiarezza) con il nostro accesscode per google photo=> input per loggati Google
 /*}*/);
-
+//passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o successo
+app.get('/google-login/callback', checkAuthenticated, passport.authenticate('google', {
+	successRedirect: '/callback',
+	failureRedirect: '/input'
+}),// function (req, res) { // input dopo il login con google
+//code = req.query.code;
+/*googleUtils.getToken(code)
+.then(token => googleUtils.getAlbums(token) 
+.then(albums => {
+	album=albums[1].id
+	access_token=token
+	DA IMPLEMENTARE
+		render degli album tramite EJS
+	
+	res.render('input.ejs')
+}
+));*/
+//res.render('input.ejs')
+/*}*/);
 
 
 /*app.post('/spotify-login', checkNotAuthenticated, passport.authenticate('local', {
@@ -184,7 +210,7 @@ app.get('/google-login', checkAuthenticated, passport.authenticate('google', {sc
 })) //inutile */ 
   
 /*app.get('/data', checkAuthenticated, (req,res)=>{
-	wrapper.getMyData(spotifyApi,function(ret){
+	spotifygoogleUtils.getMyData(spotifyApi,function(ret){
 		res.send('Ecco le tue playlist:\r\n' + ret);
 	});
 }); //per ora è inutile */
@@ -198,10 +224,6 @@ app.get('/', checkNotAuthenticated, (req, res) => { //home per i non loggati
 })
 
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o di successo
-app.get('/spotify-login/callback', checkNotAuthenticated, passport.authenticate('spotify', {
-	successRedirect: '/home',
-	failureRedirect: '/'
-}))
 
 
 var userTasteInfo;
@@ -229,7 +251,7 @@ app.get('/home', checkAuthenticated, (req, res) => { //home per i loggati
 			-chiamata getUserId da spotify => utile per la gestione della sessione con passport
 		*/
 	console.log('sicuro?')
-	wrapper.getUserTaste(spotifyApi)
+	spotifygoogleUtils.getUserTaste(spotifyApi)
 	.then(data => userTasteInfo=data)
 	res.render('home.ejs')
 		// authenticazione finita, renderizzo la pagina
@@ -265,39 +287,21 @@ app.get('/callback', checkAuthenticated, function (req, res) {
 	res.render('input.ejs' ,{albums: albums})
 }) 
 
-//passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o successo
-app.get('/google-login/callback', checkAuthenticated, passport.authenticate('google', {
-		successRedirect: '/callback',
-		failureRedirect: '/input'
-	}),// function (req, res) { // input dopo il login con google
-	//code = req.query.code;
-	/*utils.getToken(code)
-	.then(token => utils.getAlbums(token) 
-	.then(albums => {
-		album=albums[1].id
-		access_token=token
-		DA IMPLEMENTARE
-			render degli album tramite EJS
-		
-		res.render('input.ejs')
-	}
-	));*/
-	//res.render('input.ejs')
-/*}*/);
+
 
 //****************gestione del risultato******************
 async function work(res,photos){
 	let songs=Array()
 	for (let photo of photos){
 		let colors=await colorUtil.getColorsFromUrl(photo.baseUrl,photo.id)
-		let song=await wrapper.getSongFromColors(colors,userTasteInfo)
+		let song=await spotifygoogleUtils.getSongFromColors(colors,userTasteInfo)
 		string='https://open.spotify.com/embed/track/'+song+'?utm_source=generator'
 		songs.push(string)
 	}
 	res.render('result.ejs',{songs: songs})
 }
 app.get('/result', checkAuthenticated, function (req,res){
-	utils.getPhotos(access_token,album)
+	googleUtils.getPhotos(access_token,album)
 	.then(photos => {
 		work(res,photos)
 	})

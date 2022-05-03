@@ -1,14 +1,7 @@
 const res = require('express/lib/response');
 const fetch = require('node-fetch')
-const colorUtil = require('./getColors.js')
-const secrets = require('./secrets')
-const wrapper = require('./wrapper.js')
 
-
-client_id = secrets.google.client_id
-client_secret = secrets.google.client_secret;
-
-async function getToken(code){
+/*async function getToken(code){
 
     let url = 'https://www.googleapis.com/oauth2/v3/token';
     let headers = {'Content-Type': 'application/x-www-form-urlencoded'};
@@ -21,7 +14,7 @@ async function getToken(code){
     });
     const data = await response.json();
     return  data.access_token
-}
+}*/ //inutile, sostituito da passport
 
 async function getAlbums(token){
 
@@ -48,8 +41,8 @@ async function getPhotos(token,albumId){
     const data = await response.json();
     return data.mediaItems
 }
+//getToken,
 module.exports={
-    getToken,
     getAlbums,
     getPhotos
 }

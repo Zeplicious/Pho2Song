@@ -1,17 +1,7 @@
 var index=0;
 const fs = require('fs');
 var ret= '';
-function getMyData(spotifyApi,callback) {
-  (async() => {
-    // console.log(me.body);
-    getUserPlaylists(spotifyApi).then(data=>{
-      console.log('---------------------------------Finito---------------------------------\n'+ret);
-      callback(ret);
-    });
-  })().catch(e => {
-    console.error(e);
-  });
-}
+
 async function getUserTaste(spotifyApi){
 
   var data = await spotifyApi.getMyTopTracks({limit: 50})
@@ -46,7 +36,17 @@ async function getSongFromColors(colors,songs){
 
 
 }
-
+function getMyData(spotifyApi,callback) {
+  (async() => {
+    // console.log(me.body);
+    getUserPlaylists(spotifyApi).then(data=>{
+      console.log('---------------------------------Finito---------------------------------\n'+ret);
+      callback(ret);
+    });
+  })().catch(e => {
+    console.error(e);
+  });
+}//inutile
 async function getUserPlaylists(spotifyApi) {
   const data = await spotifyApi.getUserPlaylists()
   
@@ -63,7 +63,7 @@ async function getUserPlaylists(spotifyApi) {
       let data = JSON.stringify(tracksJSON);
       fs.writeFileSync('export/'+playlist.name+'.json', data);
     }
-  }
+  }//inulile
   //GET SONGS FROM PLAYLIST
 async function getPlaylistTracks(spotifyApi,playlistId, playlistName) {
   
@@ -86,7 +86,7 @@ async function getPlaylistTracks(spotifyApi,playlistId, playlistName) {
     
   console.log("---------------+++++++++++++++++++++++++")
   return tracks;
-}
+}//inutile
 module.exports = {
   getMyData,
   getUserPlaylists,

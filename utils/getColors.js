@@ -1,7 +1,7 @@
 const { get } = require('express/lib/request');
 const res = require('express/lib/response');
 const fetch = require('node-fetch')
-const secrets = require('./secrets')
+const secrets = require('../secrets')
 
 const client_id = secrets.imagga.client_id
 const client_secret = secrets.imagga.client_secret;
