@@ -1,0 +1,71 @@
+.head-banner {
+    background-color: rgb(85, 85, 85);
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    background-image: url('https://www.robertofiume.it/wp-content/uploads/2019/01/Asiago-2015.236.2508.bn_.jpg');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+}
+
+.sezione-icone {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+}
+
+.bi {
+    font-size: 50px;
+}
+
+.sezione-image .image {
+    min-height: 30rem;
+    background-size: cover;
+}
+
+.sezione-image .txt {
+    padding: 3rem;
+}
+
+.recensioni {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+}
+
+.recensione-singola img {
+    height: 200px;
+    width: 200px;
+}
+
+.newsletter {
+    background-color: rgb(85, 85, 85);
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    background-image: url('https://www.robertofiume.it/wp-content/uploads/2019/01/Asiago-2015.236.2508.bn_.jpg');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+}
+
+footer {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.list-inline-item svg {
+    font-size: 30px;
+}
+
+.list-inline-item > a {
+    color: black;
+}
+
+@media screen and (min-width: 768px) {
+    .head-banner {
+        padding-top: 12rem;
+        padding-bottom: 12rem;
+    }
+
+    .sezione-image .txt {
+        padding: 3rem;
+    }
+}
