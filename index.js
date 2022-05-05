@@ -220,11 +220,14 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 //****************gestione della home******************
 
 app.get('/', checkNotAuthenticated, (req, res) => { //home per i non loggati
-	res.render('home#.ejs')
+	res.render('./pages/home#.ejs')
 })
 
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o di successo
 
+app.get('/login', checkNotAuthenticated, (req, res)=> {
+	res.render('./pages/login.ejs')
+})
 
 var userTasteInfo;
 
@@ -253,7 +256,7 @@ app.get('/home', checkAuthenticated, (req, res) => { //home per i loggati
 	console.log('sicuro?')
 	spotifygoogleUtils.getUserTaste(spotifyApi)
 	.then(data => userTasteInfo=data)
-	res.render('home.ejs')
+	res.render('./pages/home.ejs')
 		// authenticazione finita, renderizzo la pagina
 		
 		//print di debug su console
