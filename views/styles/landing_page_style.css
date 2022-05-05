@@ -1,3 +1,5 @@
+/* Stile banner principale */
+
 .head-banner {
     background-color: rgb(85, 85, 85);
     padding-top: 8rem;
@@ -8,6 +10,8 @@
     background-blend-mode: multiply;
 }
 
+/* Stile commenti con icone */
+
 .sezione-icone {
     padding-top: 7rem;
     padding-bottom: 7rem;
@@ -17,6 +21,8 @@
     font-size: 50px;
 }
 
+/* Stile paragrafi con immagini */
+
 .sezione-image .image {
     min-height: 30rem;
     background-size: cover;
@@ -25,6 +31,8 @@
 .sezione-image .txt {
     padding: 3rem;
 }
+
+/* Stile sezione recensioni */
 
 .recensioni {
     padding-top: 7rem;
@@ -36,6 +44,8 @@
     width: 200px;
 }
 
+/* Stile newsletter */
+
 .newsletter {
     background-color: rgb(85, 85, 85);
     padding-top: 8rem;
@@ -46,6 +56,8 @@
     background-blend-mode: multiply;
 }
 
+/* Stile footer */
+
 footer {
     padding-top: 4rem;
     padding-bottom: 4rem;
@@ -55,8 +67,59 @@ footer {
     font-size: 30px;
 }
 
-.list-inline-item > a {
+.list-inline-item>a {
     color: black;
+}
+
+/* Stile bottone back to top */
+
+#back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border: 2px solid rgb(61, 61, 61);
+    border-radius: 50%;
+}
+
+.btnEntrance {
+    /* Animazione ingresso*/
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+    animation-name: btnEntrance;
+}
+
+.btnExit {
+    /* Animazione uscita */
+    animation-duration: 0.25s;
+    animation-fill-mode: both;
+    animation-name: btnExit;
+}
+
+@keyframes btnEntrance {
+
+    /* Zoom In */
+    from {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes btnExit {
+
+    /* Zoom Out */
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
 }
 
 @media screen and (min-width: 768px) {
