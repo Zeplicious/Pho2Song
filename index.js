@@ -13,12 +13,12 @@ var SpotifyWebApi = require('spotify-web-api-node');
 const SpotifyStrategy = require('passport-spotify').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-const spotifygoogleUtils = require("./utils/spotifyUtils.js");
+const spotifyUtils = require("./utils/spotifyUtils.js");
 const googleUtils = require('./utils/googleUtils.js')
 const colorUtil = require("./utils/getColors.js");
 
 
-/**************  Passport declarations **************/ 
+/**************  Passport declarations **************/
 function checkAuthenticated(req, res, next) { //controllo se l'utente è autenticato
 	if (req.isAuthenticated()) {
 		return next()
@@ -29,7 +29,7 @@ function checkAuthenticated(req, res, next) { //controllo se l'utente è autenti
 
 function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è autenticato
 	if (req.isAuthenticated()) {
-		return res.redirect('/home')
+		return res.redirect('/')
 	}
 	console.log('non autenticato: ' + req.user)
 	return next()
@@ -99,7 +99,7 @@ passport.use('google',
 const app = express();
 
 
-/************** google api declarations **************/ 
+/************** google api declarations **************/
 google_client_id = secrets.google.client_id;
 google_client_secret = secrets.google.client_secret;
 google_redirect_uri = 'http://localhost:8888/callback';
@@ -111,7 +111,7 @@ var album = '';
 /************** spotify api declarations **************/
 spotify_client_id = secrets.spotify.client_id;
 spotify_client_secret = secrets.spotify.client_secret;
-spotify_client_uri = 'http://localhost:8888/home';
+spotify_client_uri = 'http://localhost:8888';
 
 const scopes = [
 	'ugc-image-upload',
@@ -161,8 +161,26 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 /**************  Gestione della home **************/
 
-app.get('/', checkNotAuthenticated, (req, res) => { //home per i non loggati
-	res.render('./pages/landing_page.ejs')
+var userTasteInfo;
+
+app.get('/', /* checkNotAuthenticated, */(req, res) => {
+	if (spotifyApi.getAccessToken()) {
+		spotifyApi.getMe().then(data => {
+			let p2sUser = null
+			spotifyUtils.getUserTaste(spotifyApi)
+				.then(body => userTasteInfo = body)
+
+			p2sUser = {
+				username: data.body.display_name,
+				user_image: data.body.images[0].url
+			}
+			res.render('./pages/landing_page.ejs', { p2sUser: p2sUser })
+		})
+	}
+	else {
+		res.render('./pages/landing_page.ejs', { p2sUser: null })
+	}
+
 })
 
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o di successo
@@ -171,28 +189,13 @@ app.get('/login', checkNotAuthenticated, (req, res) => {
 	res.render('./pages/login.ejs')
 })
 
-var userTasteInfo;
-
-app.get('/home', checkAuthenticated, (req, res) => { //home per i loggati
-
-	/* da qui in poi posso accedere ad ogni dato utente di spotify che voglio, aggiungere quindi:
-		-chiamata per l'analisi degli UserTaste dell'utente spotify => analisi in background dei gusti preventivamente all'utilizzo delle funzionalità (ottimizzabile)
-		-chiamata getUserId da spotify => utile per la gestione della sessione con passport
-	*/
-	console.log('sicuro?')
-	spotifygoogleUtils.getUserTaste(spotifyApi)
-		.then(data => userTasteInfo = data)
-	res.render('./pages/home.ejs')
-});
-
-
 /************** Listening section of the server setup **************/
 
 //questo setup fa solo da ponte, al click sul pulsante "log me in with spotify" il browser dell'utente effettua una get a /spotify-login...
 app.get('/spotify-login', checkNotAuthenticated, passport.authenticate('spotify', { scope: scopes }));
 
 app.get('/spotify-login/callback', checkNotAuthenticated, passport.authenticate('spotify', {
-	successRedirect: '/home',
+	successRedirect: '/',
 	failureRedirect: '/'
 }))
 
@@ -223,7 +226,7 @@ async function work(res, photos) {
 	let songs = Array()
 	for (let photo of photos) {
 		let colors = await colorUtil.getColorsFromUrl(photo.baseUrl, photo.id)
-		let song = await spotifygoogleUtils.getSongFromColors(colors, userTasteInfo)
+		let song = await spotifyUtils.getSongFromColors(colors, userTasteInfo)
 		string = 'https://open.spotify.com/embed/track/' + song + '?utm_source=generator'
 		songs.push(string)
 	}
