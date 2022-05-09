@@ -50,14 +50,9 @@ footer {
     padding-bottom: 4rem;
 }
 
-a{
+a {
     color: rgb(68, 209, 139);
     text-decoration: none;
-}
-
-.copyright-text{
-    --bs-text-opacity: 0.5;
-    color: rgb(99, 115, 106);
 }
 
 @media screen and (min-width: 768px) {

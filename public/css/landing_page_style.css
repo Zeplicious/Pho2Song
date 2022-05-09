@@ -4,7 +4,7 @@
     background-color: rgb(85, 85, 85);
     padding-top: 8rem;
     padding-bottom: 8rem;
-    background-image: url('https://www.robertofiume.it/wp-content/uploads/2019/01/Asiago-2015.236.2508.bn_.jpg');
+    background-image: url('https://storage.googleapis.com/pr-newsroom-wp/1/2021/04/triangle_burst2-green-nocopy-1920x733.png');
     background-size: cover;
     background-position: center;
     background-blend-mode: multiply;
@@ -50,7 +50,7 @@
     background-color: rgb(85, 85, 85);
     padding-top: 8rem;
     padding-bottom: 8rem;
-    background-image: url('https://www.robertofiume.it/wp-content/uploads/2019/01/Asiago-2015.236.2508.bn_.jpg');
+    background-image: url('https://storage.googleapis.com/pr-newsroom-wp/1/2021/04/triangle_burst2-green-nocopy-1920x733.png');
     background-size: cover;
     background-position: center;
     background-blend-mode: multiply;
@@ -67,8 +67,21 @@ footer {
     font-size: 30px;
 }
 
-.list-inline-item>a {
-    color: black;
+.link_footer a:any-link {
+    color: rgb(68, 209, 139);
+    text-decoration-line: none;
+}
+
+.link_footer a:hover {
+    color: rgb(40, 128, 84);
+}
+
+.social_footer a:any-link {
+    color: rgb(68, 209, 139);
+}
+
+.social_footer a:hover {
+    color: rgb(40, 128, 84);
 }
 
 /* Stile bottone back to top */
