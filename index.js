@@ -162,11 +162,11 @@ app.use(express.static(path.join(__dirname, "/public")));
 /**************  Gestione della home **************/
 
 var userTasteInfo;
-
+var p2sUser = null
 app.get('/', /* checkNotAuthenticated, */(req, res) => {
 	if (spotifyApi.getAccessToken()) {
 		spotifyApi.getMe().then(data => {
-			let p2sUser = null
+			
 			spotifyUtils.getUserTaste(spotifyApi)
 				.then(body => userTasteInfo = body)
 
@@ -206,14 +206,14 @@ app.get('/google-login', checkAuthenticated, passport.authenticate('google', { s
 
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o successo
 app.get('/google-login/callback', checkAuthenticated, passport.authenticate('google', {
-	successRedirect: '/callback',
+	successRedirect: '/input',
 	failureRedirect: '/input'
 }));
 
 
 /************** Gestione dell'input **************/
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
-	res.render('./pages/input#.ejs')
+	res.render('./pages/input.ejs', { albums: albums })
 });
 
 app.get('/callback', checkAuthenticated, function (req, res) {
@@ -222,17 +222,21 @@ app.get('/callback', checkAuthenticated, function (req, res) {
 
 
 /************** Gestione del risultato **************/
+var photos
 async function work() {
 	photo=photos.pop();
 	if(photo == null)return;
 	var song =await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl, photo.id), userTasteInfo)
 	return song
-}	
-app.get('/result', checkAuthenticated, function (req, res) {
-	googleUtils.getPhotos(access_token, album)
-	.then(photos => {
-		work(res, photos)
-		})	
+}
+
+app.post('/result', checkAuthenticated, function (req, res) {
+	i=req.body.album
+	googleUtils.getPhotos(access_token, albums[i].id)
+		.then(data =>{
+			photos=data
+			res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
+		})
 })
 app.get('/getSong',function (req, res) {
 	try{
