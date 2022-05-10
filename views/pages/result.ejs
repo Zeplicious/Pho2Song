@@ -4,13 +4,40 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <title>Pho2Song</title>
+    <script>
+        function getSong(id){
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if(this.responseText!='fin'){
+                    let string='<iframe style="border-radius:12px" src='+this.responseText+ 'width="20%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>';
+                    document.getElementById(id).innerHTML+=string;
+                    getSong(++id);
+                }
+            }
+        };
+        xmlhttp.open("GET", "getSong", true);
+        xmlhttp.send();
+    }</script>
 </head>
-<body>
-    <ul>
-        <% songs.forEach(function(song){ %>
-            <li><div><iframe style="border-radius:12px" src=<%=song %> width="20%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div></li>
-        <% }); %>
-    </ul>
+<body onload="getSong(0)">
+    <div class="align-content-center">
+        <h2> Ecco le tue canzoni </h2>
+        <ul id="songsList" class="list-group"> 
+            <% var i=0 %>
+            <% console.log(num) %>
+            <% while(i<num){ %>
+                <li id=<%=i %> class="list-group-item"></li>
+                <%i++%>
+            <%}; %>
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script>
+    
 </body>
 </html>

@@ -222,21 +222,27 @@ app.get('/callback', checkAuthenticated, function (req, res) {
 
 
 /************** Gestione del risultato **************/
-async function work(res, photos) {
-	let songs = Array()
-	for (let photo of photos) {
-		let colors = await colorUtil.getColorsFromUrl(photo.baseUrl, photo.id)
-		let song = await spotifyUtils.getSongFromColors(colors, userTasteInfo)
-		string = 'https://open.spotify.com/embed/track/' + song + '?utm_source=generator'
-		songs.push(string)
-	}
-	res.render('result.ejs', { songs: songs })
-}
+async function work() {
+	photo=photos.pop();
+	if(photo == null)return;
+	var song =await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl, photo.id), userTasteInfo)
+	return song
+}	
 app.get('/result', checkAuthenticated, function (req, res) {
 	googleUtils.getPhotos(access_token, album)
-		.then(photos => {
-			work(res, photos)
-		})
+	.then(photos => {
+		work(res, photos)
+		})	
+})
+app.get('/getSong',function (req, res) {
+	try{
+		work().then(data=>{
+		if(data)res.send('https://open.spotify.com/embed/track/' + data + '?utm_source=generator')
+		else res.send('fin')
+	})
+	}catch(error){
+		res.send('fin')
+	}
 })
 
 
