@@ -1,0 +1,56 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="./">Pho2Song</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#icone">Photo to Song</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./plist-analyzer">P.list analyzer</a>
+                    <!-- <a tabindex="0" class="nav-link" data-bs-toggle="popover" data-bs-trigger="focus" title="Coming Soon" data-bs-content="Questa feature arriverà in futuro">P.list analyzer</a> -->
+                </li>
+                <li class="nav-item">
+                    <!-- <a class="nav-link" href="#recensioni">P.list compare</a> -->
+                    <a tabindex="0" class="nav-link" data-bs-toggle="popover" data-bs-trigger="focus"
+                        title="Coming Soon" data-bs-content="Questa feature arriverà in futuro">P.list compare</a>
+                </li>
+                <li class="nav-item">
+                    <!-- <a class="nav-link" href="#newsletter">Song hystory</a> -->
+                    <a tabindex="0" class="nav-link" data-bs-toggle="popover" data-bs-trigger="focus"
+                        title="Coming Soon" data-bs-content="Questa feature arriverà in futuro">Song hystory</a>
+                </li>
+            </ul>
+            <% if (!p2sUser) { %>
+                <div class="text-end">
+                    <a href="./login" class="btn btn-outline-success me-2">Login</a>
+                </div>
+                <% } else { %>
+                    <div class="dropdown">
+                        <a href="#" class="d-block link-light text-decoration-none dropdown-toggle"
+                            id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="<%= p2sUser.user_image %>" alt="mdo" width="34" height="34"
+                                class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow"
+                            aria-labelledby="dropdownUser2"
+                            style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 34px);"
+                            data-popper-placement="bottom-end">
+                            <li><a class="dropdown-item" href="#">New project...</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        </ul>
+                    </div>
+                    <% } %>
+        </div>
+    </div>
+</nav>
