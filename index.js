@@ -90,7 +90,7 @@ passport.use('google',
 			//ottengo gli album dell'utente tramite accessToken
 			let data = await googleUtils.getAlbums(accessToken)
 			albums = data
-			album = albums[1].id
+			album = albums[0].id
 			access_token = accessToken
 			return cb(null, profile)
 		})
@@ -213,11 +213,11 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 
 /************** Gestione dell'input **************/
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
-	res.render('input#.ejs')
+	res.render('./pages/input#.ejs')
 });
 
 app.get('/callback', checkAuthenticated, function (req, res) {
-	res.render('input.ejs', { albums: albums })
+	res.render('./pages/input.ejs', { albums: albums })
 })
 
 
@@ -230,7 +230,7 @@ async function work(res, photos) {
 		string = 'https://open.spotify.com/embed/track/' + song + '?utm_source=generator'
 		songs.push(string)
 	}
-	res.render('result.ejs', { songs: songs })
+	res.render('./pages/result.ejs', { songs: songs })
 }
 app.get('/result', checkAuthenticated, function (req, res) {
 	googleUtils.getPhotos(access_token, album)

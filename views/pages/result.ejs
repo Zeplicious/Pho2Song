@@ -9,7 +9,8 @@
 <body>
     <ul>
         <% songs.forEach(function(song){ %>
-            <li><div><iframe style="border-radius:12px" src=<%=song %> width="20%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div></li>
+            <li><div><iframe style="border-radius:12px; @media screen and (min-width: 768px){size: 60%;
+                }" src=<%=song %> width="50%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div></li>
         <% }); %>
     </ul>
 </body>
