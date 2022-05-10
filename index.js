@@ -253,10 +253,9 @@ app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
 })
 
 
-/* app.post('/plist-analyzer/result', (req, res) => {
-	req
-}) */
-
+app.post('/analyzer-result', (req, res) => {
+	spotifyUtils.analyzePlaylist(spotifyApi, req.body.playlistID).then(data => console.log(data))
+})
 
 app.listen(8888, () => {
 	console.log('Server listening on http://localhost:8888/');

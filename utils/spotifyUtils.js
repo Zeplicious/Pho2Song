@@ -100,11 +100,61 @@ async function getPlaylistTracks(spotifyApi, playlistId, playlistName) {
 }
 
 
+async function analyzePlaylist(spotifyApi, playlistId) {
+
+  var data = await spotifyApi.getPlaylistTracks(playlistId, { limit: 100 })
+  var ids = Array()
+
+  for (let track of data.body.items) {
+    ids.push(track.id);
+  }
+
+  var data = await spotifyApi.getAudioFeaturesForTracks(ids)
+  let averageAcousticness = 0
+  let averageDanceability = 0
+  let averageEnergy = 0
+  let averageInstrumentalness = 0
+  let averageLiveness = 0
+  let averageLoudness = 0
+  let averageSpeechiness = 0
+  let averageTempo = 0
+  let averageTime_signature = 0
+
+  for (let track of data.body.audio_features) {
+    averageAcousticness += track.acousticness
+    averageDanceability += track.danceability
+    averageEnergy += track.energy
+    averageInstrumentalness += track.instrumentalness
+    averageLiveness += track.liveness
+    averageLoudness += track.loudness
+    averageSpeechiness += speechiness
+    averageTempo += track.tempo
+    averageTime_signature += track.time_signature
+  }
+
+
+  var ret = {
+    Acousticness: averageAcousticness / (ids.length),
+    Danceability: averageDanceability / (ids.length),
+    Energy: averageEnergy / (ids.length),
+    Instrumentalness: averageInstrumentalness / (ids.length),
+    Liveness: averageLiveness / (ids.length),
+    Loudness: averageLoudness / (ids.length),
+    Speechiness: averageSpeechiness / (ids.length),
+    Tempo: averageTempo / (ids.length),
+    Time_signature: averageTime_signature / (ids.length)
+  }
+
+  return ret
+}
+
+
 module.exports = {
   getMyData,
   getUserPlaylists,
   getPlaylistTracks,
   getUserTaste,
-  getSongFromColors
+  getSongFromColors,
+  analyzePlaylist
 }
 
