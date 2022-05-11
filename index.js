@@ -249,12 +249,16 @@ app.get('/result', checkAuthenticated, function (req, res) {
 
 /************** Funzionalità: Playlist analyzer **************/
 app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
-	spotifyApi.getUserPlaylists().then(data => res.render('./pages/plist-analyzer.ejs', {playlists: data.body.items, p2sUser: p2sUser}))		/* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
+	spotifyApi.getUserPlaylists().then(data => {
+		res.render('./pages/plist-analyzer.ejs', {playlists: data.body.items, p2sUser: p2sUser})  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
+	})
 })
 
 
-app.post('/analyzer-result', (req, res) => {
-	spotifyUtils.analyzePlaylist(spotifyApi, req.body.playlistID).then(data => console.log(data))
+app.post('/plist-analyzer', (req, res) => {
+	spotifyUtils.analyzePlaylist(spotifyApi, req.body.playlistID).then(data => {
+		res.send(data)
+	})
 })
 
 app.listen(8888, () => {

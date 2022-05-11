@@ -105,11 +105,10 @@ async function analyzePlaylist(spotifyApi, playlistId) {
   var data = await spotifyApi.getPlaylistTracks(playlistId, { limit: 100 })
   var ids = Array()
 
-  for (let track of data.body.items) {
-    ids.push(track.id);
+  for (let item of data.body.items) {
+    ids.push(item.track.id);
   }
 
-  var data = await spotifyApi.getAudioFeaturesForTracks(ids)
   let averageAcousticness = 0
   let averageDanceability = 0
   let averageEnergy = 0
@@ -118,32 +117,33 @@ async function analyzePlaylist(spotifyApi, playlistId) {
   let averageLoudness = 0
   let averageSpeechiness = 0
   let averageTempo = 0
-  let averageTime_signature = 0
 
-  for (let track of data.body.audio_features) {
-    averageAcousticness += track.acousticness
-    averageDanceability += track.danceability
-    averageEnergy += track.energy
-    averageInstrumentalness += track.instrumentalness
-    averageLiveness += track.liveness
+  var data2 = await spotifyApi.getAudioFeaturesForTracks(ids)
+
+  for (let track of data2.body.audio_features) {
+    averageAcousticness += track.acousticness * 100
+    averageDanceability += track.danceability * 100
+    averageEnergy += track.energy * 100
+    averageInstrumentalness += track.instrumentalness * 100
+    averageLiveness += track.liveness * 100
     averageLoudness += track.loudness
-    averageSpeechiness += speechiness
+    averageSpeechiness += track.speechiness * 100
     averageTempo += track.tempo
-    averageTime_signature += track.time_signature
   }
 
 
   var ret = {
-    Acousticness: averageAcousticness / (ids.length),
-    Danceability: averageDanceability / (ids.length),
-    Energy: averageEnergy / (ids.length),
-    Instrumentalness: averageInstrumentalness / (ids.length),
-    Liveness: averageLiveness / (ids.length),
-    Loudness: averageLoudness / (ids.length),
-    Speechiness: averageSpeechiness / (ids.length),
-    Tempo: averageTempo / (ids.length),
-    Time_signature: averageTime_signature / (ids.length)
+    Acousticness: (averageAcousticness / (ids.length)).toFixed(2),
+    Danceability: (averageDanceability / (ids.length)).toFixed(2),
+    Energy: (averageEnergy / (ids.length)).toFixed(2),
+    Instrumentalness: (averageInstrumentalness / (ids.length)).toFixed(2),
+    Liveness: (averageLiveness / (ids.length)).toFixed(2),
+    Loudness: (averageLoudness / (ids.length)).toFixed(2),
+    Speechiness: (averageSpeechiness / (ids.length)).toFixed(2),
+    Tempo: (averageTempo / (ids.length)).toFixed(2)
   }
+
+  console.log(ret)
 
   return ret
 }
