@@ -111,7 +111,7 @@
             <% if(albums !=null ){ %>
                 <form action="/result" method="post">  
                     <div class="row"> 
-                        <div class="col-lg-8"> 
+                        <div class="col-lg-8">
                         <%var i=0 %>     
                         <% albums.forEach(function(album){ %>
                             <div class="form-check" name="albums">
@@ -129,8 +129,6 @@
                         </div> 
                     </div> 
                 </form>
-            <% } else { %>
-                <a href="/google-login" class="btn btn-dark">Login with Google</a>
             <% } %> 
         </div>
     </section>
