@@ -11,12 +11,10 @@ async function getUserTaste(spotifyApi) {
     ids.push(track.id);
   }
 
-  console.log(ids)
   var data = await spotifyApi.getAudioFeaturesForTracks(ids)
   ret = Array()
 
   //parse dei parametri utili
-  console.log(data)
   for (let track of data.body.audio_features) {
     ret.push(
       {

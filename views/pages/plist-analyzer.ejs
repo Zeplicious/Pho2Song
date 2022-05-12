@@ -19,58 +19,179 @@
 
     <%- include("../partials/navbar.ejs"); %>
 
-        <div class="container">
-            <div class="row">
+    <section id="sezione-scelta">
+        <div class="container-fluid">
+            <div class="row text-center">
                 <h1 class="pb-2 text-center">Scegli una playlist da analizzare</h1>
-                <form>
-                    <div class="col-lg-8 mx-auto">
+            </div>
+
+
+            <div class="row justify-content-center align-items-center">
+                <div id="scelta1" class="col-lg-4 col-md-6 mx-auto">
+                    <form>
                         <% playlists.forEach(playlist=> { %>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="playlistID"
-                                    value="<%= playlist.id %>" id="flexRadioDefault"
-                                    onclick=" showAnalysis(this.value)">
-                                <label class="form-check-label" for="flexRadioDefault">
+                                    value="<%= playlist.id %>" id="<%= playlist.name%>"
+                                    onclick=" showAnalysis(this.value, 1, this.id)">
+                                <label class="form-check-label" for="<%= playlist.name%>">
                                     <%= playlist.name %>
                                 </label>
                             </div>
-                            <% }) %>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 text-start">
-                            <ul id="stats1" class="list-group" style="display:none;">
-                                <li id="acousticness" class="list-group-item">
-                                </li>
-                                <li id="danceability" class="list-group-item">
+                        <% }) %>
+                    </form>
+                </div>
 
-                                </li>
-                                <li id="energy" class="list-group-item">
+                <div id="scelta2" class="col-lg-4 col-md-6 mx-auto" style="display: none;">
+                    <form>
+                        <% playlists.forEach(playlist=> { %>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="playlistID"
+                                    value="<%= playlist.id %>" id="<%= playlist.name%>"
+                                    onclick=" showAnalysis(this.value, 2, this.id)">
+                                <label class="form-check-label" for="<%= playlist.name%>">
+                                    <%= playlist.name %>
+                                </label>
+                            </div>
+                        <% }) %>
+                    </form>
+                </div>
 
-                                </li>
-                                <li id="instrumentalness" class="list-group-item">
-
-                                </li>
-                                <li id="liveness" class="list-group-item">
-
-                                </li>
-                                <li id="speechiness" class="list-group-item">
-
-                                </li>
-                                <li id="loudness" class="list-group-item">
-
-                                </li>
-                                <li id="tempo" class="list-group-item">
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </form>
+                <div id="aggiungi-scelta" class="col-lg-2 col-md-3 mx-auto text-center">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Scegli una playlist da comparare" onclick="choosePlaylistToCompare()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                          </svg>
+                    </button>
+                </div>
             </div>
         </div>
+    </section>
 
 
+    <section id="sezione-risultato" style="display:none;">
+        <div class="container-fluid">
+            <div class="row justify-content-center pt-4">
+                <div id="stats1" class="col-lg-6 text-start pb-2" style="display:none;">
+                    <div class="row">
+                        <h3 id="plist1" class="ps-4">
 
+                        </h3>
+                    </div>
+                    <ul  class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h6>Acustica media (quanto le canzoni sono registrate con strumenti reali)</h6>
+                            <div id="acousticness1" class="progress">
 
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Ballabilità media</h6>
+                            <div id="danceability1" class="progress">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Energia media (quanto le canzoni sono intense e/o rumorose)</h6>
+                            <div id="energy1" class="progress">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Strumentalità media (più il valore è alto, meno tracce vocali sono presenti)</h6>
+                            <div id="instrumentalness1" class="progress">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Media canzoni Live</h6>
+                            <div id="liveness1" class="progress">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Discorsività media (quanto le canzoni contengono tracce vocali)</h6>
+                            <div id="speechiness1" class="progress">
+
+                            </div>
+                        </li>
+
+                        <li id="loudness1" class="list-group-item">
+
+                        </li>
+
+                        <li id="tempo1" class="list-group-item">
+
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="stats2" class="col-lg-6 text-start pt-2" style="display:none;">
+                    <div class="row">
+                        <h3 id="plist2" class="text-end pe-4">
+
+                        </h3>
+                    </div>
+                    <ul  class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h6>Acustica media (quanto le canzoni sono registrate con strumenti reali)</h6>
+                            <div id="acousticness2" class="progress flex-row-reverse">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Ballabilità media</h6>
+                            <div id="danceability2" class="progress flex-row-reverse">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Energia media (quanto le canzoni sono intense e/o rumorose)</h6>
+                            <div id="energy2" class="progress flex-row-reverse">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Strumentalità media (più il valore è alto, meno tracce vocali sono presenti)</h6>
+                            <div id="instrumentalness2" class="progress flex-row-reverse">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Media canzoni Live</h6>
+                            <div id="liveness2" class="progress flex-row-reverse">
+
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <h6>Discorsività media (quanto le canzoni contengono tracce vocali)</h6>
+                            <div id="speechiness2" class="progress flex-row-reverse">
+
+                            </div>
+                        </li>
+
+                        <li id="loudness2" class="list-group-item">
+
+                        </li>
+
+                        <li id="tempo2" class="list-group-item">
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
         <!-- Optional JavaScript -->
