@@ -4,17 +4,17 @@ var ret= '';
 
 async function getUserTaste(spotifyApi){
 
-  var data = await spotifyApi.getMyTopTracks({limit: 50})
+  var data = await spotifyApi.getMyTopTracks({limit: 100})
   ids=Array()
   
   for(let track of data.body.items){
     ids.push(track.id);
   }
-  console.log(ids)
+
   var data = await spotifyApi.getAudioFeaturesForTracks(ids)
   ret=Array()
   //parse dei parametri utili
-  console.log(data)
+
   for(let track of data.body.audio_features){
     ret.push(
       {"id": track.id,
@@ -29,7 +29,7 @@ async function getUserTaste(spotifyApi){
 }
 async function getSongFromColors(colors,songs){
   //scegli una foto per i colori
-  ret=songs[index].id
+  ret=songs[index % songs.length].id
   index++;
   
   return ret

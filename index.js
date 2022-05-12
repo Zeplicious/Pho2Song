@@ -238,10 +238,18 @@ app.post('/result', checkAuthenticated, function (req, res) {
 			res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
 		})
 })
+
+app.post('/playlist', checkAuthenticated, function (req, res) {
+	spotifyApi.createPlaylist(req.body.name,{
+		'description': req.body.description 
+	}).then(data=>spotifyApi.addTracksToPlaylist(data.body.id,req.body.songs))
+	res.redirect('/')
+})
+
 app.get('/getSong',function (req, res) {
 	try{
 		work().then(data=>{
-		if(data)res.send('https://open.spotify.com/embed/track/' + data + '?utm_source=generator')
+		if(data)res.send(data)
 		else res.send('fin')
 	})
 	}catch(error){

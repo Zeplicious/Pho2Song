@@ -17,9 +17,11 @@
             xmlhttp.onreadystatechange = function() {
                if (this.readyState == 4 && this.status == 200) {
                     if(this.responseText!='fin'){
-                        let string='<div class="ratio" style="--bs-aspect-ratio: 100%;"><iframe style="border-radius:12px" src='+this.responseText+ 'width="100%" height="10" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div>';
+                        let embed = 'https://open.spotify.com/embed/track/' + this.responseText + '?utm_source=generator'
+                        let string='<iframe style="border-radius:12px" src="'+embed+ '" width="400" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>'//<div class="ratio" style="--bs-aspect-ratio: 20%;"></div>';
                         document.getElementById(id).style.display="initial"
                         document.getElementById(id).innerHTML+=string;
+                        document.getElementById("check"+id).value = 'spotify:track:'+this.responseText;
                         getSong(++id);
                     }
                     else{
@@ -89,26 +91,52 @@
             </div>
         </div>
     </nav>
-    <div class="container-fluid">
+    <div class="container-fluid result-view">
         <div class="row">
-            <div class="col-lg-3 col-md-6 mx-auto align-content-center">
-                <h4 class="text-center"> Ecco le tue canzoni </h4>
-                    <!-- <div class="d-flex justify-content-center">
-                        <div id="spin" class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div> -->
-                    <ul id="songsList" class="list-group text-center"> 
+            <div class="col-lg-8 col-md-10 mx-auto text-center">
+                <h3 class="text-center"> Ecco le tue canzoni </h3>
+                <form action="/playlist" method="post">
+                    <ul id="songsList" class="list-group list-group-flush align-content-center mx-auto col-lg-6 col-md-8"> 
                         <% var i=0 %>
                         <% while(i<num){ %>
-                            <li id=<%=i %> class="list-group-item" style="display: none;"></li>
+                            <li id=<%=i %> class="list-group-item" style="display: none;">
+                                <div>
+                                    <input class="form-check-input" name="songs" type="checkbox" id="check<%=i %>" value="" aria-label="<%=i %>">
+                                </div>
+                            </li>
                             <%i++%>
                         <%}; %>
                     </ul>
-                    <a id="submit" class="btn btn-dark" href="#" role="button" style="display: none">Salva questa playlist</a>
-
-<!--                 <div class="align-content-center">
-                </div> -->
+                    <button type="button" class="btn  btn-dark btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Salva questa playlist
+                    </button>
+                      
+                      <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Playlist</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="FormControlInput1" class="form-label">Nome</label>
+                                        <input name="name" type="text" class="form-control" id="FormControlInput1" placeholder="Il mio album musicato">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="FormControlInput2" class="form-label">Descrizione</label>
+                                        <textarea name="description" class="form-control" id="FormControlInput2" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-dark btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-dark btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

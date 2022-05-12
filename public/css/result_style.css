@@ -1,6 +1,9 @@
 body{
     padding-top: 65px;
 }
-footer{
-    padding-top: 65px;
+@media screen and (min-width: 768px) {
+    .result-view {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
 }
