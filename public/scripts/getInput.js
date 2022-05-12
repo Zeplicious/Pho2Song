@@ -19,7 +19,7 @@ upload.addEventListener("change", function(){
             reader.addEventListener("load", function() {
                 console.log(i.result)
                 console.log(i)
-                previewDefaultText.innerHTML = i.name
+                previewDefaultText.innerText += i.name
             })
             reader.readAsText(i)
             n+=1

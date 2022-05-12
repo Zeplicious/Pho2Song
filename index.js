@@ -232,6 +232,7 @@ async function work() {
 
 app.post('/result', checkAuthenticated, function (req, res) {
 	i=req.body.album
+	console.log(i)
 	googleUtils.getPhotos(access_token, albums[i].id)
 		.then(data =>{
 			photos=data
@@ -249,6 +250,7 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 app.get('/getSong',function (req, res) {
 	try{
 		work().then(data=>{
+		console.log(data)
 		if(data)res.send(data)
 		else res.send('fin')
 	})
