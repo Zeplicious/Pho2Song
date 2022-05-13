@@ -87,5 +87,6 @@ async function debug(){
 }
 //debug()
 module.exports={
+    getColorsFromUpload,
     getColorsFromUrl
 }

@@ -228,7 +228,7 @@ async function work() {
 	if(photo == null)return;
 	var song
 	if(photo.baseUrl)song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
-	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
+	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
 	return song
 }
 
