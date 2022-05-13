@@ -6,7 +6,47 @@ const secrets = require('../secrets')
 const client_id = secrets.imagga.client_id
 const client_secret = secrets.imagga.client_secret;
 
-async function getColorsFromUrl(imageUrl,id){
+async function getColorsFromUpload(image){
+    const body = new FormData
+    body.append("image", image)
+
+    var response = await fetch("https://api.imagga.com/v2/uploads", {
+        body,
+        headers: {
+          Authorization: "Basic "+Buffer.from(authString).toString('base64'),
+        "Content-Type": "multipart/form-data"
+        }
+    })
+    var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
+    var auth = client_id+':'+client_secret;
+    var authString = auth.toString();
+    const response = await fetch(url, {
+	    method: 'get',
+	    headers: {
+            Authorization: "Basic "+Buffer.from(authString).toString('base64')
+          }
+    });
+    var data = await response.json();
+    var temp=Array();
+    for(let color of data.result.colors.image_colors){
+        temp.push(
+            {
+                r: color.r,
+                g: color.g,
+                b: color.b
+            })
+    }
+
+    var imInfo={
+        //url: imageUrl,
+        colors: temp
+    }
+    console.log(imInfo);
+    return imInfo;
+
+}
+
+async function getColorsFromUrl(imageUrl){
     var url = 'https://api.imagga.com/v2/colors?image_url=' + encodeURIComponent(imageUrl)+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
     var auth = client_id+':'+client_secret;
     var authString = auth.toString();
@@ -28,14 +68,14 @@ async function getColorsFromUrl(imageUrl,id){
     }
 
     var imInfo={
-        id: id,
         //url: imageUrl,
         colors: temp
     }
-    //console.log(imInfo);
+    console.log(imInfo);
     return imInfo;
 
 }
+
 async function debug(){
     let i=0
     let array=Array()

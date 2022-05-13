@@ -226,19 +226,24 @@ var photos
 async function work() {
 	photo=photos.pop();
 	if(photo == null)return;
-	var song =await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl, photo.id), userTasteInfo)
+	var song
+	if(photo.baseUrl)song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
+	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
 	return song
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
 	i=req.body.album
 	console.log(i)
+
 	googleUtils.getPhotos(access_token, albums[i].id)
 		.then(data =>{
 			photos=data
 			res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
 		})
 })
+
+
 
 app.post('/playlist', checkAuthenticated, function (req, res) {
 	spotifyApi.createPlaylist(req.body.name,{
