@@ -20,7 +20,7 @@ async function getColorsFromUpload(image){
     var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
     var auth = client_id+':'+client_secret;
     var authString = auth.toString();
-    const response = await fetch(url, {
+    response = await fetch(url, {
 	    method: 'get',
 	    headers: {
             Authorization: "Basic "+Buffer.from(authString).toString('base64')

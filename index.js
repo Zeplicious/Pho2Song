@@ -17,6 +17,8 @@ const spotifyUtils = require("./utils/spotifyUtils.js");
 const googleUtils = require('./utils/googleUtils.js')
 const colorUtil = require("./utils/getColors.js");
 
+const bodyParser= require('body-parser');
+const fileUpload = require('express-fileupload');
 
 /**************  Passport declarations **************/
 function checkAuthenticated(req, res, next) { //controllo se l'utente è autenticato
@@ -157,7 +159,9 @@ app.use(passport.session())
 app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, "/public")));
 
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(fileUpload());
 /**************  Gestione della home **************/
 
 var userTasteInfo;
@@ -226,21 +230,24 @@ async function work() {
 	photo=photos.pop();
 	if(photo == null)return;
 	var song
-	if(photo.baseUrl)song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
+	if(photo.baseUrl)song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo) // controlli il tipo; se stringa photo in input
+	else if(photo.baseUrl)song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
 	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
 	return song
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
-	console.log(req.body)
-	i=req.body.album
+	console.log(req.files)
+	console.log(req.body.count)
+	res.redirect('/input')
+/* 	i=req.body.album
 	console.log(i)
 
 	googleUtils.getPhotos(access_token, albums[i].id)
 		.then(data =>{
 			photos=data
 			res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
-		})
+		}) */
 })
 
 
