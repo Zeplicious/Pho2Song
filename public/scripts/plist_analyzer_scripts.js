@@ -5,10 +5,16 @@ function showAnalysis(id, place, plist_name) {
         if (this.readyState == 4 && this.status == 200) {
             let values = JSON.parse(this.responseText);
 
-            document.getElementById("sezione-risultato").style.display = "initial"
+            if (document.getElementById("sezione-risultato").style.display == "none") {
+                document.getElementById("sezione-risultato").style.display = "initial"
+            }
 
             if (document.getElementById("stats" + place).style.display == "none") {
                 document.getElementById("stats" + place).style.display = "initial"
+            }
+
+            if ((document.getElementById("aggiungi-scelta").style.display == "none") && (document.getElementById("scelta2").style.display == "none")) {
+                document.getElementById("aggiungi-scelta").style.display = "initial"
             }
 
             document.getElementById("plist" + place).innerHTML = plist_name
@@ -70,18 +76,18 @@ function showAnalysis(id, place, plist_name) {
             document.getElementById("speechiness" + place).innerHTML = string
 
             if (place == 1) {
-                string = '<h5>Volume medio in decibel: ' + values.Loudness + ' dB</h5>'
+                string = '<h6>Volume medio in decibel: ' + values.Loudness + ' dB</h6>'
             } else {
-                string = '<h5>' + values.Loudness + ' dB: ' + 'Volume medio in decibel</h5>'
+                string = '<h6>' + values.Loudness + ' dB: ' + 'Volume medio in decibel</h6>'
             }
             
             document.getElementById("loudness" + place).innerHTML = string
 
             if (place == 1) {
-                string = '<h5>Tempo medio: ' + values.Tempo + ' BPM</h5>'
+                string = '<h6>Tempo medio: ' + values.Tempo + ' BPM</h6>'
             }
             else {
-                string = '<h5>' + values.Loudness + ' BPM: ' + 'Tempo medio</h5>'
+                string = '<h6>' + values.Tempo + ' BPM: ' + 'Tempo medio</h6>'
             }
             
             document.getElementById("tempo" + place).innerHTML = string
@@ -95,6 +101,7 @@ function showAnalysis(id, place, plist_name) {
 
 function choosePlaylistToCompare() {
     document.getElementById("aggiungi-scelta").style.display = "none"
+
     document.getElementById("scelta2").style.display = "initial"
 }
 
