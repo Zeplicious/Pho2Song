@@ -1,64 +1,66 @@
 const upload = document.getElementById("upload");
 const previewContainer = document.getElementById("imagePreview")
-const previewDefaultText = previewContainer.querySelector(".image-preview__default-text")
+const urlContainer = document.getElementById("urlContainer")
+const inputContainer = document.getElementById("inputContainer")
+const inputForm = document.getElementById("inputForm")
 
-upload.addEventListener("change", function(){
-    var arrayFile = []
+var urlIndex = 1;
+var arrayFile = [];
+
+upload.addEventListener("change", function () {
     var n = 0
     var m = 0
     console.log(this.files)
-    for(i of this.files){
+    for (i of this.files) {
         arrayFile[m] = i;
-        m+=1
-    }; 
+        m += 1
+    };
     console.log(arrayFile)
 
-    if(arrayFile[0]) {
+    if (arrayFile[0]) {
         arrayFile.forEach(i => {
             const reader = new FileReader();
-            reader.addEventListener("load", function() {
+            reader.addEventListener("load", function () {
                 console.log(i.result)
                 console.log(i)
-                previewDefaultText.innerHTML = i.name
+                previewContainer.innerHTML += "<div class='row mx-auto my-auto'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-auto'> <p>" + i.name + "<p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-auto'> <button class='btn-danger btn' onsubmit='FileDelete()'>Elimina</button> </div>"
             })
             reader.readAsText(i)
-            n+=1
+            n += 1
         })
-        
+
     }
 })
 
-/*$(document).ready(function(){
-    $("#upload").change(function (e) {
-        var file = e.target.file[0]
-        readImage(file);
-    })
+function addImage() {
+    var imgText = urlContainer.querySelector("#url");
+    display(imgText.value)
+};
 
-    $("#url-form").submit(function(e){
-        e.preventDefault();
-
-        if($("#url").val() != ""){
-            var url = $("#url").val()
-            convertImage(url);
-        }
-    })
-})
-
-function readImage(file){
-    if(file.type && file.type.indexOf('image') == -1) {
-        alert("file is not an image")
-        return
+function display(res) {
+    let resName = res.substring(res.lastIndexOf("/") + 1, res.length);
+    if(resName != ""){
+        previewContainer.innerHTML += "<p id='result'> " + resName + "</p>"
+        urlIndex++;
     }
-    console.log("tutto a posto")
-    const reader = new FileReader();
-    reader.addEventListener('load' , (event) => {
-        imageUrl = event.target.result;
-        console.log(imageUrl);
-    })
-    reader.readAsDataURL(file);
+    else{
+        inputContainer.innerHTML += "<div class='alert alert-danger' role='alert'> Errore: file non supportato! </div>"
+    }    
 }
 
-function convertImage(url){
-    
-    //if(broswerImageConverter.downloadImageWithType(url, imageType)){}
-}*/
+inputForm.addEventListener('submit', function (evnt) {
+    evnt.preventDefault();
+    arrayFile.forEach(function (file) {
+        sendFile(file);
+    });
+});
+
+sendFile = function (file) {
+  var formData = new FormData();
+  var request = new XMLHttpRequest();
+
+  formData.set('file', file);
+  console.log(formData.keys)
+  request.open("POST", '/result');
+  request.send(file);
+};

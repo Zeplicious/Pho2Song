@@ -153,7 +153,6 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false
 }))
-
 app.use(passport.session())
 app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, "/public")));
@@ -231,6 +230,7 @@ async function work() {
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
+	console.log(req.body)
 	i=req.body.album
 	googleUtils.getPhotos(access_token, albums[i].id)
 		.then(data =>{
