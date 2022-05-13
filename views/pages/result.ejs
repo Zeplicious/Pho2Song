@@ -18,8 +18,8 @@
                if (this.readyState == 4 && this.status == 200) {
                     if(this.responseText!='fin'){
                         let embed = 'https://open.spotify.com/embed/track/' + this.responseText + '?utm_source=generator'
-                        let string='<iframe style="border-radius:12px" src="'+embed+ '" width="400" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>'//<div class="ratio" style="--bs-aspect-ratio: 20%;"></div>';
-                        document.getElementById(id).style.display="initial"
+                        let string='<div class="col-11 px-0"><iframe style="border-radius:12px" src="'+embed+ '" width="280" height="80" frameBorder="0" allowfullscreen="1" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div>'//<div class="ratio" style="--bs-aspect-ratio: 20%;"></div>';
+                        document.getElementById("li"+id).style.display="initial"
                         document.getElementById(id).innerHTML+=string;
                         document.getElementById("check"+id).value = 'spotify:track:'+this.responseText;
                         getSong(++id);
@@ -92,24 +92,41 @@
         </div>
     </nav>
     <div class="container-fluid result-view">
-        <div class="row">
+        <div class="row justify-content-center">
+            <h3 class="text-center"> Ecco le tue canzoni </h3>
+        </div>
+        <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10 mx-auto text-center">
-                <h3 class="text-center"> Ecco le tue canzoni </h3>
                 <form action="/playlist" method="post">
-                    <ul id="songsList" class="list-group list-group-flush align-content-center mx-auto col-lg-6 col-md-8"> 
-                        <% var i=0 %>
-                        <% while(i<num){ %>
-                            <li id=<%=i %> class="list-group-item" style="display: none;">
-                                <div>
-                                    <input class="form-check-input" name="songs" type="checkbox" id="check<%=i %>" value="" aria-label="<%=i %>">
-                                </div>
-                            </li>
-                            <%i++%>
-                        <%}; %>
-                    </ul>
-                    <button type="button" class="btn  btn-dark btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Salva questa playlist
-                    </button>
+                    <!-- mx-auto col-lg-6 col-md-8 -->
+                    <div>
+                        <ul id="songsList" class="list-group list-group-flush justify-content-center align-items-center"> 
+                            <% var i=0 %>
+                            <% while(i<num){ %>
+                                <li id="li<%=i %>" class="list-group-item px-0" style="display: none;">
+                                    <div id="<%=i %>" class="row justify-content-center align-items-center">
+                                        <div class="col-1 px-0">
+                                            <input class="form-check-input mt-0" name="songs" type="checkbox" id="check<%=i %>" value="" aria-label="<%=i %>" checked>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- <div id=<%=i %> class="row justify-content-center">
+                                        
+                                            <input class="form-check-input" name="songs" type="checkbox" id="check<%=i %>" value="" aria-label="<%=i %>">
+                                        
+                                    </div> -->
+                                </li>
+                                <%i++%>
+                            <%}; %>
+                        </ul>
+                    </div>
+                    <div class="row align-items-end">
+                        <div class="col-lg-8 col-md-10 mx-auto text-center">
+                            <button type="button" class="btn  btn-dark btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                             Salva questa playlist
+                            </button>
+                        </div>
+                    </div>
                       
                       <!-- Modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
