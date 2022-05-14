@@ -1,48 +1,23 @@
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
     font-family: "Rubik", sans-serif;
 }
 
-body{
+body {
     background-color: aliceblue;
 }
-.bi-pc-display{
-    display: inline-block;
-    vertical-align: -0.075em;
-    margin-right: 1em;
-}
-.bi-link{
-    display: inline-block;
-    margin-right: 1em;
-    vertical-align: -0.15em;
-}
-.bi-google{
-    display: inline-block;
-    margin-right: 1em;
-    vertical-align: -0.125em;
-}
 
-.dropdown{
-    cursor: pointer;
-    padding-top: 1em;
-    padding-bottom: 1em;
-}
-
-.dropdown-divider{
-    display: none;
-}
-
-.input-group{
+.input-group {
     padding: 1rem;
 }
 
-.input-group-prepend{
+.input-group-prepend {
     margin-right: -1px;
 }
 
-.input-group-text{
+.input-group-text {
     display: inline-block;
     align-items: center;
     padding: 0.55rem 0.9rem;
@@ -56,4 +31,12 @@ body{
     background-color: aliceblue;
     border: 1px solid white;
     border-radius: 0.25rem;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    /* Height of the footer*/
+    width: 100%;
+    height: 15%;
 }

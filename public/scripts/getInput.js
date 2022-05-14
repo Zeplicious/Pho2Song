@@ -1,16 +1,22 @@
 const upload = document.getElementById("upload");
-const previewContainer = document.getElementById("imagePreview")
-const urlContainer = document.getElementById("urlContainer")
+const previewFileContainer = document.getElementById("filePreview")
+const previewUrlContainer = document.getElementById("urlPreview")
 const inputContainer = document.getElementById("inputContainer")
 const inputForm = document.getElementById("stupido")
+const urlForm = document.getElementById("urlForm")
 
 var urlIndex = 1;
-var arrayFile = [];
+var arrayUrl = [];
+
 
 upload.addEventListener("change", function () {
+    var arrayFile = [];
     var n = 0
     var m = 0
     console.log(this.files)
+    if(!arrayFile[0]){
+        previewFileContainer.innerHTML += "<div class = divider> </div>"
+    }
     for (i of this.files) {
         arrayFile[m] = i;
         m += 1
@@ -23,7 +29,7 @@ upload.addEventListener("change", function () {
             reader.addEventListener("load", function () {
                /*  console.log(i.result)
                 console.log(i) */
-                previewContainer.innerHTML += "<div class='row mx-auto my-auto'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-auto'> <p>" + i.name + "<p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-auto'> <button class='btn-danger btn' onsubmit='FileDelete()'>Elimina</button> </div>"
+                previewFileContainer.innerHTML += "<li class='list-group-item' id='groupItem" + n + "'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-auto'> <p class='my-auto' value= " + n + ">" + i.name + "<p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-auto'> <button class='btn-danger btn' onclick='FileDelete(evnt," + n + ")'>Elimina</button> </div> </li>"
             })
             reader.readAsText(i)
             n += 1
@@ -37,36 +43,33 @@ function onSubmit() {
     console.log("pisellI")
     console.log(document.getElementById("upload").value)
 };
-/* 
+
 function addImage() {
-    var imgText = urlContainer.querySelector("#url");
+    var imgText = urlForm.querySelector("#url");
     display(imgText.value)
 };
 
 function display(res) {
     let resName = res.substring(res.lastIndexOf("/") + 1, res.length);
+    arrayUrl.forEach(urlName => {
+        if(resName == urlName){
+            urlForm.innerHTML += "<div class='alert alert-danger alert-dismissible' role='alert'> Questo Url è già stato inserito. </div>"
+            
+        }
+    })
     if(resName != ""){
-        previewContainer.innerHTML += "<p id='result'> " + resName + "</p>"
+        previewUrlContainer.innerHTML += "<p id='result'> " + resName + "</p>"
         urlIndex++;
     }
     else{
-        inputContainer.innerHTML += "<div class='alert alert-danger' role='alert'> Errore: file non supportato! </div>"
+        urlForm.innerHTML += "<div class='alert alert-danger alert-dismissible' role='alert'> Errore: file non supportato! </div>"
     }    
+    arrayUrl.push(resName)
 }
- */
-/* inputForm.addEventListener('submit', function (evnt) {
+
+function FileDelete(evnt, index){
     evnt.preventDefault();
-    arrayFile.forEach(function (file) {
-        sendFile(file);
-    });
-});
-
-sendFile = function (file) {
-  var formData = new FormData();
-  var request = new XMLHttpRequest();
-
-  formData.set('file', file);
-  console.log(formData.keys)
-  request.open("POST", '/result');
-  request.send(file);
-}; */
+    fileItem = document.getElementById("groupItem" + index);
+    fileItem.remove();
+    //arrayFile.splice(index);
+}
