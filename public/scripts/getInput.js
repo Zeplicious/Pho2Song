@@ -7,10 +7,11 @@ const urlForm = document.getElementById("urlForm")
 
 var urlIndex = 1;
 var arrayUrl = [];
+var arrayFile = []
 
 
 upload.addEventListener("change", function () {
-    var arrayFile = [];
+    arrayFile = [];
     var n = 0
     var m = 0
     console.log(this.files)
@@ -29,11 +30,10 @@ upload.addEventListener("change", function () {
             reader.addEventListener("load", function () {
                /*  console.log(i.result)
                 console.log(i) */
-                previewFileContainer.innerHTML += "<li class='list-group-item' id='groupItem" + n + "'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-auto'> <p class='my-auto' value= " + n + ">" + i.name + "<p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-auto'> <button class='btn-danger btn' >Elimina</button> </div> </div> </li>" /* onclick='FileDelete("+n+")' */
+                previewFileContainer.innerHTML += "<li class='list-group-item' id='groupItem" + n + "'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-auto'> <p class='my-auto' value= " + n + ">" + i.name + "<p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-auto'> <button class='btn-danger btn' onclick='FileDelete(" + n + ")'>Elimina</button> </div> </li>"
                 n += 1
             })
             reader.readAsText(i)
-            
         })
 
     }
@@ -65,7 +65,9 @@ function display(res) {
 }
 
 function FileDelete(index){
-    //evnt.preventDefault();
-    //fileItem = document.getElementById("groupItem" + index).style.display='none';
-    //arrayFile.splice(index);
+    console.log("ueue")
+    console.log(arrayFile[index])
+    fileItem = document.getElementById("groupItem" + index);
+    fileItem.remove();
+    arrayFile.splice(index);
 }
