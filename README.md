@@ -2,7 +2,7 @@
 ### Cose da fare
 escludendo i dettagli
 ##### Frontend
-- [ ] result.ejs
+- [x] result.ejs
 - [ ] input.ejs
 - [ ] p.list compare
 - [ ] pagina storico
