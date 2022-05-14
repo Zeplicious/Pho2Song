@@ -238,16 +238,27 @@ async function work() {
 
 app.post('/result', checkAuthenticated, function (req, res) {
 	console.log(req.files)
-	console.log(req.body.count)
-	res.redirect('/input')
-/* 	i=req.body.album
+	console.log(req.body)
+	if(req.body.album){
+		i=req.body.album
 	console.log(i)
 
 	googleUtils.getPhotos(access_token, albums[i].id)
 		.then(data =>{
 			photos=data
 			res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
-		}) */
+		})
+	}
+	else if(req.body){
+		res.render('/input')
+		/*req.body.urlFile.forEach(url => {
+			
+		})*/
+	}
+	else if(req.files){
+		//req.files.forEach
+		res.render('/input')
+	}
 })
 
 
