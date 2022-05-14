@@ -266,7 +266,11 @@ app.post('/result', checkAuthenticated, function (req, res) {
 app.post('/playlist', checkAuthenticated, function (req, res) {
 	spotifyApi.createPlaylist(req.body.name,{
 		'description': req.body.description 
-	}).then(data=>spotifyApi.addTracksToPlaylist(data.body.id,req.body.songs))
+	}).then(data=>{
+		if(req.body.songs){
+			spotifyApi.addTracksToPlaylist(data.body.id,req.body.songs)
+		}
+	})
 	res.redirect('/')
 })
 
