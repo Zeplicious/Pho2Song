@@ -193,6 +193,12 @@ app.get('/login', checkNotAuthenticated, (req, res) => {
 	res.render('./pages/login.ejs')
 })
 
+app.post('/logout', checkAuthenticated ,(req, res) => {
+	req.logout()
+	p2sUser = null
+	spotifyApi.setAccessToken(null)
+	res.redirect('/')
+})
 
 /************** Listening section of the server setup **************/
 
