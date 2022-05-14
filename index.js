@@ -241,18 +241,20 @@ async function work() {
 	var photo = photos.pop();
 	if (photo == null) return;
 	var song
-	if (photo.baseUrl) song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo) // controlli il tipo; se stringa photo in input
+	
+	console.log(photo.baseUrl)
+	if (photo.baseUrl===undefined) {
+		console.log('file')
+		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
+	} // controlli il tipo; se stringa photo in input
 	else if (photo.baseUrl) song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
-	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
 	return song
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
 	if (req.files) {
-		for (index = 0; index < req.files.length; index++) {
-			req.files[index].getColorsFromUpload();
-			res.render('./pages/result.ejs', { num: req.body.fileCount, p2sUser: p2sUser })
-		}
+		photos= Array.from(req.files.fileUpload);
+		res.render('./pages/result.ejs', { num: photos.length, p2sUser: p2sUser })
 	}
 	else if (req.body.urlFile) {
 		url.getColorsFromUrl();
@@ -266,7 +268,7 @@ app.post('/result', checkAuthenticated, function (req, res) {
 			.then(data => {
 				photos = data
 
-				res.render('./pages/result.ejs', { num: albums[i].mediaItemsCount, p2sUser: p2sUser })
+				res.render('./pages/result.ejs', { photos: photos,num: albums[i].mediaItemsCount, p2sUser: p2sUser })
 			})
 	}
 })
