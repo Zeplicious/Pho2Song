@@ -220,7 +220,7 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 
 /************** Gestione dell'input **************/
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
-	res.render('./pages/input.ejs', { albums: albums })
+	res.render('./pages/input.ejs', { albums: albums, p2sUser: p2sUser })
 });
 
 
@@ -242,9 +242,23 @@ async function work() {
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
-	console.log(req.files)
-	console.log(req.body)
-	if(req.body.album){
+	console.log(req.files.urlFile)
+	console.log(req.files.fileUpload[0])
+	console.log(req.body.urlCount)
+	console.log(req.body.urlFile)
+	if(req.files){
+		/*req.files.fileUpload.forEach(file => {
+			file.getColorsFromUpload();
+		})*/
+		res.render('./pages/result.ejs', { num: req.body.fileCount, p2sUser: p2sUser })
+	}
+	else if(req.body.urlFile){
+		/*req.body.urlFile.forEach(url => {
+			url.getColorsFromUrl();
+		})*/
+		res.render('./pages/result.ejs', { num: req.body.urlCount, p2sUser: p2sUser })
+	}
+	else if(req.body.album){
 		i=req.body.album
 		console.log(i)
 
@@ -254,16 +268,6 @@ app.post('/result', checkAuthenticated, function (req, res) {
 				
 				res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
 			})
-	}
-	else if(req.body){
-		res.render('/input')
-		/*req.body.urlFile.forEach(url => {
-			
-		})*/
-	}
-	else if(req.files){
-		//req.files.forEach
-		res.render('/input')
 	}
 })
 
