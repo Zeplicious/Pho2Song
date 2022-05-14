@@ -227,7 +227,7 @@ app.get('/callback', checkAuthenticated, function (req, res) {
 /************** Gestione del risultato **************/
 var photos
 async function work() {
-	photo=photos.pop();
+	var photo=photos.pop();
 	if(photo == null)return;
 	var song
 	if(photo.baseUrl)song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo) // controlli il tipo; se stringa photo in input
@@ -241,13 +241,14 @@ app.post('/result', checkAuthenticated, function (req, res) {
 	console.log(req.body)
 	if(req.body.album){
 		i=req.body.album
-	console.log(i)
+		console.log(i)
 
-	googleUtils.getPhotos(access_token, albums[i].id)
-		.then(data =>{
-			photos=data
-			res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
-		})
+		googleUtils.getPhotos(access_token, albums[i].id)
+			.then(data =>{
+				photos=data
+				
+				res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
+			})
 	}
 	else if(req.body){
 		res.render('/input')
@@ -279,7 +280,7 @@ app.get('/getSong',function (req, res) {
 		work().then(data=>{
 		console.log(data)
 		if(data)res.send(data)
-		else res.send('fin')
+		else res.send('end')
 	})
 	}catch(error){
 		res.send('fin')

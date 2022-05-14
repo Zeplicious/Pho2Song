@@ -10,36 +10,6 @@
     <link rel="stylesheet" href="/css/result_style.css">
 
     <title>Pho2Song</title>
-    <script>function getSong(id){
-        /* document.getElementById("spin").style.display="none" */
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 200) {
-                if(this.responseText!='fin'){
-                    let embed = 'https://open.spotify.com/embed/track/' + this.responseText + '?utm_source=generator'
-                    let string='<div class="col-11 px-0"><iframe style="border-radius:12px" src="'+embed+ '" width="280" height="80" frameBorder="0" allowfullscreen="1" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div>'//<div class="ratio" style="--bs-aspect-ratio: 20%;"></div>';
-                    document.getElementById("li"+id).style.display="initial"
-                    document.getElementById(id).innerHTML+=string;
-                    document.getElementById("check"+id).value = 'spotify:track:'+this.responseText;
-                    getSong(++id);
-                }
-                else{
-                    document.getElementById("submit").style.display="initial"
-                }
-            }
-        };
-        xmlhttp.open("GET", "getSong", true);
-        xmlhttp.send();
-    }
-    function checkAll(){
-        if(document.getElementById('masterCheck').checked){
-            var checkboxes = document.getElementsByName('songs')
-            for (let index = 0; index < checkboxes.length; index++){
-                checkboxes[index].checked=true
-            }
-        }
-    }
-    </script>
 </head>
 <body onload="getSong(0)">
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
@@ -106,41 +76,53 @@
             <div class="col-lg-8 col-md-10 mx-auto text-center">
                 <form action="/playlist" method="post">
                     <!-- mx-auto col-lg-6 col-md-8 -->
-                    <div>
-                        <ul id="songsList" class="list-group list-group-flush justify-content-center align-items-center"> 
-                            <% var i=0 %>
-                            <% while(i<num){ %>
-                                <li id="li<%=i %>" class="list-group-item px-0" style="display: none;">
-                                    <div id="<%=i %>" class="row justify-content-center align-items-center">
-                                        <div class="col-1 px-0">
-                                             <input class="form-check-input mt-0" name="songs" type="checkbox" id="check<%=i %>" value="" aria-label="<%=i %>" checked>
-                                        </div>
+                    <ul id="songsList" class="list-group list-group-flush justify-content-center align-items-center"> 
+                        <% var i=0 %>
+                        <% while(i<num){ %>
+                            <div class="d-flex justify-content-center">
+                                <div id="spin<%=i %>"  class="spinner-border" role="status"  style="display: none">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <li id="li<%=i %>" class="list-group-item px-0" style="display: none;">
+                                <div id="<%=i %>" class="row justify-content-center align-items-center">
+                                    <div class="col-1 px-0">
+                                        <input class="form-check-input mt-0" name="songs" type="checkbox" id="check<%=i %>" value="" aria-label="<%=i %>" checked onclick='checkValid(this.id)'>
                                     </div>
+                                </div>
                                     
                                     <!-- <div id=<%=i %> class="row justify-content-center">
                                         
                                             <input class="form-check-input" name="songs" type="checkbox" id="check<%=i %>" value="" aria-label="<%=i %>">
                                         
                                     </div> -->
-                                </li>
-                                <%i++%>
+                            </li>
+                            <%i++%>
                             <%}; %>
                         </ul>
-                    </div>
-                    <div id="submit" class="row align-items-end" style="display: none">
-                        <div class="col-lg-8 col-md-10 mx-auto text-center">
-                            <input class="form-check-input" type="checkbox" value="" id="masterCheck" checked onclick="checkAll()">
-                            <label class="form-check-label" for="masterCheck">
-                                Seleziona tutte
-                            </label>
-                            <button  type="button" class="btn  btn-dark btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                             Salva questa playlist
-                            </button>
+                    <div class="d-flex justify-content-center">
+                        <div id="spin<%=i %>"  class="spinner-border" role="status"  style="display: none">
+                        <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
+                   
+                    <div id="submit" class="row align-items-center justify-content-between"  style="display: none;">
+                        <div class="col-6 mx-auto text-center">
+                            <button type="button" id="masterCheck" class="btn btn-outline-secondary"  onclick="checkAll()">Seleziona tutte</button>
+                        </div>
+                        <div class="col-6 mx-auto text-center">
+                            <button  id="submitmodal" type="button" class="btn  btn-dark btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                 Salva questa playlist
+                             </button>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    
                       
                       <!-- Modal -->
-                    <div class="modal fade" name="submitmodal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -215,6 +197,6 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
     </script>
     <!-- <script src="../scripts/main_result_scripts.js"></script> -->
-
+    <script src="../scripts/main_results_scripts.js"></script>
 </body>
 </html>

@@ -29,20 +29,17 @@ upload.addEventListener("change", function () {
             reader.addEventListener("load", function () {
                /*  console.log(i.result)
                 console.log(i) */
-                previewFileContainer.innerHTML += "<li class='list-group-item' id='groupItem" + n + "'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-auto'> <p class='my-auto' value= " + n + ">" + i.name + "<p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-auto'> <button class='btn-danger btn' onclick='FileDelete(evnt," + n + ")'>Elimina</button> </div> </li>"
+                previewFileContainer.innerHTML += "<li class='list-group-item' id='groupItem" + n + "'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-auto'> <p class='my-auto' value= " + n + ">" + i.name + "<p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-auto'> <button class='btn-danger btn' >Elimina</button> </div> </div> </li>" /* onclick='FileDelete("+n+")' */
+                n += 1
             })
             reader.readAsText(i)
-            n += 1
+            
         })
 
     }
     document.getElementById("count").value=m;
 })
 
-function onSubmit() {
-    console.log("pisellI")
-    console.log(document.getElementById("upload").value)
-};
 
 function addImage() {
     var imgText = urlForm.querySelector("#url");
@@ -67,9 +64,8 @@ function display(res) {
     arrayUrl.push(resName)
 }
 
-function FileDelete(evnt, index){
-    evnt.preventDefault();
-    fileItem = document.getElementById("groupItem" + index);
-    fileItem.remove();
+function FileDelete(index){
+    //evnt.preventDefault();
+    //fileItem = document.getElementById("groupItem" + index).style.display='none';
     //arrayFile.splice(index);
 }
