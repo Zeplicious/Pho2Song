@@ -16,6 +16,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const spotifyUtils = require("./utils/spotifyUtils.js");
 const googleUtils = require('./utils/googleUtils.js')
 const colorUtil = require("./utils/getColors.js");
+const { render } = require('express/lib/response');
 
 const bodyParser= require('body-parser');
 const fileUpload = require('express-fileupload');
@@ -26,7 +27,7 @@ function checkAuthenticated(req, res, next) { //controllo se l'utente è autenti
 		return next()
 	}
 	console.log('non autenticato: ' + req)
-	return res.redirect('/')
+	return res.redirect('/login')
 }
 
 function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è autenticato
@@ -192,10 +193,12 @@ app.get('/login', checkNotAuthenticated, (req, res) => {
 	res.render('./pages/login.ejs')
 })
 
+
 /************** Listening section of the server setup **************/
 
 //questo setup fa solo da ponte, al click sul pulsante "log me in with spotify" il browser dell'utente effettua una get a /spotify-login...
 app.get('/spotify-login', checkNotAuthenticated, passport.authenticate('spotify', { scope: scopes }));
+
 
 app.get('/spotify-login/callback', checkNotAuthenticated, passport.authenticate('spotify', {
 	successRedirect: '/',
@@ -206,6 +209,7 @@ app.get('/spotify-login/callback', checkNotAuthenticated, passport.authenticate(
 //anche se non strettamente necessario per comprensibilità ho utilizzato lo stesso "flow" utilizzato per spotify
 //Passport.authenticate per ottenere l'autorizzazione nell'utilizzare lo scope photoslibrary.readonly dell'utente
 app.get('/google-login', checkAuthenticated, passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/photoslibrary.readonly', 'https://www.googleapis.com/auth/userinfo.profile'] })); //function(req, res){  //chiamato dal file input#.ejs
+
 
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o successo
 app.get('/google-login/callback', checkAuthenticated, passport.authenticate('google', {
@@ -218,6 +222,7 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
 	res.render('./pages/input.ejs', { albums: albums })
 });
+
 
 app.get('/callback', checkAuthenticated, function (req, res) {
 	res.render('./pages/input.ejs', { albums: albums })
@@ -287,7 +292,19 @@ app.get('/getSong',function (req, res) {
 })
 
 
+/************** Funzionalità: Playlist analyzer **************/
+app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
+	spotifyApi.getUserPlaylists().then(data => {
+		res.render('./pages/plist-analyzer.ejs', {playlists: data.body.items, p2sUser: p2sUser})  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
+	})
+})
 
+
+app.post('/plist-analyzer', (req, res) => {
+	spotifyUtils.analyzePlaylist(spotifyApi, req.body.playlistID).then(data => {
+		res.send(data)
+	})
+})
 
 app.listen(8888, () => {
 	console.log('Server listening on http://localhost:8888/');

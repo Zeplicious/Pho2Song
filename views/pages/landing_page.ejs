@@ -10,66 +10,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="/css/landing_page_style.css">
+    <link rel="stylesheet" href="./css/landing_page_style.css">
 
     <title>Pho2Song-Homepage</title>
 </head>
 
 <body>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Pho2Song</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="http://localhost:8888/input">Photo to Song</a>
-                    </li>
-                    <li class="nav-item">
-                        <!-- <a class="nav-link" href="#immagini">P.list analyzer</a> -->
-                        <a tabindex="0" class="nav-link" data-bs-toggle="popover" data-bs-trigger="focus" title="Coming Soon" data-bs-content="Questa feature arriverà in futuro">P.list analyzer</a>
-                    </li>
-                    <li class="nav-item">
-                        <!-- <a class="nav-link" href="#recensioni">P.list compare</a> -->
-                        <a tabindex="0" class="nav-link" data-bs-toggle="popover" data-bs-trigger="focus" title="Coming Soon" data-bs-content="Questa feature arriverà in futuro">P.list compare</a>
-                    </li>
-                    <li class="nav-item">
-                        <!-- <a class="nav-link" href="#newsletter">Song hystory</a> -->
-                        <a tabindex="0" class="nav-link" data-bs-toggle="popover" data-bs-trigger="focus" title="Coming Soon" data-bs-content="Questa feature arriverà in futuro">Song hystory</a>
-                    </li>
-                </ul>
-                <% if (!p2sUser) { %>
-                    <div class="text-end">
-                        <a href="./login" class="btn btn-outline-success me-2">Login</a>
-                    </div>
-                    <% } else { %>
-                        <div class="dropdown">
-                            <a href="#" class="d-block link-light text-decoration-none dropdown-toggle"
-                                id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="<%= p2sUser.user_image %>" alt="mdo" width="34" height="34"
-                                    class="rounded-circle">
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark text-small shadow"
-                                aria-labelledby="dropdownUser2"
-                                style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 34px);"
-                                data-popper-placement="bottom-end">
-                                <li><a class="dropdown-item" href="#">New project...</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Sign out</a></li>
-                            </ul>
-                        </div>
-                        <% } %>
-            </div>
-        </div>
-    </nav>
+    
+    <%- include("../partials/navbar.ejs"); %> 
 
     <header class="head-banner text-white text-center">
         <div class="container">
@@ -98,21 +46,25 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="mb-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-award" viewBox="0 0 16 16">
-                            <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702 1.509.229z"/>
-                            <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/>
-                          </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                            class="bi bi-award" viewBox="0 0 16 16">
+                            <path
+                                d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702 1.509.229z" />
+                            <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z" />
+                        </svg>
                         <h3>Sperimentale</h3>
                         <p class="lead mb-8">Aiutaci a testare questa nuova funzionalità per aiutarci a migliorare</p>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="mb-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-music-note-beamed" viewBox="0 0 16 16">
-                            <path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13c0-1.104 1.12-2 2.5-2s2.5.896 2.5 2zm9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2z"/>
-                            <path fill-rule="evenodd" d="M14 11V2h1v9h-1zM6 3v10H5V3h1z"/>
-                            <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4V2.905z"/>
-                          </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                            class="bi bi-music-note-beamed" viewBox="0 0 16 16">
+                            <path
+                                d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13c0-1.104 1.12-2 2.5-2s2.5.896 2.5 2zm9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2z" />
+                            <path fill-rule="evenodd" d="M14 11V2h1v9h-1zM6 3v10H5V3h1z" />
+                            <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4V2.905z" />
+                        </svg>
                         <h3>Divertente</h3>
                         <p class="lead mb-8">Usa le foto più strane e divertiti a scoprire quale risultato otterrai</p>
                     </div>
@@ -283,7 +235,8 @@
         </script>
 
     <!-- Local scripts -->
-    <script src="../scripts/landing_page_scripts.js"></script>
+    <script src="./scripts/navbar_scripts.js"></script>
+    <script src="./scripts/landing_page_scripts.js"></script>
 
 </body>
 
