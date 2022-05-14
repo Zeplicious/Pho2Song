@@ -18,7 +18,7 @@ const googleUtils = require('./utils/googleUtils.js')
 const colorUtil = require("./utils/getColors.js");
 const { render } = require('express/lib/response');
 
-const bodyParser= require('body-parser');
+const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 
 /**************  Passport declarations **************/
@@ -161,7 +161,7 @@ app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, "/public")));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 /**************  Gestione della home **************/
 
@@ -170,7 +170,7 @@ var p2sUser = null
 app.get('/', /* checkNotAuthenticated, */(req, res) => {
 	if (spotifyApi.getAccessToken()) {
 		spotifyApi.getMe().then(data => {
-			
+
 			spotifyUtils.getUserTaste(spotifyApi)
 				.then(body => userTasteInfo = body)
 
@@ -193,7 +193,7 @@ app.get('/login', checkNotAuthenticated, (req, res) => {
 	res.render('./pages/login.ejs')
 })
 
-app.post('/logout', checkAuthenticated ,(req, res) => {
+app.post('/logout', checkAuthenticated, (req, res) => {
 	req.logout()
 	p2sUser = null
 	spotifyApi.setAccessToken(null)
@@ -238,41 +238,35 @@ app.get('/callback', checkAuthenticated, function (req, res) {
 /************** Gestione del risultato **************/
 var photos
 async function work() {
-	var photo=photos.pop();
-	if(photo == null)return;
+	var photo = photos.pop();
+	if (photo == null) return;
 	var song
-	if(photo.baseUrl)song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo) // controlli il tipo; se stringa photo in input
-	else if(photo.baseUrl)song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
+	if (photo.baseUrl) song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo) // controlli il tipo; se stringa photo in input
+	else if (photo.baseUrl) song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
 	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
 	return song
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
-	console.log(req.files.urlFile)
-	console.log(req.files.fileUpload[0])
-	console.log(req.body.urlCount)
-	console.log(req.body.urlFile)
-	if(req.files){
-		/*req.files.fileUpload.forEach(file => {
-			file.getColorsFromUpload();
-		})*/
-		res.render('./pages/result.ejs', { num: req.body.fileCount, p2sUser: p2sUser })
+	if (req.files) {
+		for (index = 0; index < req.files.length; index++) {
+			req.files[index].getColorsFromUpload();
+			res.render('./pages/result.ejs', { num: req.body.fileCount, p2sUser: p2sUser })
+		}
 	}
-	else if(req.body.urlFile){
-		/*req.body.urlFile.forEach(url => {
-			url.getColorsFromUrl();
-		})*/
+	else if (req.body.urlFile) {
+		url.getColorsFromUrl();
 		res.render('./pages/result.ejs', { num: req.body.urlCount, p2sUser: p2sUser })
 	}
-	else if(req.body.album){
-		i=req.body.album
+	else if (req.body.album) {
+		i = req.body.album
 		console.log(i)
 
 		googleUtils.getPhotos(access_token, albums[i].id)
-			.then(data =>{
-				photos=data
-				
-				res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
+			.then(data => {
+				photos = data
+
+				res.render('./pages/result.ejs', { num: albums[i].mediaItemsCount, p2sUser: p2sUser })
 			})
 	}
 })
@@ -280,24 +274,24 @@ app.post('/result', checkAuthenticated, function (req, res) {
 
 
 app.post('/playlist', checkAuthenticated, function (req, res) {
-	spotifyApi.createPlaylist(req.body.name,{
-		'description': req.body.description 
-	}).then(data=>{
-		if(req.body.songs){
-			spotifyApi.addTracksToPlaylist(data.body.id,req.body.songs)
+	spotifyApi.createPlaylist(req.body.name, {
+		'description': req.body.description
+	}).then(data => {
+		if (req.body.songs) {
+			spotifyApi.addTracksToPlaylist(data.body.id, req.body.songs)
 		}
 	})
 	res.redirect('/')
 })
 
-app.get('/getSong',function (req, res) {
-	try{
-		work().then(data=>{
-		console.log(data)
-		if(data)res.send(data)
-		else res.send('end')
-	})
-	}catch(error){
+app.get('/getSong', function (req, res) {
+	try {
+		work().then(data => {
+			console.log(data)
+			if (data) res.send(data)
+			else res.send('end')
+		})
+	} catch (error) {
 		res.send('fin')
 	}
 })
