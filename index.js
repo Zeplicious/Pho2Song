@@ -237,17 +237,17 @@ async function work() {
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
-	console.log(req.files)
+	/* console.log(req.files)
 	console.log(req.body.count)
-	res.redirect('/input')
-/* 	i=req.body.album
+	res.redirect('/input') */
+	i=req.body.album
 	console.log(i)
 
 	googleUtils.getPhotos(access_token, albums[i].id)
 		.then(data =>{
 			photos=data
 			res.render('./pages/result.ejs',{num: albums[i].mediaItemsCount,p2sUser: p2sUser})
-		}) */
+		})
 })
 
 
@@ -255,7 +255,11 @@ app.post('/result', checkAuthenticated, function (req, res) {
 app.post('/playlist', checkAuthenticated, function (req, res) {
 	spotifyApi.createPlaylist(req.body.name,{
 		'description': req.body.description 
-	}).then(data=>spotifyApi.addTracksToPlaylist(data.body.id,req.body.songs))
+	}).then(data=>{
+		if(req.body.songs){
+			spotifyApi.addTracksToPlaylist(data.body.id,req.body.songs)
+		}
+	})
 	res.redirect('/')
 })
 
