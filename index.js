@@ -299,16 +299,10 @@ app.get('/getSong', function (req, res) {
 
 /************** Funzionalità: Playlist analyzer **************/
 app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
-	spotifyApi.getUserPlaylists().then(data => {
-		(data.body.items).forEach(item => {
-			let index = data.body.items.indexOf(item)
+	spotifyApi.getUserPlaylists({limit: 50}).then(data => {
+		var playlists = data.body.items.filter(item=>item.tracks.total != 0)
 
-			if(item.tracks.total == 0) {
-				data.body.items.splice(index, 1)
-			}
-		});
-
-		res.render('./pages/plist-analyzer.ejs', {playlists: data.body.items, p2sUser: p2sUser})  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
+		res.render('./pages/plist-analyzer.ejs', {playlists: playlists, p2sUser: p2sUser})  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
 	})
 })
 
