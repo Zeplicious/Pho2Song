@@ -37,6 +37,11 @@
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <form action="/multipleFiles" method="post" enctype="multipart/form-data">
+                                        <div class="row mx-auto text-center my-2">
+                                            <div class="col-lg-6 col-xl-6 col-xxl-6 mx-auto">
+                                                <h4>Ricorda di scegliere tutte le foto una sola volta, altrimenti verranno sovrascritte!</h4>
+                                            </div>
+                                        </div>
                                         <div class="row mx-auto">
                                             <div id="sezione-input" class="col-lg-10 col-xl-10 col-xxl-10 mx-auto my-2 justify-content-center my-auto">
                                                 <input id="upload" class="form-control" type="file" name="images" accept="image/*" multiple>
@@ -225,7 +230,7 @@
 
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-            <!-- <script src="/scripts/input_scripts.js"></script> -->
+            <script src="/scripts/input_scripts.js"></script>
             <script src="/scripts/navbar_scripts.js"></script>
             <!-- Option 2: Separate Popper and Bootstrap JS -->
             <!--
