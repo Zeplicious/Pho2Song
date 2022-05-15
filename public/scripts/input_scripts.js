@@ -17,7 +17,7 @@ upload.addEventListener("change", function () {
     console.log("ueu")
     console.log(this.files)
     console.log(this.files[0])
-    console.log(URL.createObjectURL(this.files[0]))
+    //console.log(URL.createObjectURL(this.files[0]))
     console.log(this.files.fileUpload)
     for (indice = 0; indice < this.files.length; indice++){
         tempArrayFile[indice] = this.files[indice];
@@ -67,7 +67,7 @@ function display(res) {
     if (resName != "" && urlIsNew) {
         for (index = 1; index <= urlIndex; index++) {
             if(document.getElementById("urlFile" + index) == null || document.getElementById("urlFile" + index).value == null){
-                previewUrlContainer.innerHTML += "<li class='list-group-item' id='urlItem" + urlIndex + "'> <input type='text' id='urlFile" + urlIndex + "' value=" + res + " style='display: none'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2'> <p class='my-2' value= " + index + ">" + resName + "</p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-2'> <button class='btn-danger btn' onclick='UrlDelete(" + index + ")'>Elimina</button> </div> </li>"
+                previewUrlContainer.innerHTML += "<li class='list-group-item' id='urlItem" + urlIndex + "'> <input type='text' name='urls' id='urlFile" + urlIndex + "' value=" + res + " style='display: none'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2'> <p class='my-2' value= " + index + ">" + resName + "</p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-2'> <button class='btn-danger btn' onclick='UrlDelete(" + index + ")'>Elimina</button> </div> </li>"
                 arrayUrl.push(res)
                 urlIsEmpty = true;
                 break;
@@ -77,7 +77,7 @@ function display(res) {
             }
         }
         if(!urlIsEmpty){
-            previewUrlContainer.innerHTML += "<li class='list-group-item' id='urlItem" + urlIndex + "'> <input type='text' id='urlFile" + urlIndex + "' value=" + res + " style='display: none'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2'> <p class='my-2' value= " + urlIndex + ">" + resName + "</p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-2'> <button class='btn-danger btn' onclick='UrlDelete(" + urlIndex + ")'>Elimina</button> </div> </li>"
+            previewUrlContainer.innerHTML += "<li class='list-group-item' id='urlItem" + urlIndex + "'> <input type='text'  name='urls' id='urlFile" + urlIndex + "' value=" + res + " style='display: none'> <div class='row mx-auto my-2'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2'> <p class='my-2' value= " + urlIndex + ">" + resName + "</p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-2'> <button class='btn-danger btn' onclick='UrlDelete(" + urlIndex + ")'>Elimina</button> </div> </li>"
             urlIndex++;
             arrayUrl.push(res)
         }

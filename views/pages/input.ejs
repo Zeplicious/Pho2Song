@@ -36,7 +36,7 @@
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <form action="/multipleFiles" method="post" enctype="multipart/form-data">
+                                    <form action="/result" method="post" enctype="multipart/form-data">
                                         <div class="row mx-auto text-center my-2">
                                             <div class="col-lg-6 col-xl-6 col-xxl-6 mx-auto">
                                                 <h4>Ricorda di scegliere tutte le foto una sola volta, altrimenti verranno sovrascritte!</h4>
@@ -51,6 +51,16 @@
                                                 <input class="btn btn-primary " type="submit" value="Invia">
                                             </div>
                                         </div>
+                                        <div class="divider">
+                                            <div class="row mx-auto">
+                                                <div class="col-12 mx-auto">
+    
+                                                    <ul class="list-group list-group-flush" id="filePreview">
+    
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </form>
 
                                         <!-- style="visibility: hidden;width: 0px; height: 0px; display: none;" -->
@@ -61,18 +71,6 @@
                                             <path
                                                 d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V1Zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0Zm2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0ZM9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5ZM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5ZM1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2H1.5Z" />
                                         </svg>Dal tuo computer</a> -->
-
-
-                                    <div class="divider">
-                                        <div class="row mx-auto">
-                                            <div class="col-12 mx-auto">
-
-                                                <ul class="list-group list-group-flush" id="filePreview">
-
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -107,12 +105,12 @@
                                             <button type="submit" class="btn btn-danger">Invia</button>
                                         </div>
                                     </div>
-                                </form>
-                                <div class="row mx-auto">
-                                    <div class="col-12 my-auto">
-                                        <div class="image-preview" id="urlPreview"></div>
+                                    <div class="row mx-auto">
+                                        <div class="col-12 my-auto">
+                                            <div class="image-preview" id="urlPreview"></div>
+                                        </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                         <div class="accordion-item">
