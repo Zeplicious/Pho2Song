@@ -261,8 +261,9 @@ app.post('/result', checkAuthenticated, function (req, res) {
 		var urls=Array()
 		res.render('./pages/result.ejs', { photos:null, num: photos.length, p2sUser: p2sUser })
 	}
-	else if (req.body.urlFile) {
-		url.getColorsFromUrl();
+	else if (req.body.urlText) {
+		photos = Array.from(req.body.urlText)
+		photos.getColorsFromUrl();
 		res.render('./pages/result.ejs', { photos:null,num: req.body.urlCount, p2sUser: p2sUser })
 	}
 	else if (req.body.album) {
