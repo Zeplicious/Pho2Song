@@ -253,12 +253,6 @@ app.get('/input', checkAuthenticated, function (req, res) { // input prima del l
 	res.render('./pages/input.ejs', { albums: albums, p2sUser: p2sUser })
 });
 
-
-app.get('/callback', checkAuthenticated, function (req, res) {
-	res.render('./pages/input.ejs', { albums: albums })
-})
-
-
 /************** Gestione del risultato **************/
 var photos = Array()
 async function work() {
@@ -277,13 +271,13 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 		photos= req.files;
 		if(photos.length!=0){
 			var urls=Array();
-			console.log("files")
+			
 			for (let index = 0; index < photos.length; index++) {
 				urls.push(photos[index].path.substring(6));
 			}
 			res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
 		}
-		res.redirect('/input');
+		else res.redirect('/input');
 	}
 	else if (req.body.urls) {//finito
 		console.log("urls")
@@ -291,7 +285,9 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 			photos.push(req.body.urls)
 		}
 		else photos = Array.from(req.body.urls)
-		res.render('./pages/result.ejs', { urls: photos,num: photos.length, p2sUser: p2sUser })
+		if(photos.length!=0){
+			res.render('./pages/result.ejs', { urls: photos,num: photos.length, p2sUser: p2sUser })
+		}
 	}
 	else if (req.body.album) {//finito
 		console.log("albums")
@@ -306,6 +302,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 				res.render('./pages/result.ejs', { urls: photos,num: albums[i].mediaItemsCount, p2sUser: p2sUser })
 			})
 	}
+	else res.redirect('/input');
 	
 })
 
