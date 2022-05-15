@@ -102,13 +102,50 @@
                 </div>
             
             
+                
             <div class="col-md-4 order-md-last order-first mb-3">
+                
                 <ul class="list-group list-group-flush">
+                    <div id="carouselExampleControls" class="carousel slide order-last carousel-fade order-md-first rounded-2" data-bs-ride="carousel" style="display: none;">
+                        <div class="carousel-inner align-items-center justify-content-center rounded-2">
+                        <% var flag= true%>
+                        <% var i=0 %> 
+                        <% if(photos)photos.forEach(element => { %>
+                        
+                        <% if (flag) { %>
+                            <div class="carousel-item active text-center  justify-content-center rounded-1">
+                                <img src="<%=element.baseUrl%>" class="imgg d-block w-100 rounded-2" alt="...">
+                                <div class="carousel-caption d-block">
+                                    <p id="text<%= i %>"></p>
+                                </div>      
+                            </div>
+                        <% flag=false%>
+                        <% } else { %>
+                            <div class="carousel-item text-center  justify-content-center rounded-1">
+                                <img src="<%=element.baseUrl%>"class="imgg d-block w-100 rounded-2"  alt="...">
+                                <div class="carousel-caption d-block">
+                                    <p id="text<%= i %>"></p>
+                                </div>      
+                            </div>
+                            
+                        <% }%>
+                        <% i++; %> 
+                        <% }) %>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
                     <li class="my-list-group-item list-group-item">
                         <h4 class="ms-3">Ci siamo...</h4>
                         <p class="ms-3">Abbiamo analizzato le tue incredibili e sensazionali foto e abbiamo scelto queste canzoni per te in base a quelli che pensiamo possano essere i tuoi gusti!
                         </p>
-                    </li>  
+                    </li> 
                     <li class="my-list-group-item list-group-item">
                         <h4 class="ms-3">Ok... ora?</h4>
                         <p class="ms-3">Ora prenditi del tempo per ascoltare le canzoni proposte e, se sei soddisfatto del nostro lavoro, scegli quali canzoni tenere e crea la tua playlist!

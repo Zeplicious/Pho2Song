@@ -262,24 +262,30 @@ app.get('/callback', checkAuthenticated, function (req, res) {
 var photos
 async function work() {
 	var photo = photos.pop();
+	console.log("daje")
 	if (photo == null) return;
 	var song
-	if (photo.baseUrl) song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo) // controlli il tipo; se stringa photo in input
+	console.log("daje")
+	if (photo.baseUrl===undefined) {
+		console.log("daje")
+		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
+	} // controlli il tipo; se stringa photo in input
 	else if (photo.baseUrl) song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
-	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
+	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
+	console.log("daje")
 	return song
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
 	if (req.files) {
-		for (index = 0; index < req.files.length; index++) {
-			req.files[index].getColorsFromUpload();
-			res.render('./pages/result.ejs', { num: req.body.fileCount, p2sUser: p2sUser })
-		}
+		photos= Array.from(req.files.fileUpload);
+		console.log(photos)
+		var urls=Array()
+		res.render('./pages/result.ejs', { photos:null, num: photos.length, p2sUser: p2sUser })
 	}
 	else if (req.body.urlFile) {
 		url.getColorsFromUrl();
-		res.render('./pages/result.ejs', { num: req.body.urlCount, p2sUser: p2sUser })
+		res.render('./pages/result.ejs', { photos:null,num: req.body.urlCount, p2sUser: p2sUser })
 	}
 	else if (req.body.album) {
 		i = req.body.album
@@ -289,7 +295,7 @@ app.post('/result', checkAuthenticated, function (req, res) {
 			.then(data => {
 				photos = data
 
-				res.render('./pages/result.ejs', { num: albums[i].mediaItemsCount, p2sUser: p2sUser })
+				res.render('./pages/result.ejs', { photos: photos,num: albums[i].mediaItemsCount, p2sUser: p2sUser })
 			})
 	}
 })
@@ -322,16 +328,9 @@ app.get('/getSong', function (req, res) {
 
 /************** Funzionalità: Playlist analyzer **************/
 app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
-	spotifyApi.getUserPlaylists().then(data => {
-		(data.body.items).forEach(item => {
-			let index = data.body.items.indexOf(item)
-
-			if(item.tracks.total == 0) {
-				data.body.items.splice(index, 1)
-			}
-		});
-
-		res.render('./pages/plist-analyzer.ejs', {playlists: data.body.items, p2sUser: p2sUser})  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
+	spotifyApi.getUserPlaylists({limit: 50}).then(data => {
+		var playlists = data.body.items.filter(item=>item.tracks.total != 0)
+		res.render('./pages/plist-analyzer.ejs', {playlists: playlists, p2sUser: p2sUser})  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
 	})
 })
 

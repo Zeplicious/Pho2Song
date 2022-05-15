@@ -7,6 +7,26 @@ body{
         padding-bottom: 4rem;
     }
 }
+ /* .img{
+    width: 300px; 
+    height: 300px; 
+    overflow: hidden;
+} */
+/* .carousel-inner{
+    max-width: 300px;
+    max-height:300px
+} */
+.imgg{
+    filter: blur(2px);
+    
+}
+.carousel-item img{
+    object-fit: cover;
+    object-position:center;
+    height:30vh;
+    width: 25vw;
+}
+
 .list-group:first-child{
     border-top-left-radius: 10%;
     border-top-right-radius: 10%;

@@ -18,6 +18,7 @@ upload.addEventListener("change", function () {
     var n = 0
     console.log(this.files)
     console.log(this.files[0])
+    console.log(URL.createObjectURL(this.files[0]))
     console.log(this.files.fileUpload)
     for (indice = 0; indice < this.files.length; indice++) /*i of this.files)*/ {
         tempArrayFile[indice] = this.files[indice];
