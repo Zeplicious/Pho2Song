@@ -95,7 +95,6 @@ passport.use('google',
 			//ottengo gli album dell'utente tramite accessToken
 			let data = await googleUtils.getAlbums(accessToken)
 			albums = data
-			album = albums[0].id
 			access_token = accessToken
 			return cb(null, profile)
 		})
@@ -302,6 +301,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 				res.render('./pages/result.ejs', { urls: photos,num: albums[i].mediaItemsCount, p2sUser: p2sUser })
 			})
 	}
+	res.redirect('/');
 })
 
 
