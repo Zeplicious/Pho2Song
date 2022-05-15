@@ -180,7 +180,7 @@ const upload = multer({ storage : fileStorageEngine })
 
 app.post('/multipleFiles', upload.array("images", 50), (req,res) => {
 	console.log(req.files)
-
+	colorUtil.getColorsFromUpload(req.files[0])
 	res.send("Multiple file uploaded")
 
 });
