@@ -20,6 +20,7 @@ const { render } = require('express/lib/response');
 
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const { FileArray } = require('express-fileupload');
 
 /**************  Passport declarations **************/
 function checkAuthenticated(req, res, next) { //controllo se l'utente è autenticato
@@ -239,26 +240,30 @@ app.get('/callback', checkAuthenticated, function (req, res) {
 var photos
 async function work() {
 	var photo = photos.pop();
+	console.log("daje")
 	if (photo == null) return;
 	var song
-	
-	console.log(photo.baseUrl)
+	console.log("daje")
 	if (photo.baseUrl===undefined) {
-		console.log('file')
+		console.log("daje")
 		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
 	} // controlli il tipo; se stringa photo in input
 	else if (photo.baseUrl) song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
+	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
+	console.log("daje")
 	return song
 }
 
 app.post('/result', checkAuthenticated, function (req, res) {
 	if (req.files) {
 		photos= Array.from(req.files.fileUpload);
-		res.render('./pages/result.ejs', { num: photos.length, p2sUser: p2sUser })
+		console.log(photos)
+		var urls=Array()
+		res.render('./pages/result.ejs', { photos:null, num: photos.length, p2sUser: p2sUser })
 	}
 	else if (req.body.urlFile) {
 		url.getColorsFromUrl();
-		res.render('./pages/result.ejs', { num: req.body.urlCount, p2sUser: p2sUser })
+		res.render('./pages/result.ejs', { photos:null,num: req.body.urlCount, p2sUser: p2sUser })
 	}
 	else if (req.body.album) {
 		i = req.body.album
@@ -303,7 +308,6 @@ app.get('/getSong', function (req, res) {
 app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
 	spotifyApi.getUserPlaylists({limit: 50}).then(data => {
 		var playlists = data.body.items.filter(item=>item.tracks.total != 0)
-
 		res.render('./pages/plist-analyzer.ejs', {playlists: playlists, p2sUser: p2sUser})  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
 	})
 })
