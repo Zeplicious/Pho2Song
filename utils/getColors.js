@@ -2,18 +2,16 @@ const { get } = require('express/lib/request');
 const res = require('express/lib/response');
 const fetch = require('node-fetch')
 const secrets = require('../secrets')
-
+const FormData=require('form-data')
 const client_id = secrets.imagga.client_id
 const client_secret = secrets.imagga.client_secret;
 
 async function getColorsFromUpload(image){
-    for (let index = 0; index < 1000000000; index++){}
-    return null
-    const body = new FormData
-    body.append("image", image)
+    /* for (let index = 0; index < 1000000000; index++){}
+    return null */
 
     var response = await fetch("https://api.imagga.com/v2/uploads", {
-        body,
+        body: {"image": image},
         headers: {
           Authorization: "Basic "+Buffer.from(authString).toString('base64'),
         "Content-Type": "multipart/form-data"
@@ -22,6 +20,7 @@ async function getColorsFromUpload(image){
     var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
     var auth = client_id+':'+client_secret;
     var authString = auth.toString();
+    console.log("skere")
     response = await fetch(url, {
 	    method: 'get',
 	    headers: {

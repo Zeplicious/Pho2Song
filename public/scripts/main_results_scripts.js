@@ -6,7 +6,7 @@ function getSong(id){
             if(this.responseText!='end'){
                 let embed = 'https://open.spotify.com/embed?uri=' +encodeURIComponent('spotify:track:'+this.responseText)
                 let string='<div class="col-11 px-0"><iframe style="border-radius:12px" src="'+embed+ '" allowtransparency="true" width="280" height="80" frameBorder="0" allow="encrypted-media;"></iframe></div>'//<div class="ratio" style="--bs-aspect-ratio: 20%;"></div>';
-                //document.getElementById("text"+id).innerText=this.responseText;
+                document.getElementById("text"+id).innerText=this.responseText;
                 document.getElementById(id).innerHTML+=string;
                 document.getElementById("li"+id).style.display="initial"
                 document.getElementById("check"+id).value = 'spotify:track:'+this.responseText;
