@@ -169,7 +169,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 /**************  Aux function multer **************/
 const fileStorageEngine = multer.diskStorage({
 	destination: (req, file, callback) => {
-	  callback(null, './views/pages/images')
+	  callback(null, './public/images')
 	},
 	filename: (req, file, callback) => {
 	  callback(null, Date.now()  + '--' + file.originalname);
