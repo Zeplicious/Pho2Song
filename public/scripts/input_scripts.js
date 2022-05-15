@@ -43,7 +43,6 @@ upload.addEventListener("change", function () {
         }
     })
     fileIsNew = true;
-    document.getElementById("fileCount").value=fileIndex;
 
     //document.getElementById("sezione-input").innerHTML += "<input type='file' class='form-control' id='upload' name='fileUpload' accept='image/png, image/jpeg' multiple>"
 });
@@ -86,7 +85,6 @@ function display(res) {
         urlForm.innerHTML += "<div class='alert alert-danger alert-dismissible' role='alert'> Errore: file non supportato!<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button> </div>"
     }
     urlIsNew = true;
-    document.getElementById("urlCount").value = urlIndex;
 }
 
 function FileDelete(index) {
