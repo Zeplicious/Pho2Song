@@ -117,7 +117,6 @@ passport.use('google',
 			//ottengo gli album dell'utente tramite accessToken
 			let data = await googleUtils.getAlbums(accessToken)
 			albums = data
-			album = albums[0].id
 			access_token = accessToken
 			return cb(null, profile)
 		})
@@ -218,7 +217,9 @@ app.get('/', /* checkNotAuthenticated, */(req, res) => {
 		spotifyApi.getMe().then(data => {
 
 			spotifyUtils.getUserTaste(spotifyApi)
-				.then(body => userTasteInfo = body)
+				.then(body => {
+					userTasteInfo = body
+				})
 
 			p2sUser = {
 				username: data.body.display_name,
@@ -275,12 +276,6 @@ app.get('/input', checkAuthenticated, function (req, res) { // input prima del l
 	res.render('./pages/input.ejs', { albums: albums, p2sUser: p2sUser })
 });
 
-
-app.get('/callback', checkAuthenticated, function (req, res) {
-	res.render('./pages/input.ejs', { albums: albums })
-})
-
-
 /************** Gestione del risultato **************/
 var photos = Array()
 async function work() {
@@ -291,29 +286,34 @@ async function work() {
 		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
 	} // controlli il tipo; se stringa photo in input
 	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
-	console.log("daje")
 	return song
 }
 
 app.post('/result',upload.array("images", 50), checkAuthenticated, function (req, res) {
-	if (req.files) {
+	if (req.files) {//finito
 		photos= req.files;
-		var urls=Array();
-		for (let index = 0; index < photos.length; index++) {
-			urls.push(photos[index].path);
+		if(photos.length!=0){
+			var urls=Array();
 			
+			for (let index = 0; index < photos.length; index++) {
+				urls.push(photos[index].path.substring(6));
+			}
+			res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
 		}
-		console.log(urls)
-		res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
+		else res.redirect('/input');
 	}
 	else if (req.body.urls) {//finito
+		console.log("urls")
 		if (typeof photo == String){
 			photos.push(req.body.urls)
 		}
 		else photos = Array.from(req.body.urls)
-		res.render('./pages/result.ejs', { urls: photos,num: photos.length, p2sUser: p2sUser })
+		if(photos.length!=0){
+			res.render('./pages/result.ejs', { urls: photos,num: photos.length, p2sUser: p2sUser })
+		}
 	}
 	else if (req.body.album) {//finito
+		console.log("albums")
 		i = req.body.album
 		googleUtils.getPhotos(access_token, albums[i].id)
 			.then(data => {
@@ -325,6 +325,8 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 				res.render('./pages/result.ejs', { urls: photos,num: albums[i].mediaItemsCount, p2sUser: p2sUser })
 			})
 	}
+	else res.redirect('/input');
+	
 })
 
 
@@ -343,7 +345,6 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 app.get('/getSong', function (req, res) {
 	try {
 		work().then(data => {
-			console.log(data)
 			if (data) res.send(data)
 			else res.send('end')
 		})
