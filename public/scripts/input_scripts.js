@@ -47,6 +47,8 @@ upload.addEventListener("change", function () {
     })
     fileIsNew = true;
     document.getElementById("fileCount").value=fileIndex;
+
+    document.getElementById("sezione-input").innerHTML += "<input type='file' class='form-control' id='upload' name='fileUpload' accept='image/png, image/jpeg' multiple>"
 })
 
 function addImage() {
@@ -92,4 +94,11 @@ function UrlDelete(index){
     urlItem = null;
     arrayUrl.splice(index-1);
     urlIndex--;
+}
+
+/* Prova nuovo upload di files */
+
+function injectFileInputTag() {
+    console.log("Sono nello script")
+    document.getElementById("sezione-input").innerHTML += "<input type='file' name='userPhoto' multiple onchange='injectFileInputTag()'/>"
 }
