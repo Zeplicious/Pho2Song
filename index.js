@@ -275,14 +275,18 @@ async function work() {
 app.post('/result',upload.array("images", 50), checkAuthenticated, function (req, res) {
 	if (req.files) {//finito
 		photos= req.files;
-		var urls=Array();
-		for (let index = 0; index < photos.length; index++) {
-			urls.push(photos[index].path.substring(6));
-			
+		if(photos.length!=0){
+			var urls=Array();
+			console.log("files")
+			for (let index = 0; index < photos.length; index++) {
+				urls.push(photos[index].path.substring(6));
+			}
+			res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
 		}
-		res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
+		res.redirect('/input');
 	}
 	else if (req.body.urls) {//finito
+		console.log("urls")
 		if (typeof photo == String){
 			photos.push(req.body.urls)
 		}
@@ -290,6 +294,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 		res.render('./pages/result.ejs', { urls: photos,num: photos.length, p2sUser: p2sUser })
 	}
 	else if (req.body.album) {//finito
+		console.log("albums")
 		i = req.body.album
 		googleUtils.getPhotos(access_token, albums[i].id)
 			.then(data => {
@@ -301,7 +306,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 				res.render('./pages/result.ejs', { urls: photos,num: albums[i].mediaItemsCount, p2sUser: p2sUser })
 			})
 	}
-	res.redirect('/');
+	
 })
 
 
