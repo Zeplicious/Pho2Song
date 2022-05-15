@@ -102,7 +102,6 @@
                 </div>
             
             
-                
             <div class="col-md-4 order-md-last order-first mb-3">
                 
                 <ul class="list-group list-group-flush">
@@ -110,11 +109,11 @@
                         <div class="carousel-inner align-items-center justify-content-center rounded-2">
                         <% var flag= true%>
                         <% var i=0 %> 
-                        <% if(photos)photos.forEach(element => { %>
+                        <% if(urls)urls.forEach(element => { %>
                         
                         <% if (flag) { %>
                             <div class="carousel-item active text-center  justify-content-center rounded-1">
-                                <img src="<%=element.baseUrl%>" class="imgg d-block w-100 rounded-2" alt="...">
+                                <img src="/images/1652630087959--chillong.jpg" class="imgg d-block w-100 rounded-2" alt="...">
                                 <div class="carousel-caption d-block">
                                     <p id="text<%= i %>"></p>
                                 </div>      
@@ -122,7 +121,7 @@
                         <% flag=false%>
                         <% } else { %>
                             <div class="carousel-item text-center  justify-content-center rounded-1">
-                                <img src="<%=element.baseUrl%>"class="imgg d-block w-100 rounded-2"  alt="...">
+                                <img src="/images/1652630087959--chillong.jpg"class="imgg d-block w-100 rounded-2"  alt="...">
                                 <div class="carousel-caption d-block">
                                     <p id="text<%= i %>"></p>
                                 </div>      

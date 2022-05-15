@@ -169,7 +169,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 /**************  Aux function multer **************/
 const fileStorageEngine = multer.diskStorage({
 	destination: (req, file, callback) => {
-	  callback(null, './images')
+	  callback(null, './public/images')
 	},
 	filename: (req, file, callback) => {
 	  callback(null, Date.now()  + '--' + file.originalname);
@@ -180,7 +180,7 @@ const upload = multer({ storage : fileStorageEngine })
 
 app.post('/multipleFiles', upload.array("images", 50), (req,res) => {
 	console.log(req.files)
-
+	colorUtil.getColorsFromUpload(req.files[0])
 	res.send("Multiple file uploaded")
 
 });
@@ -259,44 +259,47 @@ app.get('/callback', checkAuthenticated, function (req, res) {
 
 
 /************** Gestione del risultato **************/
-var photos
+var photos = Array()
 async function work() {
 	var photo = photos.pop();
-	console.log("daje")
 	if (photo == null) return;
 	var song
-	console.log("daje")
-	if (photo.baseUrl===undefined) {
-		console.log("daje")
-		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
+	if (typeof photo == String) {
+		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
 	} // controlli il tipo; se stringa photo in input
-	else if (photo.baseUrl) song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo.baseUrl), userTasteInfo)
-	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
+	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
 	console.log("daje")
 	return song
 }
 
-app.post('/result', checkAuthenticated, function (req, res) {
+app.post('/result',upload.array("images", 50), checkAuthenticated, function (req, res) {
 	if (req.files) {
-		photos= Array.from(req.files.fileUpload);
-		console.log(photos)
-		var urls=Array()
-		res.render('./pages/result.ejs', { photos:null, num: photos.length, p2sUser: p2sUser })
+		photos= req.files;
+		var urls=Array();
+		for (let index = 0; index < photos.length; index++) {
+			urls.push(photos[index].path);
+			
+		}
+		console.log(urls)
+		res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
 	}
-	else if (req.body.urlText) {
-		photos = Array.from(req.body.urlText)
-		photos.getColorsFromUrl();
-		res.render('./pages/result.ejs', { photos:null,num: req.body.urlCount, p2sUser: p2sUser })
+	else if (req.body.urls) {//finito
+		if (typeof photo == String){
+			photos.push(req.body.urls)
+		}
+		else photos = Array.from(req.body.urls)
+		res.render('./pages/result.ejs', { urls: photos,num: photos.length, p2sUser: p2sUser })
 	}
-	else if (req.body.album) {
+	else if (req.body.album) {//finito
 		i = req.body.album
-		console.log(i)
-
 		googleUtils.getPhotos(access_token, albums[i].id)
 			.then(data => {
-				photos = data
-
-				res.render('./pages/result.ejs', { photos: photos,num: albums[i].mediaItemsCount, p2sUser: p2sUser })
+				
+				data.forEach(element => {
+					photos.push(element.baseUrl)
+				});
+				
+				res.render('./pages/result.ejs', { urls: photos,num: albums[i].mediaItemsCount, p2sUser: p2sUser })
 			})
 	}
 })
