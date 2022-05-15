@@ -7,6 +7,7 @@ const passport = require('passport');
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+const NodeCouchDb = require('node-couchdb');
 
 var SpotifyWebApi = require('spotify-web-api-node');
 
@@ -20,6 +21,7 @@ const { render } = require('express/lib/response');
 
 const bodyParser = require('body-parser');
 const multer = require('multer');			//Abilita il file upload verso il server
+const res = require('express/lib/response');
 
 
 
@@ -42,7 +44,16 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 
 var User = [];
 
+/**************  Creazione CouchDb   ************** */
+const couch = new NodeCouchDb({
+	auth: {
+		user: 'admin',
+		pass: 'Musazza7'
+	}
+})
 
+const dbName = 'p2susers';
+const viewUrl = '_design/all_p2susers/_view/all';
 
 //STRATEGIA PASSPORT SPOTIFY
 passport.use('spotify',
@@ -56,7 +67,7 @@ passport.use('spotify',
 			spotifyApi.setAccessToken(accessToken);
 			spotifyApi.setRefreshToken(refreshToken);
 			//Controllo se l'utente è presente nell'array User (simil database temporaneo)
-			if (!User.find(profile => profile.id === id)) {
+			if (User.find(profile => profile.id === id)) {
 				(err, user) => {
 					//Ottengo l'id dell'utente tramite Spotify
 					spotifyApi
@@ -65,12 +76,23 @@ passport.use('spotify',
 							User.push({
 								id: userinfo.id,
 							})
-							console.log('utente inserito')
+							couch.insert(dbName, {
+								_id: profile.id,
+								playlists: []
+							}).then(({data, headers, status}) => {
+								console.log('utente inserito')
+							}), (err) => {
+								console.log('utente già trovato')
+								res.send(err)
+							}
+							
 						})
 					return done(err, user)
 				}
+				
 			}
 			return done(null, profile);
+			
 		}
 	)
 )
@@ -164,6 +186,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 
 
 /**************  Aux function multer **************/
@@ -348,3 +371,24 @@ app.post('/plist-analyzer', (req, res) => {
 app.listen(8888, () => {
 	console.log('Server listening on http://localhost:8888/');
 });
+
+/************** Funzionalità: Song History ******************* */
+app.get('/song_history', checkAuthenticated, (req, res) => {
+	couch.get(dbName, viewUrl).then(
+        (data, headers, status) => {
+            console.log(data.data.rows[0].value)
+			data.data.rows.forEach( (user) => {
+				console.log(user.value.spotify_id)
+				console.log(p2sUser.username)
+				if(user.value.spotify_id == User[0]){
+					res.render('song_history.ejs', {
+						p2susers: data.data.rows[indexOf(User[0])]
+					})
+				}
+			})
+        },
+        (err) => {
+            res.send(err);
+        }
+    );
+})
