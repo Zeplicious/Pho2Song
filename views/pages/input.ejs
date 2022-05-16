@@ -17,7 +17,7 @@
     <title>Pho2Song - Input Feature</title>
 </head>
 
-<body>
+<body onload="setUp()">
     <%- include("../partials/navbar.ejs"); %>
 
             <section class="text-center" id="accordionSection">
@@ -26,8 +26,9 @@
 
 
                     <h2>Aggiungi le tue foto!</h2>
-
+                    <!-- Accordion -->
                     <div class="accordion my-3" id="accordionExample">
+                        <!-- item 1 - files -->
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -69,8 +70,9 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!-- item 2 - urls -->
                         <div class="accordion-item">
+                
                             <h2 class="accordion-header" id="headingTwo">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -80,7 +82,9 @@
 
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                 data-bs-parent="#accordionExample">
+
                                 <form action="/result" method="post" enctype="application/x-www-form-urlencoded" id="urlForm">
+
                                     <div class="row mx-auto mt-4">
                                         <div class="col-6 mx-auto">
                                             <h5>Inserisci URL</h5>
@@ -88,14 +92,11 @@
                                     </div>
 
                                     <div class="row mx-auto my-4">
-                                        <div class="col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2">
-                                            <input type="text" id="urlText" class="form-control" name="urlText" placeholder="https://..." aria-label="Username" aria-describedby="addon-wrapping">
+                                        <div class="col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2" id="urlInputArea">
+                                           
                                         </div>
-
                                         <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
-                                            <button type="button" id="aggiungi-url" class="btn btn-primary" data-bs-dismiss="modal" onclick="addImage()">
-                                                Aggiungi
-                                            </button>
+                                            <input type="button" id="aggiungi-url" class="btn btn-primary" value="Aggiungi" onclick="addImage()">
                                         </div>
 
                                         <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
@@ -105,15 +106,17 @@
 
                                     <div class="row mx-auto">
                                         <div class="col-12 my-auto">
-                                            <ul class="image-preview list-group list-group-flush" id="urlPreview">
+                                            <ul class="list-group list-group-flush" id="urlPreview">
 
                                             </ul>
                                         </div>
                                     </div>
+
                                 </form>
+
                             </div>
                         </div>
-
+                        <!-- item 3 - google photo's albums -->
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingThree">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -162,6 +165,8 @@
                         </div>
                     </div>
                 </div>
+                <!-- /Accordion -->
+
             </section>
 
 
