@@ -20,7 +20,6 @@
 <body>
     <%- include("../partials/navbar.ejs"); %>
 
-        <% var n=0 %>
             <section class="text-center" id="accordionSection">
                 <div class="container">
 
@@ -51,18 +50,19 @@
                                             <div id="sezione-input" class="col-lg-10 col-xl-10 col-xxl-10 mx-auto my-2 justify-content-center my-auto">
                                                 <input id="upload" class="form-control" type="file" name="images" accept="image/*" multiple>
                                             </div>
+
                                             <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
-                                                <button id="submit-files" class="btn btn-primary" type="submit" disabled>Invia</button>
+                                                <button id="submit-files" class="btn btn-primary" type="submit">Invia</button>
                                             </div>
                                         </div>
 
-                                        <div class="divider">
-                                            <div class="row mx-auto">
-                                                <div class="col-12 mx-auto">
-                                                    <ul class="list-group list-group-flush" id="filePreview">
-    
-                                                    </ul>
-                                                </div>
+                                        <hr id="divider">
+                                        
+                                        <div class="row mx-auto">
+                                            <div class="col-12 mx-auto">
+                                                <ul class="list-group list-group-flush" id="filePreview">
+                                            
+                                                </ul>
                                             </div>
                                         </div>
                                     </form>
@@ -89,24 +89,25 @@
 
                                     <div class="row mx-auto my-4">
                                         <div class="col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2">
-                                            <input type="text" id="urlText" class="form-control" name="urlText"
-                                                value="<% n++ %>" placeholder="https://..." aria-label="Username"
-                                                aria-describedby="addon-wrapping">
+                                            <input type="text" id="urlText" class="form-control" name="urlText" placeholder="https://..." aria-label="Username" aria-describedby="addon-wrapping">
                                         </div>
 
                                         <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
-                                            <button type="button" id="aggiungi-url" class="btn btn-primary"
-                                                onclick="addImage()" data-bs-dismiss="modal">Aggiungi</button>
+                                            <button type="button" id="aggiungi-url" class="btn btn-primary" data-bs-dismiss="modal" onclick="addImage()">
+                                                Aggiungi
+                                            </button>
                                         </div>
 
                                         <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
-                                            <button type="submit" class="btn btn-danger">Invia</button>
+                                            <button id="submit-urls" class="btn btn-primary" type="submit" disabled>Invia</button>
                                         </div>
                                     </div>
 
                                     <div class="row mx-auto">
                                         <div class="col-12 my-auto">
-                                            <div class="image-preview" id="urlPreview"></div>
+                                            <ul class="image-preview list-group list-group-flush" id="urlPreview">
+
+                                            </ul>
                                         </div>
                                     </div>
                                 </form>
