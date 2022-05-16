@@ -57,7 +57,6 @@ function FileDelete(index) {
 function setUp(){
     arrayUrl = [];
     urlListItemId = 0;
-    console.log(arrayUrl)
     urlInputArea.innerHTML+= "<input type='text'  class='form-control' name='urls' id='urlSent" + urlListItemId+ "'placeholder='https://...' >"
 }
 
@@ -74,76 +73,39 @@ function isValidHttpUrl(string) {
 }
 function isNew(url){
     for (let index = 0; index < arrayUrl.length; index++) {
-        if (url == arrayUrl[index]){
-            
-            console.log('via negro')
-            return false
-        }
-        
+        if (url == arrayUrl[index])return false
     }
     return true
 }
 function reloadInputText(target){
-    
     target.style.display='none'
-        
-    
     console.log(urlListItemId)
-    
     urlInputArea.innerHTML += "<div></div><input type='text'  class='form-control' name='urls' id='urlSent" + (urlListItemId+1) + "' 'placeholder='https://...''></div>"
-    console.log("miao")
 }
 function invalidateInputText(target){
     target.value=''
 }
 
 function addImage() {
-    console.log("\n\n\n")
-    console.log(arrayUrl.length)
-    console.log(urlListItemId)
     let urlInput = document.getElementById("urlSent"  + urlListItemId)
-    console.log("skere")
-        /* if(!isValidHttpUrl(urlInput.value)){
-            document.getElementById('accordionSection').innerHTML += alertInvalidHTML;
-            reloadInputText(urlInput)
-            console.log('dwn')
-        }
-        else if(!isNew(urlInput.value)){ 
-            document.getElementById('accordionSection').innerHTML += alertAlreadyInHTML;
-            reloadInputText(urlInput)
-            console.log('vecia')
-        }
-        else{ */
     display(urlInput)
-        //}
-
-    
 };
 
 
 function display(urlInput) {
     let url = urlInput.value
     let imgName = url.substring(url.lastIndexOf("/") + 1, url.length);
-    console.log('************************DISPLAY***************************')
-    console.log(arrayUrl)
-    console.log("length: "+arrayUrl.length)
-    console.log(url)
     reloadInputText(urlInput)
-    console.log("daje")
     if(!isValidHttpUrl(urlInput.value)){
         //document.getElementById('accordionSection').innerHTML += alertInvalidHTML;
         invalidateInputText(urlInput)
         urlListItemId++
-        console.log('dwn')
-        console.log(urlListItemId)
         return
     }
     else if(!isNew(urlInput.value)){ 
         //document.getElementById('accordionSection').innerHTML += alertAlreadyInHTML;
         invalidateInputText(urlInput)
         urlListItemId++
-        console.log('vecia')
-        console.log(urlListItemId)
         return
     }
     
@@ -160,31 +122,18 @@ function display(urlInput) {
     let urlListItemHTML ="<li class='list-group-item' id='urlItem" + urlListItemId + "'>" + rowHTML +"</li>"
 
     //appending the new list item
-    console.log('li creato')
     urlPreview.innerHTML += urlListItemHTML
 
-    console.log(arrayUrl)
-    console.log("length: "+arrayUrl.length)
-
     urlListItemId++
-    console.log(urlListItemId)
+
 }
 
 
 function UrlDelete(url,id){
-    console.log('************************DELETE***************************')
-    console.log(arrayUrl)
-    console.log("length: "+arrayUrl.length)
-    console.log("idListItem: "+id)
-    console.log('input disabilitato')
 
     document.getElementById("urlSent" + id).value=''
     document.getElementById("urlItem" + id).style.display = "none";
 
-    console.log('item cancellato')
-
     arrayUrl=arrayUrl.filter(arrayUrlElem => arrayUrlElem!=url )
 
-    console.log(arrayUrl)
-    console.log("length: "+arrayUrl.length)
 }
