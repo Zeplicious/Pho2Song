@@ -84,32 +84,39 @@ function isNew(url){
     return true
 }
 function reloadInputText(target){
-    console.log("miao")
+    
     target.style.display='none'
-    urlListItemId++
-    urlInputArea.innerHTML += "<input type='text'  class='form-control' name='urls' id='urlSent" + urlListItemId + "' 'placeholder='https://...''>"
+        
+    
+    console.log(urlListItemId)
+    
+    urlInputArea.innerHTML += "<div></div><input type='text'  class='form-control' name='urls' id='urlSent" + (urlListItemId+1) + "' 'placeholder='https://...''></div>"
+    console.log("miao")
 }
 function invalidateInputText(target){
     target.value=''
-    reloadInputText(target)
 }
 
 function addImage() {
+    console.log("\n\n\n")
+    console.log(arrayUrl.length)
+    console.log(urlListItemId)
     let urlInput = document.getElementById("urlSent"  + urlListItemId)
-    
-    if(!isValidHttpUrl(urlInput.value)){
-        document.getElementById('accordionSection').innerHTML += alertInvalidHTML;
-        invalidateInputText(urlInput)
-        console.log('dwn')
-    }
-    else if(!isNew(urlInput.value)){ 
-        document.getElementById('accordionSection').innerHTML += alertAlreadyInHTML;
-        invalidateInputText(urlInput)
-        console.log('vecia')
-    }
-    else{
-        display(urlInput)
-    }
+    console.log("skere")
+        /* if(!isValidHttpUrl(urlInput.value)){
+            document.getElementById('accordionSection').innerHTML += alertInvalidHTML;
+            reloadInputText(urlInput)
+            console.log('dwn')
+        }
+        else if(!isNew(urlInput.value)){ 
+            document.getElementById('accordionSection').innerHTML += alertAlreadyInHTML;
+            reloadInputText(urlInput)
+            console.log('vecia')
+        }
+        else{ */
+    display(urlInput)
+        //}
+
     
 };
 
@@ -121,6 +128,24 @@ function display(urlInput) {
     console.log(arrayUrl)
     console.log("length: "+arrayUrl.length)
     console.log(url)
+    reloadInputText(urlInput)
+    console.log("daje")
+    if(!isValidHttpUrl(urlInput.value)){
+        //document.getElementById('accordionSection').innerHTML += alertInvalidHTML;
+        invalidateInputText(urlInput)
+        urlListItemId++
+        console.log('dwn')
+        console.log(urlListItemId)
+        return
+    }
+    else if(!isNew(urlInput.value)){ 
+        //document.getElementById('accordionSection').innerHTML += alertAlreadyInHTML;
+        invalidateInputText(urlInput)
+        urlListItemId++
+        console.log('vecia')
+        console.log(urlListItemId)
+        return
+    }
     
     //check if url already in input
 
@@ -140,11 +165,13 @@ function display(urlInput) {
 
     console.log(arrayUrl)
     console.log("length: "+arrayUrl.length)
-    reloadInputText(urlInput)
+
+    urlListItemId++
+    console.log(urlListItemId)
 }
 
 
-/* function UrlDelete(url,id){
+function UrlDelete(url,id){
     console.log('************************DELETE***************************')
     console.log(arrayUrl)
     console.log("length: "+arrayUrl.length)
@@ -160,4 +187,4 @@ function display(urlInput) {
 
     console.log(arrayUrl)
     console.log("length: "+arrayUrl.length)
-} */
+}
