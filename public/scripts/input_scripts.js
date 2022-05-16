@@ -14,35 +14,34 @@ var fileIsNew = true;
 var m = 0
 
 upload.addEventListener("change", function () {
-    console.log("ueu")
+
     console.log(this.files)
-    console.log(this.files[0])
-    //console.log(URL.createObjectURL(this.files[0]))
-    console.log(this.files.fileUpload)
+
+    if (this.files.length > 0) {
+        document.getElementById("submit-files").disabled = false
+    }
+    else {
+        document.getElementById("submit-files").disabled = true
+    }
+
+    /* console.log("ueu")
+    console.log(this.files)
+    console.log(this.files[0]) 
+    console.log(URL.createObjectURL(this.files[0]))
+    console.log(this.files.fileUpload) */
     for (indice = 0; indice < this.files.length; indice++){
         tempArrayFile[indice] = this.files[indice];
 
     }
-    console.log(tempArrayFile)
+
     tempArrayFile.forEach(i => {
-        arrayFile.forEach(j => {
-            if (j == i) {
-                fileIsNew = false;
-            }
-        })
-        if (fileIsNew == true) {
-            //DA IMPLEMENTARE CONDIZIONI
-            arrayFile.push(i)
-            const reader = new FileReader();
+        const reader = new FileReader();
             reader.addEventListener("load", function () {
-                console.log(i)
                 previewFileContainer.innerHTML += "<li class='list-group-item' id='fileItem" + fileIndex + "'> <div class='row mx-auto my-2 align-items-center'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2'> <p class='my-auto p-file' value= " + fileIndex + ">" + i.name + "</p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-2'> <button class='btn-danger btn' onclick='FileDelete(" + fileIndex + ")'>Elimina</button> </div> </li>"
                 fileIndex += 1
             })
-            reader.readAsText(i)
-        }
+        reader.readAsText(i)
     })
-    fileIsNew = true;
 
     //document.getElementById("sezione-input").innerHTML += "<input type='file' class='form-control' id='upload' name='fileUpload' accept='image/png, image/jpeg' multiple>"
 });

@@ -25,6 +25,11 @@ body {
     box-shadow: 0 0 0 0 rgba(68, 167, 118, 0.593);
 }
 
+.btn-primary:disabled {
+    background-color: rgba(30, 215, 96, 0.7);
+    border-color: rgb(30, 215, 96, 0.5);
+}
+
 .p-file{
     display: inline-block;
 }

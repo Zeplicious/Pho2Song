@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pho2Song - History Feature</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row mx-auto my-2">
+            <div class="col-lg-6 col-xl-6 col-xxl-6 mx-auto">
+                <h3>Hey <%= p2suser %>, ecco com'è andata la tua esperienza su Pho2Song!</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h2>Queste sono le tue playlist:</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <ul>
+                    <% for(i = 0; i < p2splaylists.length; i++) {//p2susers.playlists.forEach((playlist) => { %>
+                        <% if(p2suser == p2splaylists[i].value.user){ %> 
+                        <li>
+                            <div class="row">
+                                <div class="col">
+                                    <h3>
+                                        <%= p2splaylists[i].value.name %>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul>
+                                        <% p2splaylists[i].value.songs.forEach((song) => { %>
+
+                                            <div class="row">
+                                                <div class="col-4 mx.mx-auto">
+                                                    <p><%= song.name %> è stata ottenuta dalla foto: <%= song.photo %></p>
+                                                </div>
+                                            </div>
+
+                                        <% }) %>
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </li>
+                        <% } %> 
+                    <% }//) %>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <ul>
+
+    </ul>
+</body>
+
+</html>

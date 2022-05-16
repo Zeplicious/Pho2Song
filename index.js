@@ -7,6 +7,7 @@ const passport = require('passport');
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+const NodeCouchDb = require('node-couchdb');
 
 var SpotifyWebApi = require('spotify-web-api-node');
 
@@ -20,6 +21,7 @@ const { render } = require('express/lib/response');
 
 const bodyParser = require('body-parser');
 const multer = require('multer');			//Abilita il file upload verso il server
+const res = require('express/lib/response');
 
 
 
@@ -42,7 +44,16 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 
 var User = [];
 
+/**************  Creazione CouchDb   ************** */
+const couch = new NodeCouchDb({
+	auth: {
+		user: 'admin',
+		pass: 'Musazza7'
+	}
+})
 
+const dbName = 'p2splaylists';
+const viewUrl = '_design/all_playlists/_view/all';
 
 //STRATEGIA PASSPORT SPOTIFY
 passport.use('spotify',
@@ -55,8 +66,8 @@ passport.use('spotify',
 			//Setto accessToken e refreshToken ottenuti dalla strategia passport
 			spotifyApi.setAccessToken(accessToken);
 			spotifyApi.setRefreshToken(refreshToken);
-			//Controllo se l'utente è presente nell'array User (simil database temporaneo)
-			if (!User.find(profile => profile.id === id)) {
+			//Controllo se l'utente è presente nell'array User
+			if (User.find(profile => profile.id === id)) {
 				(err, user) => {
 					//Ottengo l'id dell'utente tramite Spotify
 					spotifyApi
@@ -65,12 +76,13 @@ passport.use('spotify',
 							User.push({
 								id: userinfo.id,
 							})
-							console.log('utente inserito')
 						})
 					return done(err, user)
 				}
+				
 			}
 			return done(null, profile);
+			
 		}
 	)
 )
@@ -165,6 +177,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+
 /**************  Aux function multer **************/
 const fileStorageEngine = multer.diskStorage({
 	destination: (req, file, callback) => {
@@ -200,6 +213,7 @@ app.get('/', /* checkNotAuthenticated, */(req, res) => {
 
 			p2sUser = {
 				username: data.body.display_name,
+				id: data.body.id,
 				user_image: data.body.images[0].url
 			}
 			res.render('./pages/landing_page.ejs', { p2sUser: p2sUser })
@@ -223,6 +237,7 @@ app.post('/logout', checkAuthenticated, (req, res) => {
 	spotifyApi.setAccessToken(null)
 	res.redirect('/')
 })
+
 
 /************** Listening section of the server setup **************/
 
@@ -252,6 +267,7 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
 	res.render('./pages/input.ejs', { albums: albums, p2sUser: p2sUser })
 });
+
 
 /************** Gestione del risultato **************/
 var photos = Array()
@@ -306,9 +322,25 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 	
 })
 
-
-
 app.post('/playlist', checkAuthenticated, function (req, res) {
+	var rev;
+	var songsArray = Array();
+	for(index = 0; index < req.body.songs.length; index++){
+		console.log(req.body.songs[index])
+		songsArray[index] = {"name": req.body.songs[index]}
+	}
+
+	couch.uniqid().then((ids) => {
+        const id = ids[0]
+		couch.insert(dbName, {
+			_id: id,
+			name: req.body.name,
+			user: p2sUser.id,			
+			song_number: req.body.songs.length,
+			songs: songsArray
+		})
+	})
+	
 	spotifyApi.createPlaylist(req.body.name, {
 		'description': req.body.description
 	}).then(data => {
@@ -330,7 +362,6 @@ app.get('/getSong', function (req, res) {
 	}
 })
 
-
 /************** Funzionalità: Playlist analyzer **************/
 app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
 	spotifyApi.getUserPlaylists({limit: 50}).then(data => {
@@ -349,3 +380,22 @@ app.post('/plist-analyzer', (req, res) => {
 app.listen(8888, () => {
 	console.log('Server listening on http://localhost:8888/');
 });
+
+/************** Funzionalità: Song History ******************* */
+
+app.get('/song_history', checkAuthenticated, (req, res) => {
+	couch.get(dbName, viewUrl ).then(
+        (data, headers, status) => {
+            console.log(data)
+			console.log(data.data)
+			console.log(data.data.rows)
+			res.render('./pages/song_history.ejs', {
+				p2suser: p2sUser.id,
+				p2splaylists: data.data.rows
+				})
+			},
+        (err) => {
+            res.send(err);
+        }
+    );
+})
