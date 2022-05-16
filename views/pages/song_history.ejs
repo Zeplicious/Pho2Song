@@ -12,7 +12,7 @@
     <div class="container">
         <div class="row mx-auto my-2">
             <div class="col-lg-6 col-xl-6 col-xxl-6 mx-auto">
-                <h3>Hey <%= p2suser.spotify_id %>, ecco com'è andata la tua esperienza su Pho2Song!</h3>
+                <h3>Hey <%= p2suser %>, ecco com'è andata la tua esperienza su Pho2Song!</h3>
             </div>
         </div>
         <div class="row">
@@ -23,19 +23,20 @@
         <div class="row">
             <div class="col">
                 <ul>
-                    <% for(i = 0; i < p2suser.playlists.length; i++) {//p2susers.playlists.forEach((playlist) => { %>
+                    <% for(i = 0; i < p2splaylists.length; i++) {//p2susers.playlists.forEach((playlist) => { %>
+                        <% if(p2suser == p2splaylists[i].value.user){ %> 
                         <li>
                             <div class="row">
                                 <div class="col">
                                     <h3>
-                                        <%= p2suser.playlists[0].name %>
+                                        <%= p2splaylists[i].value.name %>
                                     </h3>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
                                     <ul>
-                                        <% p2suser.playlists[0].songs.forEach((song) => { %>
+                                        <% p2splaylists[i].value.songs.forEach((song) => { %>
 
                                             <div class="row">
                                                 <div class="col-4 mx.mx-auto">
@@ -50,6 +51,7 @@
                             </div>
 
                         </li>
+                        <% } %> 
                     <% }//) %>
                 </ul>
             </div>
