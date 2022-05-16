@@ -55,6 +55,10 @@ const couch = new NodeCouchDb({
 const dbName = 'p2splaylists';
 const viewUrl = '_design/all_playlists/_view/all';
 
+function view(doc) {
+	emit(doc._id, {name: doc.name, user: doc.user, song_number: doc.song_number, songs: doc.songs});
+  }
+
 //STRATEGIA PASSPORT SPOTIFY
 passport.use('spotify',
 	new SpotifyStrategy({
@@ -296,7 +300,6 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 		else res.redirect('/input');
 	}
 	else if (req.body.urls) {//finito
-		console.log("urls")
 		if (typeof photo == String){
 			photos.push(req.body.urls)
 		}
@@ -306,7 +309,6 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 		}
 	}
 	else if (req.body.album) {//finito
-		console.log("albums")
 		i = req.body.album
 		googleUtils.getPhotos(access_token, albums[i].id)
 			.then(data => {
@@ -326,7 +328,6 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 	var rev;
 	var songsArray = Array();
 	for(index = 0; index < req.body.songs.length; index++){
-		console.log(req.body.songs[index])
 		songsArray[index] = {"name": req.body.songs[index]}
 	}
 
@@ -335,7 +336,8 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 		couch.insert(dbName, {
 			_id: id,
 			name: req.body.name,
-			user: p2sUser.id,			
+			user: p2sUser.id,
+			description: req.body.description,			
 			song_number: req.body.songs.length,
 			songs: songsArray
 		})
@@ -386,10 +388,8 @@ app.listen(8888, () => {
 app.get('/song_history', checkAuthenticated, (req, res) => {
 	couch.get(dbName, viewUrl ).then(
         (data, headers, status) => {
-            console.log(data)
-			console.log(data.data)
-			console.log(data.data.rows)
 			res.render('./pages/song_history.ejs', {
+				p2sUser: p2sUser,
 				p2suser: p2sUser.id,
 				p2splaylists: data.data.rows
 				})
