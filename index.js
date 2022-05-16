@@ -247,6 +247,7 @@ app.post('/logout', checkAuthenticated, (req, res) => {
 	res.redirect('/')
 })
 
+
 /************** Listening section of the server setup **************/
 
 //questo setup fa solo da ponte, al click sul pulsante "log me in with spotify" il browser dell'utente effettua una get a /spotify-login...
@@ -275,6 +276,7 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
 	res.render('./pages/input.ejs', { albums: albums, p2sUser: p2sUser })
 });
+
 
 /************** Gestione del risultato **************/
 var photos = Array()
@@ -329,8 +331,6 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 	
 })
 
-
-
 app.post('/playlist', checkAuthenticated, function (req, res) {
 	spotifyApi.createPlaylist(req.body.name, {
 		'description': req.body.description
@@ -353,7 +353,6 @@ app.get('/getSong', function (req, res) {
 	}
 })
 
-
 /************** Funzionalità: Playlist analyzer **************/
 app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
 	spotifyApi.getUserPlaylists({limit: 50}).then(data => {
@@ -375,19 +374,14 @@ app.listen(8888, () => {
 
 /************** Funzionalità: Song History ******************* */
 app.get('/song_history', checkAuthenticated, (req, res) => {
-	couch.get(dbName, viewUrl).then(
+	couch.get(dbName, "Valerio Lorito").then(
         (data, headers, status) => {
-            console.log(data.data.rows[0].value)
-			data.data.rows.forEach( (user) => {
-				console.log(user.value.spotify_id)
-				console.log(p2sUser.username)
-				if(user.value.spotify_id == User[0]){
-					res.render('song_history.ejs', {
-						p2susers: data.data.rows[indexOf(User[0])]
-					})
-				}
-			})
-        },
+            console.log(data)
+			console.log(data.data.playlists[0].songs)
+			res.render('./pages/song_history.ejs', {
+				p2suser: data.data
+				})
+			},
         (err) => {
             res.send(err);
         }

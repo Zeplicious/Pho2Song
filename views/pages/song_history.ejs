@@ -12,29 +12,34 @@
     <div class="container">
         <div class="row mx-auto my-2">
             <div class="col-lg-6 col-xl-6 col-xxl-6 mx-auto">
-                <h3>Hey <%= p2susers.spotify_id %>, ecco com'è andata la tua esperienza su Pho2Song!</h3>
+                <h3>Hey <%= p2suser.spotify_id %>, ecco com'è andata la tua esperienza su Pho2Song!</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h2>Queste sono le tue playlist:</h2>
             </div>
         </div>
         <div class="row">
             <div class="col">
                 <ul>
-                    <% for(i = 0; i < p2susers.playlists.length; i++) {//p2susers.playlists.forEach((playlist) => { %>
+                    <% for(i = 0; i < p2suser.playlists.length; i++) {//p2susers.playlists.forEach((playlist) => { %>
                         <li>
                             <div class="row">
                                 <div class="col">
                                     <h3>
-                                        <%= playlists[0].name %>:
+                                        <%= p2suser.playlists[0].name %>
                                     </h3>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <ul>
-                                        <% ps2users.value.playlists.songs.forEach((song) => { %>
+                                        <% p2suser.playlists[0].songs.forEach((song) => { %>
 
                                             <div class="row">
-                                                <div class="col">
-                                                    <p><%= song.name %></p>
+                                                <div class="col-4 mx.mx-auto">
+                                                    <p><%= song.name %> è stata ottenuta dalla foto: <%= song.photo %></p>
                                                 </div>
                                             </div>
 
