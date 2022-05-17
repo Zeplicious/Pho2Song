@@ -78,6 +78,7 @@ passport.use('spotify',
 			  }, expiresIn / 2 * 1000);
 			  
 			//Controllo se l'utente è presente nell'array User
+			console.log(profile);
 			if (User.find(profile => profile.id === id)) {
 				(err, user) => {
 					//Ottengo l'id dell'utente tramite Spotify
@@ -270,15 +271,15 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 
 /************** Gestione dell'input **************/
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
-	res.render('./pages/input.ejs', { albums: albums, logged: access_token!='', p2sUser: p2sUser })
+	res.render('./pages/input.ejs', { albums: albums,logged: access_token!='', p2sUser: p2sUser })
 });
 
 
 /************** Gestione del risultato **************/
 
-var photos = Array()
-var imgNames= Array()
-var songsDB= Array()
+var photos
+var imgNames
+var songsDB
 
 async function work() {
 	var photo = photos.pop();
@@ -299,6 +300,9 @@ async function work() {
 }
 
 app.post('/result',upload.array("images", 50), checkAuthenticated, function (req, res) {
+	photos=Array()
+	songsDB=Array()
+	imgNames=Array()
 	if (req.files) {//finito
 		photos= req.files;
 		if(photos.length!=0){

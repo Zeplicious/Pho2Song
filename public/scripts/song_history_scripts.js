@@ -8,3 +8,4 @@ function displaySongs(playlist){
         playlistContainer.style = "display: none;"
     } 
 }
+
