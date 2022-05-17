@@ -7,21 +7,21 @@ const urlForm = document.getElementById("urlForm")
 const urlInputArea = document.getElementById("urlInputArea")
 const urlSubmitButton= document.getElementById("submit-urls")
 
+
+
+
+//Initializing global variables for urls
+var urlListItemId = 0;
 var arrayUrl = [];
-var arrayFiles = [];
 
 //defining HTML alert
 const alertAlreadyInHTML = "<div class='alert alert-danger alert-dismissible' role='alert'> Questo Url è già stato inserito. <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
 const alertInvalidHTML = "<div class='alert alert-danger alert-dismissible' role='alert'> Questo Url non è valido. <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
 
-//initializing global variables for urls
-var urlListItemId = 0;
-
-//initializing global variables for urls
+//Initializing global variables for files
 var fileListItemId = 0;
-
-var fileIndex = 1;
-var fileIsNew = true;
+var arrayFiles = [];
+var deleteButtonForFile = '<div class="col-lg-4 col-xl-4 col-xxl-4 mx-auto my-2"><button class="btn-danger btn" type="button" onclick="FileDelete(" + fileIndex + ")">Elimina</button></div>'
 
 
 /************* Files management section *************/
@@ -36,6 +36,16 @@ function annihilateWholeLineage() {
     }
 }
 
+function manageSubmitButton(dim) {
+    if (dim > 0) {
+        document.getElementById("submit-files").disabled = false
+    } else {
+        document.getElementById("submit-files").disabled = true
+    }
+}
+
+//Main functionality
+
 function showFilesPreview(inputFiles) {
     
     manageSubmitButton(inputFiles.length)
@@ -45,84 +55,6 @@ function showFilesPreview(inputFiles) {
         fileListItemId++
     }
 }
-
-function manageSubmitButton(dim) {
-    if (dim > 0) {
-        document.getElementById("submit-files").disabled = false
-    } else {
-        document.getElementById("submit-files").disabled = true
-    }
-}
-
-/* function setUpForFiles(){
-    arrayFiles = Array();
-    fileInputId = 0;
-    fileInputArea.innerHTML += '<input id="file-input' + fileinputId + '" class="form-control" type="file" name="images" accept="image/*" multiple onchange="addFiles()">'
-}
-
-function isNewForFiles(arrayOfInputFiles){                  //This function return true if all files in input are new, false otherwise
-    for (let i = 0; i < arrayOfInputFiles.length; i++) {
-        for (let j = 0; j < arrayFiles.length; j++) {
-            if (arrayOfInputFiles[i] == arrayFiles[j]) {
-                return false
-            }
-            
-        }
-    }
-    return true
-}
-
-function invalidateInputFiles(target){
-    target.parentElement.removeChild(target);
-    fileInputArea.innerHTML += '<input id="file-input' + (fileInputId + 1) + '" class="form-control" type="file" name="images" accept="image/*" multiple onchange="addFiles()">'
-}
-
-function reloadInputText(target){
-    target.style.display='none'//disabilito l'input relativo al i-esimo click su 'Agggiungi'
-    //creo l'input relativo al i+1-esimo click su 'Agggiungi'
-    urlInputArea.innerHTML += "<input type='text'  class='form-control' name='urls' id='urlSent" + (urlListItemId+1) + "' 'placeholder='https://...''>" 
-}
-
-function addFiles() {
-    let fileInput = document.getElementById("file-input" + fileInputId)
-    if(!isNew(fileInput.files)){ 
-        //document.getElementById('accordionSection').innerHTML += alertAlreadyInHTML;
-        invalidateInputFiles(fileInput)
-    }
-    else{
-        reloadInputText(fileInput)
-        display(fileInput.files)
-    }
-
-    urlListItemId++
-} */
-
-/* uploadFiles.addEventListener("change", function () {
-
-    console.log(this.files)
-
-    if (this.files.length > 0) {
-        document.getElementById("submit-files").disabled = false
-    }
-    else {
-        document.getElementById("submit-files").disabled = true
-    }
-
-    for (indice = 0; indice < this.files.length; indice++){
-        tempArrayFile[indice] = this.files[indice];
-
-    }
-
-    tempArrayFile.forEach(i => {
-        const reader = new FileReader();
-            reader.addEventListener("load", function () {
-                fileList.innerHTML += "<li class='list-group-item' id='fileItem" + fileIndex + "'> <div class='row mx-auto my-2 align-items-center'> <div class='col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2'> <p class='my-auto p-file' value= " + fileIndex + ">" + i.name + "</p> </div> <div class='col-lg-4 col-xl-4 col-xxl-4 mx-auto my-2'> <button class='btn-danger btn' onclick='FileDelete(" + fileIndex + ")'>Elimina</button> </div> </li>"
-                fileIndex += 1
-            })
-        reader.readAsText(i)
-    })
-
-}); */
 
 /************* URLs management section *************/
 
