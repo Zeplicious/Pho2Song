@@ -270,7 +270,7 @@ app.get('/google-login/callback', checkAuthenticated, passport.authenticate('goo
 
 /************** Gestione dell'input **************/
 app.get('/input', checkAuthenticated, function (req, res) { // input prima del login con google 
-	res.render('./pages/input.ejs', { albums: albums, p2sUser: p2sUser })
+	res.render('./pages/input.ejs', { albums: albums, logged: access_token!='', p2sUser: p2sUser })
 });
 
 
@@ -368,6 +368,8 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 	/*for(index = 0; index < req.body.songs.length; index++){//non penso questo serva più
 		songsArray[index] = {"name": songsDB[index].song.name, "photo": songsDB[index].img}
 	}*/
+
+	console.log(songsDB)
 
 	couch.uniqid().then((ids) => {
         const id = ids[0]
