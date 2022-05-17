@@ -20,7 +20,7 @@ async function getUserTaste(spotifyApi) {
   for(let track of data.body.audio_features){
     ret.push(
       {
-        id: track.id,
+        uri: ('spotify:track:'+track.id),
         name: names[index],
         danceability: track.danceability * 255,
         energy: track.energy * 255,
@@ -37,7 +37,7 @@ async function getSongFromColors(colors, songs) {
 
   //scegli una foto per i colori
   ret={
-    id: songs[index % songs.length].id,
+    uri: songs[index % songs.length].uri,
     name: songs[index % songs.length].name
   }
   index++;

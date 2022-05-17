@@ -288,7 +288,6 @@ async function work() {
 		song: song,
 		img: imgName
 	})
-
 	return song
 }
 
@@ -341,25 +340,25 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 app.post('/playlist', checkAuthenticated, function (req, res) {
 	var rev;
 	var songsArray = Array();
-
+	let selectedSongs = Array.from(req.body.songs)
 	spotifyApi.createPlaylist(req.body.name, {// creo una nuova playlist
 		'description': req.body.description
 	}).then(data => {//aggiungo le tracce selezionate nella nuova playlist (se presenti)
-		if (req.body.songs) {
-			spotifyApi.addTracksToPlaylist(data.body.id, req.body.songs)
+		if (selectedSongs) {
+			spotifyApi.addTracksToPlaylist(data.body.id, selectedSongs)
 		}
 	})
 	
 	//songsDB è un array di obj di questo tipo
 	/* {
 		song:{
-			id: <id della canzone>
+			uri: 'spotify:track:<id della canzone>'
 			name: <nome della canzone>
 		}
 		img: <nome foto>
 	} */
-	songsDB=songsDB.filter(songImg => req.body.songs.include(songImg.song.id)) // filtro le canzoni in base alle canzoni che l'utente ha selezionato
-
+	songsDB=songsDB.filter(songImg => selectedSongs.includes(songImg.song.uri)) // filtro le canzoni in base alle canzoni che l'utente ha selezionato
+	console.log(songsDB)
 	for(index = 0; index < req.body.songs.length; index++){//non penso questo serva più
 		songsArray[index] = {"name": req.body.songs[index]}
 	}
