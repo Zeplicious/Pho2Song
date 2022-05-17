@@ -17,7 +17,7 @@
     <title>Pho2Song - Input Feature</title>
 </head>
 
-<body onload="setUp()">
+<body onload="setUp(), setUpForFiles()">
     <%- include("../partials/navbar.ejs"); %>
 
             <section class="text-center" id="accordionSection">
@@ -48,20 +48,18 @@
                                         </div>
 
                                         <div class="row mx-auto">
-                                            <div id="sezione-input" class="col-lg-10 col-xl-10 col-xxl-10 mx-auto my-2 justify-content-center my-auto">
-                                                <input id="upload" class="form-control" type="file" name="images" accept="image/*" multiple>
+                                            <div id="files-input-area" class="col-lg-10 col-xl-10 col-xxl-10 mx-auto my-2 justify-content-center my-auto">
+                                                <!-- <input id="upload-files" class="form-control" type="file" name="images" accept="image/*" multiple onchange="addFiles()"> -->
                                             </div>
 
                                             <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
                                                 <button id="submit-files" class="btn btn-primary" type="submit">Invia</button>
                                             </div>
                                         </div>
-
-                                        <hr id="divider">
                                         
                                         <div class="row mx-auto">
                                             <div class="col-12 mx-auto">
-                                                <ul class="list-group list-group-flush" id="filePreview">
+                                                <ul id="files-list" class="list-group list-group-flush">
                                             
                                                 </ul>
                                             </div>
@@ -83,7 +81,7 @@
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                 data-bs-parent="#accordionExample">
 
-                                <form action="/result" method="post" enctype="application/x-www-form-urlencoded" id="urlForm">
+                                <form id="urlForm" action="/result" method="post" enctype="application/x-www-form-urlencoded">
 
                                     <div class="row mx-auto mt-4">
                                         <div class="col-6 mx-auto">
@@ -92,11 +90,11 @@
                                     </div>
 
                                     <div class="row mx-auto my-4">
-                                        <div class="col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2" id="urlInputArea">
+                                        <div id="urlInputArea" class="col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2">
                                            
                                         </div>
                                         <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
-                                            <input type="button" id="aggiungi-url" class="btn btn-primary" value="Aggiungi" onclick="addImage()">
+                                            <input id="aggiungi-url" type="button" class="btn btn-primary" value="Aggiungi" onclick="addImage()">
                                         </div>
 
                                         <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
@@ -106,7 +104,7 @@
 
                                     <div class="row mx-auto">
                                         <div class="col-12 my-auto">
-                                            <ul class="list-group list-group-flush" id="urlPreview">
+                                            <ul id="urlPreview" class="list-group list-group-flush">
 
                                             </ul>
                                         </div>
