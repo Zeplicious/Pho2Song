@@ -49,12 +49,12 @@
                         </div>
                         <div class="col-lg-6 col-xl-6 col-xxl-6">
                             <ul class="list-group mx-auto" id="<%=p2splaylists[i].id%>Songs" style="display: none;">
-                                <% p2splaylists[i].value.songs.forEach((song)=> { %>
+                                <% p2splaylists[i].value.songs.forEach((songData)=> { %>
                                     <li class="list-group-item mx-auto d-flex">
                                         <div class="row">
                                             <div class="col-lg-4 col-xl-4 col-xxl-4 mx-auto ">
                                                 <p class="song-text ms-2 me-auto" >
-                                                    <%= song.name %> è stata ottenuta dalla foto: <%= song.photo %>
+                                                    <%= songData.song.name %> è stata ottenuta dalla foto: <%= songData.photo %>
                                                 </p>
                                             </div>
                                         </div>

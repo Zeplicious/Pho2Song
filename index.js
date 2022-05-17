@@ -286,7 +286,7 @@ async function work() {
 
 	songsDB.push({
 		song: song,
-		img: imgName
+		photo: imgName
 	})
 	return song
 }
@@ -355,13 +355,12 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 			uri: 'spotify:track:<id della canzone>'
 			name: <nome della canzone>
 		}
-		img: <nome foto>
+		photo: <nome foto>
 	} */
 	songsDB=songsDB.filter(songImg => selectedSongs.includes(songImg.song.uri)) // filtro le canzoni in base alle canzoni che l'utente ha selezionato
-	console.log(songsDB)
-	for(index = 0; index < req.body.songs.length; index++){//non penso questo serva più
-		songsArray[index] = {"name": req.body.songs[index]}
-	}
+	/*for(index = 0; index < req.body.songs.length; index++){//non penso questo serva più
+		songsArray[index] = {"name": songsDB[index].song.name, "photo": songsDB[index].img}
+	}*/
 
 	couch.uniqid().then((ids) => {
         const id = ids[0]
@@ -371,11 +370,9 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 			user: p2sUser.id,
 			description: req.body.description,			
 			song_number: req.body.songs.length,
-			songs: songsArray //penso qui possa andarci songsDB direttamente
+			songs: songsDB //penso qui possa andarci songsDB direttamente
 		})
 	})
-	
-	
 	res.redirect('/')
 })
 
