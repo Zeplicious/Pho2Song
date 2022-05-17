@@ -17,7 +17,7 @@
     <title>Pho2Song - Input Feature</title>
 </head>
 
-<body onload="setUp(), setUpForFiles()">
+<body onload="setUp()">
     <%- include("../partials/navbar.ejs"); %>
 
             <section class="text-center" id="accordionSection">
@@ -49,18 +49,18 @@
 
                                         <div class="row mx-auto">
                                             <div id="files-input-area" class="col-lg-10 col-xl-10 col-xxl-10 mx-auto my-2 justify-content-center my-auto">
-                                                <!-- <input id="upload-files" class="form-control" type="file" name="images" accept="image/*" multiple onchange="addFiles()"> -->
+                                                <input id="upload-files" class="form-control" type="file" name="images" accept="image/*" multiple onclick="annihilateWholeLineage()" onchange="showFilesPreview(this.files)">
                                             </div>
 
                                             <div class="col-lg-2 col-xl-2 col-xxl-2 mx-auto my-2">
-                                                <button id="submit-files" class="btn btn-primary" type="submit">Invia</button>
+                                                <button id="submit-files" class="btn btn-primary" type="submit" disabled>Invia</button>
                                             </div>
                                         </div>
                                         
                                         <div class="row mx-auto">
                                             <div class="col-12 mx-auto">
                                                 <ul id="files-list" class="list-group list-group-flush">
-                                            
+
                                                 </ul>
                                             </div>
                                         </div>

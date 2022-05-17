@@ -9,8 +9,7 @@ const urlSubmitButton= document.getElementById("submit-urls")
 
 var arrayUrl = [];
 var arrayFiles = [];
-var tempArrayFile = [];
-var urlIsEmpty = false;
+
 //defining HTML alert
 const alertAlreadyInHTML = "<div class='alert alert-danger alert-dismissible' role='alert'> Questo Url è già stato inserito. <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
 const alertInvalidHTML = "<div class='alert alert-danger alert-dismissible' role='alert'> Questo Url non è valido. <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
@@ -19,18 +18,44 @@ const alertInvalidHTML = "<div class='alert alert-danger alert-dismissible' role
 var urlListItemId = 0;
 
 //initializing global variables for urls
-var fileInputId = 0;
+var fileListItemId = 0;
 
 var fileIndex = 1;
 var fileIsNew = true;
-var m = 0
+
 
 /************* Files management section *************/
 
 //Utiliy functions for files
 
-function setUpForFiles(){
-    arrayFiles = [];
+function annihilateWholeLineage() {
+    let dim = filesList.childNodes.length
+    for (let i = 0; i < dim; i++) {
+        filesList.removeChild(filesList.childNodes[0])
+        
+    }
+}
+
+function showFilesPreview(inputFiles) {
+    
+    manageSubmitButton(inputFiles.length)
+
+    for (let i = 0; i < inputFiles.length; i++) {
+        filesList.innerHTML += '<li class="list-group-item" id="file-item"' + fileListItemId + '"> <div class="row mx-auto my-2 align-items-center"> <div class="col-lg-8 col-xl-8 col-xxl-8 mx-auto my-2"> <p class="my-auto p-file">' + inputFiles[i].name + '</p></div></li>'
+        fileListItemId++
+    }
+}
+
+function manageSubmitButton(dim) {
+    if (dim > 0) {
+        document.getElementById("submit-files").disabled = false
+    } else {
+        document.getElementById("submit-files").disabled = true
+    }
+}
+
+/* function setUpForFiles(){
+    arrayFiles = Array();
     fileInputId = 0;
     fileInputArea.innerHTML += '<input id="file-input' + fileinputId + '" class="form-control" type="file" name="images" accept="image/*" multiple onchange="addFiles()">'
 }
@@ -70,7 +95,7 @@ function addFiles() {
     }
 
     urlListItemId++
-}
+} */
 
 /* uploadFiles.addEventListener("change", function () {
 
@@ -98,12 +123,6 @@ function addFiles() {
     })
 
 }); */
-
-function FileDelete(index) {
-    document.getElementById("fileItem" + index).value = null;
-    document.getElementById("fileItem" + index).style.display = "none"; 
-    console.log(document.getElementById("fileItem" + index).value)
-}
 
 /************* URLs management section *************/
 
