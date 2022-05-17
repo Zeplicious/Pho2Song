@@ -109,7 +109,7 @@ function FileDelete(index) {
 
 //Setup the used variables
 function setUp(){
-    arrayUrl = [];
+    arrayUrl = Array();
     urlListItemId = 0;
     urlInputArea.innerHTML+= "<input type='text'  class='form-control' name='urls' id='urlSent" + urlListItemId+ "'placeholder='https://...' >"
 }
@@ -150,16 +150,23 @@ function invalidateInputText(target){
 //chiamata onclick del tasto 'Submit'
 function prepareSubmit() { //cancello l'ultimo campo text che sarà vuoto al momento del submit
     let urlInput = document.getElementById("urlSent"  + urlListItemId)
-    urlInput.parentElement.removeChild(urlInput);
+    urlInputArea.removeChild(urlInput);
+
+    let i=0;
+    urlInputArea.childNodes.forEach(urlInput=>{
+        if(urlInput.id !== undefined){
+            urlInput.value=arrayUrl[i]
+            i++
+        }
+    })
 }
 
 function addImage() {
+    console.log(arrayUrl)
 
     let urlInput = document.getElementById("urlSent"  + urlListItemId)
     if(!isValidHttpUrl(urlInput.value)){
         //document.getElementById('accordionSection').innerHTML += alertInvalidHTML;
-        console.log("urlSent"  + urlListItemId)
-        console.log(urlInput)
         invalidateInputText(urlInput)
     }
     else if(!isNew(urlInput.value)){ 
@@ -168,14 +175,14 @@ function addImage() {
     }
     else{
         reloadInputText(urlInput)
-        display(urlInput.value)
+        display(urlInput)
     }
-
     urlListItemId++
 };
 
 
-function display(url) {
+function display(urlInput) {
+    let url=urlInput.value
     if(urlSubmitButton.disabled)urlSubmitButton.disabled=false;// riabilito il tasto di submit se precentemente disabilitato
 
     let imgName = url.substring(url.lastIndexOf("/") + 1, url.length);//estraggo il nome del file
@@ -190,8 +197,8 @@ function display(url) {
 
     //appending the new list item
     urlPreview.innerHTML += urlListItemHTML
+    urlInput.value=url;
 }
-
 
 function UrlDelete(url,id){
     let urlInput=document.getElementById("urlSent" + id)
