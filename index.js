@@ -305,7 +305,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 			var urls=Array();
 			
 			for (let index = 0; index < photos.length; index++) {
-				imgNames.push(photos[index].path.substring(photos[index].path.lastIndexOf("/") + 1))
+				imgNames.push(photos[index].path.substring(photos[index].path.indexOf("-") + 2))
 				urls.push(photos[index].path.substring(6));
 			}
 			res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
