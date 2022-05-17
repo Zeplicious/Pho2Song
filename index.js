@@ -30,7 +30,6 @@ function checkAuthenticated(req, res, next) { //controllo se l'utente è autenti
 	if (req.isAuthenticated()) {
 		return next()
 	}
-	console.log('non autenticato: ' + req)
 	return res.redirect('/login')
 }
 
@@ -38,7 +37,6 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 	if (req.isAuthenticated()) {
 		return res.redirect('/')
 	}
-	console.log('non autenticato: ' + req.user)
 	return next()
 }
 
@@ -226,7 +224,7 @@ app.get('/', /* checkNotAuthenticated, */(req, res) => {
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o di successo
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
-	res.render('./pages/login.ejs')
+	res.render('./pages/login.ejs', {p2sUser: p2sUser})
 })
 
 app.post('/logout', checkAuthenticated, (req, res) => {
@@ -286,7 +284,7 @@ async function work() {
 
 	songsDB.push({
 		song: song,
-		img: imgName
+		photo: imgName
 	})
 	return song
 }
@@ -355,13 +353,12 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 			uri: 'spotify:track:<id della canzone>'
 			name: <nome della canzone>
 		}
-		img: <nome foto>
+		photo: <nome foto>
 	} */
 	songsDB=songsDB.filter(songImg => selectedSongs.includes(songImg.song.uri)) // filtro le canzoni in base alle canzoni che l'utente ha selezionato
-	console.log(songsDB)
-	for(index = 0; index < req.body.songs.length; index++){//non penso questo serva più
-		songsArray[index] = {"name": req.body.songs[index]}
-	}
+	/*for(index = 0; index < req.body.songs.length; index++){//non penso questo serva più
+		songsArray[index] = {"name": songsDB[index].song.name, "photo": songsDB[index].img}
+	}*/
 
 	couch.uniqid().then((ids) => {
         const id = ids[0]
@@ -371,11 +368,9 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 			user: p2sUser.id,
 			description: req.body.description,			
 			song_number: req.body.songs.length,
-			songs: songsArray //penso qui possa andarci songsDB direttamente
+			songs: songsDB //penso qui possa andarci songsDB direttamente
 		})
 	})
-	
-	
 	res.redirect('/')
 })
 
