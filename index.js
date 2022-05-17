@@ -306,12 +306,12 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 		else res.redirect('/input');
 	}
 	else if (req.body.urls) {//finito
-
+		console.log(req.body)
 		if (typeof photo == String){
 			photos.push(req.body.urls)
 		}
 		else photos = Array.from(req.body.urls)
-
+		console.log(photos)
 		photos.forEach(element => { //utilizzo l'url come identificatore delle foto per il DB
 			imgNames.push(element);
 		});
