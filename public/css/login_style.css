@@ -5,8 +5,9 @@
     border-radius: 30px;
 }
 
-.btn{
+.btn-spotify{
     text-align: center;
+    width: 60%;
 }
 
 .btn1:hover{
@@ -50,8 +51,13 @@ footer {
     padding-bottom: 4rem;
 }
 
-a {
-    color: rgb(30 215 96);
+.anchor-register{
+    color: rgb(68, 209, 139);
+    text-decoration: none;
+}
+
+.anchor-footer {
+    color: rgb(68, 209, 139);
     text-decoration: none;
 }
 
@@ -60,7 +66,7 @@ a {
         margin-top: 1rem;
     }
 
-    .btn{
+    .btn-spotify{
         width: 60%;
     }
     

@@ -34,6 +34,12 @@ main {
     text-overflow: ellipsis;
 } 
 
+.song-text{
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -91,7 +97,7 @@ footer {
     }
     .song-text{
         display: inline-block;
-        max-width: 15ch;
+        max-width: 22ch;
         text-overflow: ellipsis;
         overflow: hidden;
     }

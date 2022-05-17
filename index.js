@@ -30,7 +30,6 @@ function checkAuthenticated(req, res, next) { //controllo se l'utente è autenti
 	if (req.isAuthenticated()) {
 		return next()
 	}
-	console.log('non autenticato: ' + req)
 	return res.redirect('/login')
 }
 
@@ -38,7 +37,6 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 	if (req.isAuthenticated()) {
 		return res.redirect('/')
 	}
-	console.log('non autenticato: ' + req.user)
 	return next()
 }
 
@@ -226,7 +224,7 @@ app.get('/', /* checkNotAuthenticated, */(req, res) => {
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o di successo
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
-	res.render('./pages/login.ejs')
+	res.render('./pages/login.ejs', {p2sUser: p2sUser})
 })
 
 app.post('/logout', checkAuthenticated, (req, res) => {
