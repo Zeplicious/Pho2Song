@@ -22,6 +22,18 @@ main {
     border-radius: 0;
 }
 
+.playlist-name{
+    color:rgb(68, 209, 139);
+    max-width: 20ch;
+    text-overflow: ellipsis;
+}
+
+.playlist-description{
+    color: black;
+    max-width: 20ch;
+    text-overflow: ellipsis;
+} 
+
 .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -64,5 +76,23 @@ footer {
 @media (min-width: 768px) {
     .bd-placeholder-img-lg {
         font-size: 3.5rem;
+    }
+
+}
+
+@media (max-width: 425px){
+    .playlist-name{
+        max-width: 13ch;
+        text-overflow: ellipsis;
+    }
+    .playlist-description{
+        max-width: 13ch;
+        text-overflow: ellipsis;
+    }
+    .song-text{
+        display: inline-block;
+        max-width: 15ch;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 }
