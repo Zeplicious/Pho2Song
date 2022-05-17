@@ -383,7 +383,7 @@ app.get('/getSong', function (req, res) {
 			else res.send('end')
 		})
 	} catch (error) {
-		res.send('fin')
+		res.send('end')
 	}
 })
 
