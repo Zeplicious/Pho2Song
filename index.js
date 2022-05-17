@@ -65,9 +65,18 @@ passport.use('spotify',
 		callbackURL: 'http://localhost:8888/spotify-login/callback'
 	},
 		function (accessToken, refreshToken, expiresIn, profile, done) {
+
 			//Setto accessToken e refreshToken ottenuti dalla strategia passport
 			spotifyApi.setAccessToken(accessToken);
 			spotifyApi.setRefreshToken(refreshToken);
+
+			//gestisco il refreshtoken automatizzando la richiesta di un nuovo accesstoken
+			setInterval(async () => {
+				let data = await spotifyApi.refreshAccessToken();
+				let access_token = data.body['access_token'];
+				spotifyApi.setAccessToken(access_token);
+			  }, expiresIn / 2 * 1000);
+			  
 			//Controllo se l'utente è presente nell'array User
 			if (User.find(profile => profile.id === id)) {
 				(err, user) => {
@@ -296,7 +305,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 			var urls=Array();
 			
 			for (let index = 0; index < photos.length; index++) {
-				imgNames.push(photos[index].path.substring(url.lastIndexOf("/") + 1))
+				imgNames.push(photos[index].path.substring(photos[index].path.lastIndexOf("/") + 1))
 				urls.push(photos[index].path.substring(6));
 			}
 			res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
