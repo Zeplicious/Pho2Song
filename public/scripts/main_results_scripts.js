@@ -10,7 +10,7 @@ function getSong(id){
                 document.getElementById("text"+id).innerText=response.name;
                 document.getElementById(id).innerHTML+=string;
                 document.getElementById("li"+id).style.display="initial"
-                document.getElementById("check"+id).value = 'spotify:track:'+response.id;
+                document.getElementById("check"+id).value = response.id;
                 getSong(++id);
             }
             else{

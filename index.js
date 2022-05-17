@@ -268,15 +268,27 @@ app.get('/input', checkAuthenticated, function (req, res) { // input prima del l
 
 
 /************** Gestione del risultato **************/
+
 var photos = Array()
+var imgNames= Array()
+var songsDB= Array()
+
 async function work() {
 	var photo = photos.pop();
+	var imgName = imgNames.pop();
 	if (photo == null) return;
 	var song
 	if (typeof photo == String) {
 		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
+
 	} // controlli il tipo; se stringa photo in input
 	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
+
+	songsDB.push({
+		song: song,
+		img: imgName
+	})
+
 	return song
 }
 
@@ -287,6 +299,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 			var urls=Array();
 			
 			for (let index = 0; index < photos.length; index++) {
+				imgNames.push(photos[index].path.substring(url.lastIndexOf("/") + 1))
 				urls.push(photos[index].path.substring(6));
 			}
 			res.render('./pages/result.ejs', { urls:urls, num: photos.length, p2sUser: p2sUser })
@@ -294,10 +307,16 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 		else res.redirect('/input');
 	}
 	else if (req.body.urls) {//finito
+
 		if (typeof photo == String){
 			photos.push(req.body.urls)
 		}
 		else photos = Array.from(req.body.urls)
+
+		photos.forEach(element => { //utilizzo l'url come identificatore delle foto per il DB
+			imgNames.push(element);
+		});
+
 		if(photos.length!=0){
 			res.render('./pages/result.ejs', { urls: photos,num: photos.length, p2sUser: p2sUser })
 		}
@@ -307,7 +326,8 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 		googleUtils.getPhotos(access_token, albums[i].id)
 			.then(data => {
 				
-				data.forEach(element => {
+				data.forEach(element => { //concateno <titolo dell'album>.<nome della foto> come identificatore delle foto per il DB 
+					imgNames.push( albums[i].title + "." + element.filename );
 					photos.push(element.baseUrl)
 				});
 				
@@ -321,7 +341,26 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 app.post('/playlist', checkAuthenticated, function (req, res) {
 	var rev;
 	var songsArray = Array();
-	for(index = 0; index < req.body.songs.length; index++){
+
+	spotifyApi.createPlaylist(req.body.name, {// creo una nuova playlist
+		'description': req.body.description
+	}).then(data => {//aggiungo le tracce selezionate nella nuova playlist (se presenti)
+		if (req.body.songs) {
+			spotifyApi.addTracksToPlaylist(data.body.id, req.body.songs)
+		}
+	})
+	
+	//songsDB è un array di obj di questo tipo
+	/* {
+		song:{
+			id: <id della canzone>
+			name: <nome della canzone>
+		}
+		img: <nome foto>
+	} */
+	songsDB=songsDB.filter(songImg => req.body.songs.include(songImg.song.id)) // filtro le canzoni in base alle canzoni che l'utente ha selezionato
+
+	for(index = 0; index < req.body.songs.length; index++){//non penso questo serva più
 		songsArray[index] = {"name": req.body.songs[index]}
 	}
 
@@ -333,17 +372,11 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 			user: p2sUser.id,
 			description: req.body.description,			
 			song_number: req.body.songs.length,
-			songs: songsArray
+			songs: songsArray //penso qui possa andarci songsDB direttamente
 		})
 	})
 	
-	spotifyApi.createPlaylist(req.body.name, {
-		'description': req.body.description
-	}).then(data => {
-		if (req.body.songs) {
-			spotifyApi.addTracksToPlaylist(data.body.id, req.body.songs)
-		}
-	})
+	
 	res.redirect('/')
 })
 
