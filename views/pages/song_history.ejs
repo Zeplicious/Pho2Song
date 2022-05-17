@@ -34,7 +34,7 @@
             <div class="row mx-auto p-2">
                 <% for(i=0; i < p2splaylists.length; i++) { %>
                     <% if(p2suser==p2splaylists[i].value.user){ %>
-                        <div class="col-lg-4 col-xl-4 col-xxl-4">
+                        <div class="col-md-4 col-lg-4 col-xl-4 col-xxl-4">
                             <ul class="list-group">
                                 <button type="button" class="list-group-item my-1 d-flex justify-content-between align-items-start"
                                     onclick="displaySongs('<%= p2splaylists[i].id%>')">
@@ -52,15 +52,22 @@
                                 </button>
                             </ul>
                         </div>
-                        <div class="col-lg-6 col-xl-6 col-xxl-6">
+                        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                             <ul class="list-group mx-auto" id="<%=p2splaylists[i].id%>Songs" style="display: none;">
                                 <% p2splaylists[i].value.songs.forEach((songData)=> { %>
                                     <li class="list-group-item mx-auto d-flex">
                                         <div class="row">
-                                            <div class="col-12 mx-auto ">
-                                                <p class="song-text mt-1 mb-1 ms-2 me-auto" >
-                                                    <%= songData.song.name %> è stata ottenuta dalla foto: <%= songData.photo %>
-                                                </p>
+                                            <div class="col-12 mx-auto">
+                                                <% try { %> 
+                                                    <% url = new URL(songData.photo); %>
+                                                    <div class=" song-text mt-1 mb-1 ms-2 me-auto" >
+                                                        <%= songData.song.name %> è stata ottenuta dalla foto: <a href= "<%= songData.photo %>"><%= songData.photo%></a>
+                                                    </div>
+                                                  <% } catch (_) { %>
+                                                    <div class=" song-text mt-1 mb-1 ms-2 me-auto" >
+                                                        <%= songData.song.name %> è stata ottenuta dalla foto: <%= songData.photo %>
+                                                    </div>
+                                                <% } %>
                                             </div>
                                         </div>
                                     </li>
