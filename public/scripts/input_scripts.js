@@ -58,6 +58,14 @@ function showFilesPreview(inputFiles) {
 
 /************* URLs management section *************/
 
+//Toasts initialization
+
+var toastTrigger = document.getElementById('aggiungi-url')
+var toastLive = document.getElementById('liveToast')
+if (toastTrigger) {
+    var toast = new bootstrap.Toast(toastLive)
+}
+
 //Setup the used variables
 function setUp(){
     arrayUrl = Array();
@@ -117,11 +125,11 @@ function addImage() {
 
     let urlInput = document.getElementById("urlSent"  + urlListItemId)
     if(!isValidHttpUrl(urlInput.value)){
-        //document.getElementById('accordionSection').innerHTML += alertInvalidHTML;
+        toast.show()
         invalidateInputText(urlInput)
     }
     else if(!isNew(urlInput.value)){ 
-        //document.getElementById('accordionSection').innerHTML += alertAlreadyInHTML;
+        toast.show()
         invalidateInputText(urlInput)
     }
     else{
