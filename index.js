@@ -45,8 +45,8 @@ var User = [];
 /**************  Creazione CouchDb   ************** */
 const couch = new NodeCouchDb({
 	auth: {
-		user: 'admin',
-		pass: 'Musazza7'
+		user: secrets.database.user,
+		pass: secrets.database.password
 	}
 })
 
@@ -281,16 +281,44 @@ var photos
 var imgNames
 var songsDB
 
+var colorsArray = [
+	{
+		r: "255",
+		g: "0",
+		b:	"0" 
+	},
+	{
+		r: "255", 
+		g: "20",
+		b: "20"
+	},
+	{
+		r: "255",
+		g: "40",
+		b: "5"
+	}, 
+	{
+		r: "200",
+		g: "10",
+		b: "0"
+	},
+	{
+		r: "220",
+		g: "10",
+		b: "30"
+	}
+]
+
 async function work() {
 	var photo = photos.pop();
 	var imgName = imgNames.pop();
 	if (photo == null) return;
 	var song
 	if (typeof photo == String) {
-		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), userTasteInfo)
+		song = await spotifyUtils.getSongFromColors(colorsArray/* await colorUtil.getColorsFromUrl(photo) */, userTasteInfo)
 
 	} // controlli il tipo; se stringa photo in input
-	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo), userTasteInfo)
+	else song = await spotifyUtils.getSongFromColors(colorsArray/* await colorUtil.getColorsFromUpload(photo) */, userTasteInfo)
 
 	songsDB.push({
 		song: song,

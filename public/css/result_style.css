@@ -10,6 +10,8 @@ body{
 .imgtext{
     font-weight: bold;
     font-style: italic;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
 }
 .imgg{
     filter: blur(2px);

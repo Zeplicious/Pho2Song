@@ -24,7 +24,7 @@ async function getUserTaste(spotifyApi) {
         name: names[index],
         danceability: track.danceability * 255,
         energy: track.energy * 255,
-        loudness: track.danceability * 255,
+        acousticness: track.acousticness * 255,
       });
     index++
   }
@@ -35,12 +35,67 @@ async function getUserTaste(spotifyApi) {
 
 async function getSongFromColors(colors, songs) {
 
+  var max = songs[0];
+  var red = 0;
+  var green = 0;
+  var blue = 0;
+
+  for(colorIndex = 0; colorIndex < colors.length; colorIndex++){
+    red += parseInt(colors[colorIndex].r)
+    green += parseInt(colors[colorIndex].g)
+    blue += parseInt(colors[colorIndex].b)
+  }
+
+  red = red/5
+  green = green/5
+  blue = blue/5
+
+  var averageColor = {
+    r: red,
+    g: green,
+    b: blue,
+  }
+
+  for(songIndex = 1; songIndex < songs.length; songIndex++){
+    if(averageColor.r > averageColor.g && averageColor.r > averageColor.b){
+      if (songs[songIndex].energy > max.energy){
+        max = songs[songIndex]
+      }
+    }
+    /* else if(){
+      if (songs[songIndex].energy > max.energy){
+        max = songs[songIndex]
+      }
+    } */
+    else if(averageColor.g > averageColor.r && averageColor.g > averageColor.b){
+      if (songs[songIndex].acousticness > max.acousticness){
+        max = songs[songIndex]
+      }
+    }
+    else if(averageColor.b > averageColor.r && averageColor.b > averageColor.g){
+      if (songs[songIndex].danceability > max.danceability){
+        max = songs[songIndex]
+      }
+    }
+    else if(averageColor.r == averageColor.g && averageColor.r == averageColor.b){
+      if(song[songIndex].acousticness > max.acoustiness && song[songIndex].energy < 0.25 && song[songIndex].energy < max.energy){
+        max = songs[songIndex]
+      }
+    }
+  }
+
   //scegli una foto per i colori
-  ret={
+  /* ret={
     uri: songs[index % songs.length].uri,
     name: songs[index % songs.length].name
+  } */
+  ret = {
+    uri: max.uri,
+    name: max.name
   }
   index++;
+
+  console.log("finito")
 
   return ret
 
