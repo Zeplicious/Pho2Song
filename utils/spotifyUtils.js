@@ -1,17 +1,29 @@
 var index = 0;
 const fs = require('fs');
+const { isBuffer } = require('util');
 var ret = '';
 
 async function getUserTaste(spotifyApi) {
-
   var data = await spotifyApi.getMyTopTracks({limit: 100})
+  
   ids=Array()
   names=Array()
-  for(let track of data.body.items){
-    ids.push(track.id);
-    names.push(track.name);
+  if(data.body.total<50){
+    let data = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50})
+    for(let track of data.body.items){
+      ids.push(track.track.id);
+      names.push(track.track.name);
+    }
+    
+  }
+  if(data.body.total!=0){
+    for(let track of data.body.items){
+      ids.push(track.id);
+      names.push(track.name);
+    }
   }
 
+  console.log(ids)
   var data = await spotifyApi.getAudioFeaturesForTracks(ids)
   ret = Array()
 
@@ -28,7 +40,6 @@ async function getUserTaste(spotifyApi) {
       });
     index++
   }
-
   return ret
 }
 
@@ -101,64 +112,6 @@ async function getSongFromColors(colors, songs) {
 
 
 }
-
-
-function getMyData(spotifyApi, callback) {
-  (async () => {
-    // console.log(me.body);
-    getUserPlaylists(spotifyApi).then(data => {
-      console.log('---------------------------------Finito---------------------------------\n' + ret);
-      callback(ret);
-    });
-  })().catch(e => {
-    console.error(e);
-  });
-}
-
-
-async function getUserPlaylists(spotifyApi) {
-  const data = await spotifyApi.getUserPlaylists()
-
-  //console.log("---------------+++++++++++++++++++++++++")
-  let playlists = []
-
-  for (let playlist of data.body.items) {
-    // console.log(playlist.name + " " + playlist.id)
-    ret += playlist.name + " " + playlist.id + '\r\n';
-    let tracks = await getPlaylistTracks(spotifyApi, playlist.id, playlist.name);
-    // console.log(tracks);
-
-    const tracksJSON = { tracks }
-    let data = JSON.stringify(tracksJSON);
-    fs.writeFileSync('export/' + playlist.name + '.json', data);
-  }
-}
-
-
-//GET SONGS FROM PLAYLIST
-async function getPlaylistTracks(spotifyApi, playlistId, playlistName) {
-
-  const data = await spotifyApi.getPlaylistTracks(playlistId, {
-    offset: 1,
-    limit: 100,
-    fields: 'items'
-  })
-
-  // console.log('The playlist contains these tracks', data.body);
-  // console.log('The playlist contains these tracks: ', data.body.items[0].track);
-  // console.log("'" + playlistName + "'" + ' contains these tracks:');
-  let tracks = [];
-
-  for (let track_obj of data.body.items) {
-    const track = track_obj.track
-    tracks.push(track);
-    //console.log(track.name + " : " + track.artists[0].name)
-  }
-
-  console.log("---------------+++++++++++++++++++++++++")
-  return tracks;
-}
-
 
 async function analyzePlaylist(spotifyApi, playlistId) {
 
@@ -245,9 +198,6 @@ async function analyzePlaylist(spotifyApi, playlistId) {
 
 
 module.exports = {
-  getMyData,
-  getUserPlaylists,
-  getPlaylistTracks,
   getUserTaste,
   getSongFromColors,
   analyzePlaylist
