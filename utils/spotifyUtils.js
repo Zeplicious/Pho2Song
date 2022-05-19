@@ -25,12 +25,13 @@ async function getUserTaste(spotifyApi) {
   }
 
   var data = await spotifyApi.getAudioFeaturesForTracks(ids)
-  ret = Array()
+  ret =new Map()
 
   //parse dei parametri utili
   var index = 0
   for(let track of data.body.audio_features){
-    ret.push(
+    ret.set(
+      index,
       {
         uri: ('spotify:track:'+track.id),
         name: names[index],
