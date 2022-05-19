@@ -62,7 +62,7 @@ passport.use('spotify',
 	new SpotifyStrategy({
 		clientID: secrets.spotify.client_id,
 		clientSecret: secrets.spotify.client_secret,
-		callbackURL: 'http://localhost:8888/spotify-login/callback'
+		callbackURL: '/spotify-login/callback'
 	},
 		function (accessToken, refreshToken, expiresIn, profile, done) {
 
@@ -113,7 +113,7 @@ passport.use('google',
 	new GoogleStrategy({
 		clientID: secrets.google.client_id,
 		clientSecret: secrets.google.client_secret,
-		callbackURL: 'http://localhost:8888/google-login/callback'
+		callbackURL: '/google-login/callback'
 	},
 		async function (accessToken, refreshToken, profile, cb) {
 			//ottengo gli album dell'utente tramite accessToken

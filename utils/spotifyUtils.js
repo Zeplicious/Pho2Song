@@ -169,39 +169,72 @@ async function analyzePlaylist(spotifyApi, playlistId) {
     ids.push(item.track.id);
   }
 
-  let averageAcousticness = 0
-  let averageDanceability = 0
-  let averageEnergy = 0
-  let averageInstrumentalness = 0
-  let averageLiveness = 0
-  let averageLoudness = 0
-  let averageSpeechiness = 0
-  let averageTempo = 0
+  let averageAcousticness = 0, countAcousticness = 0
+  let averageDanceability = 0, countDanceability = 0
+  let averageEnergy = 0, countEnergy = 0
+  let averageInstrumentalness = 0, countInstrumentalness = 0
+  let averageLiveness = 0, countLiveness = 0
+  let averageLoudness = 0, countLoudness = 0
+  let averageSpeechiness = 0, countSpeechiness = 0
+  let averageTempo = 0, countTempo = 0
 
   var data2 = await spotifyApi.getAudioFeaturesForTracks(ids)
 
   for (let track of data2.body.audio_features) {
-    averageAcousticness += track.acousticness * 100
-    averageDanceability += track.danceability * 100
-    averageEnergy += track.energy * 100
-    averageInstrumentalness += track.instrumentalness * 100
-    averageLiveness += track.liveness * 100
-    averageLoudness += track.loudness
-    averageSpeechiness += track.speechiness * 100
-    averageTempo += track.tempo
+    if(track.acousticness !== undefined && track.acousticness != null) {
+      averageAcousticness += track.acousticness * 100
+      countAcousticness++
+    }
+    if(track.danceability !== undefined && track.danceability != null) {
+      averageDanceability += track.danceability * 100
+      countDanceability++
+    }
+    if(track.energy !== undefined && track.energy != null) {
+      averageEnergy += track.energy * 100
+      countEnergy++
+    }
+    if(track.instrumentalness !== undefined && track.instrumentalness != null) {
+      averageInstrumentalness += track.instrumentalness * 100
+      countInstrumentalness++
+    }
+    if(track.liveness !== undefined && track.liveness != null) {
+      averageLiveness += track.liveness * 100
+      countLiveness++
+    }
+    if(track.loudness !== undefined && track.loudness != null) {
+      averageLoudness += track.loudness
+      countLoudness++
+    }
+    if(track.speechiness !== undefined && track.speechiness != null) {
+      averageSpeechiness += track.speechiness * 100
+      countSpeechiness++
+    }
+    if(track.tempo !== undefined && track.tempo != null) {
+      averageTempo += track.tempo
+      countTempo++
+    }
   }
 
 
   var ret = {
-    Acousticness: (averageAcousticness / (ids.length)).toFixed(2),
-    Danceability: (averageDanceability / (ids.length)).toFixed(2),
-    Energy: (averageEnergy / (ids.length)).toFixed(2),
-    Instrumentalness: (averageInstrumentalness / (ids.length)).toFixed(2),
-    Liveness: (averageLiveness / (ids.length)).toFixed(2),
-    Loudness: (averageLoudness / (ids.length)).toFixed(2),
-    Speechiness: (averageSpeechiness / (ids.length)).toFixed(2),
-    Tempo: (averageTempo / (ids.length)).toFixed(2)
+    Acousticness: (averageAcousticness / (countAcousticness)).toFixed(2),
+    Danceability: (averageDanceability / (countDanceability)).toFixed(2),
+    Energy: (averageEnergy / (countEnergy)).toFixed(2),
+    Instrumentalness: (averageInstrumentalness / (countInstrumentalness)).toFixed(2),
+    Liveness: (averageLiveness / (countLiveness)).toFixed(2),
+    Loudness: (averageLoudness / (countLoudness)).toFixed(2),
+    Speechiness: (averageSpeechiness / (countSpeechiness)).toFixed(2),
+    Tempo: (averageTempo / (countTempo)).toFixed(2)
   }
+
+  console.log(countAcousticness)
+  console.log(countDanceability)
+  console.log(countEnergy)
+  console.log(countInstrumentalness)
+  console.log(countLiveness)
+  console.log(countLoudness)
+  console.log(countSpeechiness)
+  console.log(countTempo)
 
   console.log(ret)
 
