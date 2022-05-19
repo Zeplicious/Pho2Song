@@ -181,37 +181,39 @@ async function analyzePlaylist(spotifyApi, playlistId) {
   var data2 = await spotifyApi.getAudioFeaturesForTracks(ids)
 
   for (let track of data2.body.audio_features) {
-    if(track.acousticness !== undefined && track.acousticness != null) {
-      averageAcousticness += track.acousticness * 100
-      countAcousticness++
-    }
-    if(track.danceability !== undefined && track.danceability != null) {
-      averageDanceability += track.danceability * 100
-      countDanceability++
-    }
-    if(track.energy !== undefined && track.energy != null) {
-      averageEnergy += track.energy * 100
-      countEnergy++
-    }
-    if(track.instrumentalness !== undefined && track.instrumentalness != null) {
-      averageInstrumentalness += track.instrumentalness * 100
-      countInstrumentalness++
-    }
-    if(track.liveness !== undefined && track.liveness != null) {
-      averageLiveness += track.liveness * 100
-      countLiveness++
-    }
-    if(track.loudness !== undefined && track.loudness != null) {
-      averageLoudness += track.loudness
-      countLoudness++
-    }
-    if(track.speechiness !== undefined && track.speechiness != null) {
-      averageSpeechiness += track.speechiness * 100
-      countSpeechiness++
-    }
-    if(track.tempo !== undefined && track.tempo != null) {
-      averageTempo += track.tempo
-      countTempo++
+    if (track !== undefined && track != null) {
+      if(track.acousticness !== undefined && track.acousticness != null) {
+        averageAcousticness += track.acousticness * 100
+        countAcousticness++
+      }
+      if(track.danceability !== undefined && track.danceability != null) {
+        averageDanceability += track.danceability * 100
+        countDanceability++
+      }
+      if(track.energy !== undefined && track.energy != null) {
+        averageEnergy += track.energy * 100
+        countEnergy++
+      }
+      if(track.instrumentalness !== undefined && track.instrumentalness != null) {
+        averageInstrumentalness += track.instrumentalness * 100
+        countInstrumentalness++
+      }
+      if(track.liveness !== undefined && track.liveness != null) {
+        averageLiveness += track.liveness * 100
+        countLiveness++
+      }
+      if(track.loudness !== undefined && track.loudness != null) {
+        averageLoudness += track.loudness
+        countLoudness++
+      }
+      if(track.speechiness !== undefined && track.speechiness != null) {
+        averageSpeechiness += track.speechiness * 100
+        countSpeechiness++
+      }
+      if(track.tempo !== undefined && track.tempo != null) {
+        averageTempo += track.tempo
+        countTempo++
+      } 
     }
   }
 
