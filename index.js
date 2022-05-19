@@ -100,6 +100,7 @@ passport.use('spotify',
 				clientId: spotify_client_id,
 				clientSecret: spotify_client_secret,
 			})
+
 			//Setto accessToken e refreshToken ottenuti dalla strategia passport
 			
 			spotifyApi.setAccessToken(accessToken);
@@ -356,6 +357,12 @@ async function work(userTasteInfo,userData) {
 }
 
 app.post('/result',upload.array("images", 50), checkAuthenticated, function (req, res) {
+	let spotifyApi=  new SpotifyWebApi({
+		clientId: spotify_client_id,
+		clientSecret: spotify_client_secret,
+	})
+	spotifyApi.setAccessToken(accessToken);
+	req.session.user.tastes=spotifyUtils.getUserTaste(spotifyApi)
 	userData.set(req.session.user.id,{
 		photos: Array(),
 		names: Array(),
@@ -475,12 +482,12 @@ app.get('/getSong',checkAuthenticated,async function (req, res) {
 			else{
 				let song
 				if(photo.path !== undefined){
-					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),req.session.user.tastes)
+					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),await req.session.user.tastes)
 					console.log('CIAO')
 					
 				}
 				else{
-					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),req.session.user.tastes)
+					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo), await req.session.user.tastes)
 				}
 			
 				userData.get(req.session.user.id).songsDB.push({
