@@ -447,12 +447,12 @@ app.listen(8888, () => {
 	console.log('Server listening on http://localhost:8888/');
 });
 
-/************** Funzionalità: Song History ******************* */
+/************** Funzionalità: Playlist History ******************* */
 
-app.get('/song_history', checkAuthenticated, (req, res) => {
+app.get('/playlist_history', checkAuthenticated, (req, res) => {
 	couch.get(dbName, viewUrl ).then(
         (data, headers, status) => {
-			res.render('./pages/song_history.ejs', {
+			res.render('./pages/playlist_history.ejs', {
 				p2sUser: p2sUser,
 				p2suser: p2sUser.id,
 				p2splaylists: data.data.rows

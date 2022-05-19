@@ -9,13 +9,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
-    <link href="/css/song_history_style.css" rel="stylesheet">
+    <link href="/css/playlist_history_style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/footer_style.css">
     
     <title>Pho2Song - History Feature</title>
 </head>
 
-<body>
+<body onload='highlightLink("third-feature")'>
 
     <%- include("../partials/navbar.ejs"); %>
 
@@ -38,9 +38,9 @@
             <div class="row mx-auto p-2">
                 <% for(i=0; i < p2splaylists.length; i++) { %>
                     <% if(p2suser==p2splaylists[i].value.user){ %>
-                        <div class="col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+                        <div class="col-lg-4 col-xl-4 col-xxl-4 my-2">
                             <ul class="list-group">
-                                <button type="button" class="list-group-item my-1 d-flex justify-content-between align-items-start"
+                                <button type="button" class="list-group-item d-flex justify-content-between align-items-start"
                                     onclick="displaySongs('<%= p2splaylists[i].id%>')">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-bold text-start playlist-name">
@@ -56,20 +56,20 @@
                                 </button>
                             </ul>
                         </div>
-                        <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                        <div class="col-lg-8 col-xl-8 col-xxl-8 my-2">
                             <ul class="list-group mx-auto" id="<%=p2splaylists[i].id%>Songs" style="display: none;">
                                 <% p2splaylists[i].value.songs.forEach((songData)=> { %>
-                                    <li class="list-group-item mx-auto d-flex">
+                                    <li class="list-group-item song-item mx-auto d-flex align-content-center">
                                         <div class="row">
                                             <div class="col-12 mx-auto">
                                                 <% try { %> 
                                                     <% url = new URL(songData.photo); %>
-                                                    <div class=" song-text mt-1 mb-1 ms-2 me-auto" >
-                                                        <%= songData.song.name %> è stata ottenuta dalla foto: <a href= "<%= songData.photo %>"><%= songData.photo%></a>
+                                                    <div class=" song-text mt-1 mb-1 ms-2 me-auto text-center" >
+                                                        <i><%= songData.song.name %></i> è stata ottenuta dalla foto: <a class="anchor-url" href= "<%= songData.photo %>"><%= songData.photo%></a>
                                                     </div>
                                                   <% } catch (_) { %>
-                                                    <div class=" song-text mt-1 mb-1 ms-2 me-auto" >
-                                                        <%= songData.song.name %> è stata ottenuta dalla foto: <%= songData.photo %>
+                                                    <div class=" song-text mt-1 mb-1 ms-2 me-auto text-center" >
+                                                        <i><%= songData.song.name %></i> è stata ottenuta dalla foto: <i> <%= songData.photo %> </i>
                                                     </div>
                                                 <% } %>
                                             </div>
@@ -95,7 +95,7 @@
         <%- include("../partials/footer.ejs"); %> 
 
         <script src="./scripts/navbar_scripts.js"></script>
-        <script src="./scripts/song_history_scripts.js"></script>
+        <script src="./scripts/playlist_history_scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
             crossorigin="anonymous"></script>
