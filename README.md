@@ -3,9 +3,9 @@
 escludendo i dettagli
 ##### Frontend
 - [x] result.ejs
-- [ ] input.ejs
-- [ ] p.list compare
-- [ ] pagina storico
+- [x] input.ejs
+- [x] p.list compare
+- [x] pagina storico
 ##### Backend
-- [ ] algoritmo scelta canzoni
-- [ ] database
+- [x] algoritmo scelta canzoni
+- [x] database

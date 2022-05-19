@@ -47,8 +47,8 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 /**************  Creazione CouchDb   ************** */
 const couch = new NodeCouchDb({
 	auth: {
-		user: 'admin',
-		pass: 'Musazza7'
+		user: secrets.database.user,
+		pass: secrets.database.password
 	}
 })
 
@@ -304,6 +304,33 @@ app.get('/input', checkAuthenticated, function (req, res) { // input prima del l
 
 const userData = new Map();
 
+var colorsArray = [
+	{
+		r: "255",
+		g: "0",
+		b:	"0" 
+	},
+	{
+		r: "255", 
+		g: "20",
+		b: "20"
+	},
+	{
+		r: "255",
+		g: "40",
+		b: "5"
+	}, 
+	{
+		r: "200",
+		g: "10",
+		b: "0"
+	},
+	{
+		r: "220",
+		g: "10",
+		b: "30"
+	}
+]
 async function work(userTasteInfo,userData) {
 	try{
 		var photo = userData.photos.pop();
@@ -418,6 +445,8 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 		photo: <nome foto>
 	} */
 	songsDB=songsDB.filter(songImg => selectedSongs.includes(songImg.song.uri)) // filtro le canzoni in base alle canzoni che l'utente ha selezionato
+
+	console.log(songsDB)
 
 	couch.uniqid().then((ids) => {
         const id = ids[0]

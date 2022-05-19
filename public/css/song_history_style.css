@@ -23,7 +23,7 @@ main {
 }
 
 .playlist-name{
-    color:rgb(68, 209, 139);
+    color:rgb(30, 215, 96);
     max-width: 20ch;
     text-overflow: ellipsis;
 }
@@ -38,6 +38,7 @@ main {
     display: inline-block;
     text-overflow: ellipsis;
     overflow: hidden;
+    max-width: 60%;
 }
 
 .bd-placeholder-img {
@@ -50,43 +51,17 @@ main {
 
 .plist-analyzer-link{
     text-decoration: none;
-    color: rgb(68, 209, 139);
+    color: rgb(30, 215, 96);
 }
 
-footer {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-}
-
-.list-inline-item svg {
-    font-size: 30px;
-}
-
-.link_footer a:any-link {
-    color: rgb(68, 209, 139);
-    text-decoration-line: none;
-}
-
-.link_footer a:hover {
-    color: rgb(40, 128, 84);
-}
-
-.social_footer a:any-link {
-    color: rgb(68, 209, 139);
-}
-
-.social_footer a:hover {
-    color: rgb(40, 128, 84);
-}
-
-@media (min-width: 768px) {
+@media screen and (min-width: 768px) {
     .bd-placeholder-img-lg {
         font-size: 3.5rem;
     }
 
-}
+} 
 
-@media (max-width: 425px){
+@media screen and (max-width: 320px){
     .playlist-name{
         max-width: 13ch;
         text-overflow: ellipsis;
@@ -97,8 +72,45 @@ footer {
     }
     .song-text{
         display: inline-block;
-        max-width: 22ch;
+        max-width: 13ch;
         text-overflow: ellipsis;
         overflow: hidden;
-    }
+    } 
 }
+
+@media screen and (max-width: 768px){
+    .playlist-name{
+       max-width: 25ch;
+        text-overflow: ellipsis;
+    }
+    .playlist-description{
+        max-width: 25ch;
+        text-overflow: ellipsis;
+    }
+    .song-text{
+        display: inline-block;
+        max-width: 25ch; 
+        
+        text-overflow: ellipsis;
+        overflow: hidden;
+    } 
+}
+
+/* @media screen and (min-width: 1440px){
+    .playlist-name{
+       max-width: 25ch;
+        text-overflow: ellipsis;
+    }
+    .playlist-description{
+        max-width: 25ch;
+        text-overflow: ellipsis;
+    }
+    .song-text{
+        display: inline-block;
+        max-width: 50%; 
+        
+        text-overflow: ellipsis;
+        overflow: hidden;
+    } 
+}
+ */

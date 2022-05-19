@@ -12,8 +12,8 @@ const client_id = secrets.imagga.client_id
 const client_secret = secrets.imagga.client_secret;
 
 async function getColorsFromUpload(image){
-    for (let index = 0; index < 1000000000; index++){}
-    return null 
+   for (let index = 0; index < 1000000000; index++){}
+    return null
     const filePath = image.path;
     const formData = new FormData();
     formData.append("image",fs.createReadStream(filePath));
