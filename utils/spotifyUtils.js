@@ -51,11 +51,11 @@ async function getSongFromColors(colors, songs) {
   var blue = 0;
 
   for(colorIndex = 0; colorIndex < colors.length; colorIndex++){
-    red += parseInt(colors[colorIndex].r)
-    green += parseInt(colors[colorIndex].g)
-    blue += parseInt(colors[colorIndex].b)
+    red += colors[colorIndex].r
+    green += colors[colorIndex].g
+    blue += colors[colorIndex].b
   }
-
+  console.log(red,green,blue)
   red = red/colors.length
   green = green/colors.length
   blue = blue/colors.length
