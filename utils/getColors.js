@@ -31,6 +31,7 @@ async function getColorsFromUpload(image){
     }
     var temp=Array();
     for(let color of response.result.colors.image_colors){
+
         temp.push(
             {
                 r: color.r,
@@ -38,38 +39,11 @@ async function getColorsFromUpload(image){
                 b: color.b
             })
     }
+    
 
-    var imInfo={
-        //url: imageUrl,
-        colors: temp
-    }
-    console.log(imInfo);
-    return imInfo;    
-    /* var auth = client_id+':'+client_secret;
-    var authString = auth.toString();
-    response = await fetch(url, {
-	    method: 'get',
-	    headers: {
-            Authorization: "Basic "+Buffer.from(authString).toString('base64')
-          }
-    });
-    var data = await response.json();
-    var temp=Array();
-    for(let color of data.result.colors.image_colors){
-        temp.push(
-            {
-                r: color.r,
-                g: color.g,
-                b: color.b
-            })
-    }
 
-    var imInfo={
-        //url: imageUrl,
-        colors: temp
-    }
-    console.log(imInfo);
-    return imInfo; */
+    
+    return temp;    
 }
 
 async function getColorsFromUrl(imageUrl){
@@ -93,40 +67,12 @@ async function getColorsFromUrl(imageUrl){
             })
     }
 
-    var imInfo={
-        //url: imageUrl,
-        colors: temp
-    }
-    console.log(imInfo);
-    return imInfo;    
 
-    /* var url = 'https://api.imagga.com/v2/colors?image_url=' + encodeURIComponent(imageUrl)+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
-    var auth = client_id+':'+client_secret;
-    var authString = auth.toString();
-    const response = await fetch(url, {
-	    method: 'get',
-	    headers: {
-            Authorization: "Basic "+Buffer.from(authString).toString('base64')
-          }
-    });
-    var data = await response.json();
-    var temp=Array();
-    for(let color of data.result.colors.image_colors){
-        temp.push(
-            {
-                r: color.r,
-                g: color.g,
-                b: color.b
-            })
-    }
-
-    var imInfo={
         //url: imageUrl,
-        colors: temp
-    }
-    console.log(imInfo);
-    return imInfo;
-*/
+ 
+
+    //console.log(imInfo);
+    return temp;    
 }
 async function test(){
     
