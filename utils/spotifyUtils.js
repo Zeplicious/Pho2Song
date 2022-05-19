@@ -51,10 +51,13 @@ async function getSongFromColors(colors, songs) {
   var blue = 0;
 
   for(colorIndex = 0; colorIndex < colors.length; colorIndex++){
-    red += parseInt(colors[colorIndex].r)
-    green += parseInt(colors[colorIndex].g)
-    blue += parseInt(colors[colorIndex].b)
+    console.log(colors[colorIndex].r, colors[colorIndex].g, colors[colorIndex].b)
+    red += colors[colorIndex].r
+    green += colors[colorIndex].g
+    blue += colors[colorIndex].b
   }
+
+  
 
   red = red/colors.length
   green = green/colors.length
@@ -66,7 +69,6 @@ async function getSongFromColors(colors, songs) {
     b: blue,
   }
   
-  console.log(averageColor)
   for(songIndex = 1; songIndex < songs.length; songIndex++){
     if(averageColor.r > averageColor.g && averageColor.r > averageColor.b){
       if (songs[songIndex].energy > max.energy){
