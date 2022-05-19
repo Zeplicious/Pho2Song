@@ -340,12 +340,13 @@ async function work(userTasteInfo,userData) {
 	var imgName = userData.names.pop();
 	if (photo == null) return;
 	var song
-	
-	if ((typeof photo) == File || (typeof photo) == Object ) {
+	try{
+		url = new URL(photo)
+		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),userTasteInfo)
+		
+	}catch(e){
 		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),userTasteInfo)
-
-	} // controlli il tipo; se stringa photo in input
-	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),userTasteInfo)
+	}
 
 	userData.songsDB.push({
 		song: song,
@@ -366,9 +367,9 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 	}
 	
 	if (req.files) {//finito
+		userData.get(req.session.user.id).photos=req.files;
 		let photos=userData.get(req.session.user.id).photos
 		let names=userData.get(req.session.user.id).names
-		photos= req.files;
 		if(photos.length!=0){
 			let urls=Array();
 			
@@ -470,16 +471,18 @@ app.get('/getSong',checkAuthenticated,async function (req, res) {
 			let photo = userData.get(req.session.user.id).photos.pop();
 			let imgName = userData.get(req.session.user.id).names.pop();
 			console.log((typeof photo) == String)
-			console.log((typeof photo) == Object)
 			if (photo == null) data=null
 			else{
 				let song
-				if ( (typeof photo) == Object) {
-				song =  await spotifyUtils.getSongFromColors( await colorUtil.getColorsFromUpload(photo) ,req.session.user.tastes)
-		
-				} // controlli il tipo; se stringa photo in input
-				else song = await spotifyUtils.getSongFromColors( await colorUtil.getColorsFromUrl(photo) ,req.session.user.tastes)
-		
+				if(photo.path !== undefined){
+					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),req.session.user.tastes)
+					console.log('CIAO')
+					
+				}
+				else{
+					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),req.session.user.tastes)
+				}
+			
 				userData.get(req.session.user.id).songsDB.push({
 					song: song,
 					photo: imgName
