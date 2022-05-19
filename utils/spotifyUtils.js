@@ -24,12 +24,13 @@ async function getUserTaste(spotifyApi) {
   }
 
   var data = await spotifyApi.getAudioFeaturesForTracks(ids)
-  ret = Array()
+  ret =new Map()
 
   //parse dei parametri utili
   var index = 0
   for(let track of data.body.audio_features){
-    ret.push(
+    ret.set(
+      index,
       {
         uri: ('spotify:track:'+track.id),
         name: names[index],
@@ -66,6 +67,7 @@ async function getSongFromColors(colors, songs) {
     b: blue,
   }
   
+  console.log(averageColor)
   for(songIndex = 1; songIndex < songs.length; songIndex++){
     if(averageColor.r > averageColor.g && averageColor.r > averageColor.b){
       if (songs[songIndex].energy > max.energy){
