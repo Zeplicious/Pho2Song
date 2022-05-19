@@ -66,7 +66,6 @@ async function getSongFromColors(colors, songs) {
     b: blue,
   }
   
-  console.log(averageColor)
   for(songIndex = 1; songIndex < songs.length; songIndex++){
     if(averageColor.r > averageColor.g && averageColor.r > averageColor.b){
       if (songs[songIndex].energy > max.energy){
