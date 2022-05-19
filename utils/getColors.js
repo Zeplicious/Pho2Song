@@ -12,8 +12,8 @@ const client_id = secrets.imagga.client_id
 const client_secret = secrets.imagga.client_secret;
 
 async function getColorsFromUpload(image){
-   for (let index = 0; index < 1000000000; index++){}
-    return null
+   /* for (let index = 0; index < 1000000000; index++){}
+    return null */
     const filePath = image.path;
     const formData = new FormData();
     formData.append("image",fs.createReadStream(filePath));
@@ -73,8 +73,8 @@ async function getColorsFromUpload(image){
 }
 
 async function getColorsFromUrl(imageUrl){
-    for (let index = 0; index < 1000000000; index++){}
-    return;
+    /* for (let index = 0; index < 1000000000; index++){}
+    return; */
     var url = 'https://api.imagga.com/v2/colors?image_url=' + encodeURIComponent(imageUrl)+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0'
     var response
     try {

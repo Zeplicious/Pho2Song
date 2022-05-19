@@ -291,7 +291,7 @@ app.get('/input', checkAuthenticated, function (req, res) { // input prima del l
 	res.render('./pages/input.ejs', 
 	{ 
 		albums: req.session.user.albums,
-		logged: req.session.user.albums!==undefined, 
+		logged: req.session.user.accessTokenGoogle!='', 
 		p2sUser: {
 			username: req.session.user.name,
 			user_image: req.session.user.prof_pic
@@ -340,11 +340,12 @@ async function work(userTasteInfo,userData) {
 	var imgName = userData.names.pop();
 	if (photo == null) return;
 	var song
-	if (typeof photo == String) {
-		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),userTasteInfo)
+	
+	if ((typeof photo) == File || (typeof photo) == Object ) {
+		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),userTasteInfo)
 
 	} // controlli il tipo; se stringa photo in input
-	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),userTasteInfo)
+	else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),userTasteInfo)
 
 	userData.songsDB.push({
 		song: song,
@@ -464,20 +465,20 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 
 app.get('/getSong',checkAuthenticated,async function (req, res) {
 	try {
-		let data
-		
-			
+		let data	
 		try{
-			var photo = userData.get(req.session.user.id).photos.pop();
-			var imgName = userData.get(req.session.user.id).names.pop();
+			let photo = userData.get(req.session.user.id).photos.pop();
+			let imgName = userData.get(req.session.user.id).names.pop();
+			console.log((typeof photo) == String)
+			console.log((typeof photo) == Object)
 			if (photo == null) data=null
 			else{
-				var song
-				if (typeof photo == String) {
-				song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),req.session.user.tastes)
+				let song
+				if ( (typeof photo) == Object) {
+				song =  await spotifyUtils.getSongFromColors( await colorUtil.getColorsFromUpload(photo) ,req.session.user.tastes)
 		
 				} // controlli il tipo; se stringa photo in input
-				else song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),req.session.user.tastes)
+				else song = await spotifyUtils.getSongFromColors( await colorUtil.getColorsFromUrl(photo) ,req.session.user.tastes)
 		
 				userData.get(req.session.user.id).songsDB.push({
 					song: song,
@@ -486,8 +487,10 @@ app.get('/getSong',checkAuthenticated,async function (req, res) {
 				data=song
 			}
 		}catch(e){
+			console.log(e)
 			data='error'
 		}
+		console.log(data)
 		if (data=='error') res.redirect('/')
 		else if (data) res.send(data)
 		else res.send('end')

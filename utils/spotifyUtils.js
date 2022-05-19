@@ -1,4 +1,4 @@
-var index = 0;
+
 const fs = require('fs');
 const { isBuffer } = require('util');
 var ret = '';
@@ -23,12 +23,11 @@ async function getUserTaste(spotifyApi) {
     }
   }
 
-  console.log(ids)
   var data = await spotifyApi.getAudioFeaturesForTracks(ids)
   ret = Array()
 
   //parse dei parametri utili
-  index=0
+  var index = 0
   for(let track of data.body.audio_features){
     ret.push(
       {
@@ -57,16 +56,17 @@ async function getSongFromColors(colors, songs) {
     blue += parseInt(colors[colorIndex].b)
   }
 
-  red = red/5
-  green = green/5
-  blue = blue/5
+  red = red/colors.length
+  green = green/colors.length
+  blue = blue/colors.length
 
   var averageColor = {
     r: red,
     g: green,
     b: blue,
   }
-
+  
+  console.log(averageColor)
   for(songIndex = 1; songIndex < songs.length; songIndex++){
     if(averageColor.r > averageColor.g && averageColor.r > averageColor.b){
       if (songs[songIndex].energy > max.energy){
@@ -89,12 +89,12 @@ async function getSongFromColors(colors, songs) {
       }
     }
     else if(averageColor.r == averageColor.g && averageColor.r == averageColor.b){
-      if(song[songIndex].acousticness > max.acoustiness && song[songIndex].energy < 0.25 && song[songIndex].energy < max.energy){
+      if(songs[songIndex].acousticness > max.acoustiness && songs[songIndex].energy < 0.25 && song[songIndex].energy < max.energy){
         max = songs[songIndex]
       }
     }
   }
-
+  
   //scegli una foto per i colori
   /* ret={
     uri: songs[index % songs.length].uri,
@@ -104,8 +104,6 @@ async function getSongFromColors(colors, songs) {
     uri: max.uri,
     name: max.name
   }
-  index++;
-
   console.log("finito")
 
   return ret
