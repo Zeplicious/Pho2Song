@@ -1,17 +1,29 @@
 var index = 0;
 const fs = require('fs');
+const { isBuffer } = require('util');
 var ret = '';
 
 async function getUserTaste(spotifyApi) {
-
   var data = await spotifyApi.getMyTopTracks({limit: 100})
+  
   ids=Array()
   names=Array()
-  for(let track of data.body.items){
-    ids.push(track.id);
-    names.push(track.name);
+  if(data.body.total<50){
+    let data = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50})
+    for(let track of data.body.items){
+      ids.push(track.track.id);
+      names.push(track.track.name);
+    }
+    
+  }
+  if(data.body.total!=0){
+    for(let track of data.body.items){
+      ids.push(track.id);
+      names.push(track.name);
+    }
   }
 
+  console.log(ids)
   var data = await spotifyApi.getAudioFeaturesForTracks(ids)
   ret = Array()
 
@@ -28,7 +40,6 @@ async function getUserTaste(spotifyApi) {
       });
     index++
   }
-
   return ret
 }
 
@@ -102,64 +113,6 @@ async function getSongFromColors(colors, songs) {
 
 }
 
-
-function getMyData(spotifyApi, callback) {
-  (async () => {
-    // console.log(me.body);
-    getUserPlaylists(spotifyApi).then(data => {
-      console.log('---------------------------------Finito---------------------------------\n' + ret);
-      callback(ret);
-    });
-  })().catch(e => {
-    console.error(e);
-  });
-}
-
-
-async function getUserPlaylists(spotifyApi) {
-  const data = await spotifyApi.getUserPlaylists()
-
-  //console.log("---------------+++++++++++++++++++++++++")
-  let playlists = []
-
-  for (let playlist of data.body.items) {
-    // console.log(playlist.name + " " + playlist.id)
-    ret += playlist.name + " " + playlist.id + '\r\n';
-    let tracks = await getPlaylistTracks(spotifyApi, playlist.id, playlist.name);
-    // console.log(tracks);
-
-    const tracksJSON = { tracks }
-    let data = JSON.stringify(tracksJSON);
-    fs.writeFileSync('export/' + playlist.name + '.json', data);
-  }
-}
-
-
-//GET SONGS FROM PLAYLIST
-async function getPlaylistTracks(spotifyApi, playlistId, playlistName) {
-
-  const data = await spotifyApi.getPlaylistTracks(playlistId, {
-    offset: 1,
-    limit: 100,
-    fields: 'items'
-  })
-
-  // console.log('The playlist contains these tracks', data.body);
-  // console.log('The playlist contains these tracks: ', data.body.items[0].track);
-  // console.log("'" + playlistName + "'" + ' contains these tracks:');
-  let tracks = [];
-
-  for (let track_obj of data.body.items) {
-    const track = track_obj.track
-    tracks.push(track);
-    //console.log(track.name + " : " + track.artists[0].name)
-  }
-
-  console.log("---------------+++++++++++++++++++++++++")
-  return tracks;
-}
-
-
 async function analyzePlaylist(spotifyApi, playlistId) {
 
   var data = await spotifyApi.getPlaylistTracks(playlistId, { limit: 100 })
@@ -169,39 +122,74 @@ async function analyzePlaylist(spotifyApi, playlistId) {
     ids.push(item.track.id);
   }
 
-  let averageAcousticness = 0
-  let averageDanceability = 0
-  let averageEnergy = 0
-  let averageInstrumentalness = 0
-  let averageLiveness = 0
-  let averageLoudness = 0
-  let averageSpeechiness = 0
-  let averageTempo = 0
+  let averageAcousticness = 0, countAcousticness = 0
+  let averageDanceability = 0, countDanceability = 0
+  let averageEnergy = 0, countEnergy = 0
+  let averageInstrumentalness = 0, countInstrumentalness = 0
+  let averageLiveness = 0, countLiveness = 0
+  let averageLoudness = 0, countLoudness = 0
+  let averageSpeechiness = 0, countSpeechiness = 0
+  let averageTempo = 0, countTempo = 0
 
   var data2 = await spotifyApi.getAudioFeaturesForTracks(ids)
 
   for (let track of data2.body.audio_features) {
-    averageAcousticness += track.acousticness * 100
-    averageDanceability += track.danceability * 100
-    averageEnergy += track.energy * 100
-    averageInstrumentalness += track.instrumentalness * 100
-    averageLiveness += track.liveness * 100
-    averageLoudness += track.loudness
-    averageSpeechiness += track.speechiness * 100
-    averageTempo += track.tempo
+    if (track !== undefined && track != null) {
+      if(track.acousticness !== undefined && track.acousticness != null) {
+        averageAcousticness += track.acousticness * 100
+        countAcousticness++
+      }
+      if(track.danceability !== undefined && track.danceability != null) {
+        averageDanceability += track.danceability * 100
+        countDanceability++
+      }
+      if(track.energy !== undefined && track.energy != null) {
+        averageEnergy += track.energy * 100
+        countEnergy++
+      }
+      if(track.instrumentalness !== undefined && track.instrumentalness != null) {
+        averageInstrumentalness += track.instrumentalness * 100
+        countInstrumentalness++
+      }
+      if(track.liveness !== undefined && track.liveness != null) {
+        averageLiveness += track.liveness * 100
+        countLiveness++
+      }
+      if(track.loudness !== undefined && track.loudness != null) {
+        averageLoudness += track.loudness
+        countLoudness++
+      }
+      if(track.speechiness !== undefined && track.speechiness != null) {
+        averageSpeechiness += track.speechiness * 100
+        countSpeechiness++
+      }
+      if(track.tempo !== undefined && track.tempo != null) {
+        averageTempo += track.tempo
+        countTempo++
+      } 
+    }
   }
 
 
   var ret = {
-    Acousticness: (averageAcousticness / (ids.length)).toFixed(2),
-    Danceability: (averageDanceability / (ids.length)).toFixed(2),
-    Energy: (averageEnergy / (ids.length)).toFixed(2),
-    Instrumentalness: (averageInstrumentalness / (ids.length)).toFixed(2),
-    Liveness: (averageLiveness / (ids.length)).toFixed(2),
-    Loudness: (averageLoudness / (ids.length)).toFixed(2),
-    Speechiness: (averageSpeechiness / (ids.length)).toFixed(2),
-    Tempo: (averageTempo / (ids.length)).toFixed(2)
+    Acousticness: (averageAcousticness / (countAcousticness)).toFixed(2),
+    Danceability: (averageDanceability / (countDanceability)).toFixed(2),
+    Energy: (averageEnergy / (countEnergy)).toFixed(2),
+    Instrumentalness: (averageInstrumentalness / (countInstrumentalness)).toFixed(2),
+    Liveness: (averageLiveness / (countLiveness)).toFixed(2),
+    Loudness: (averageLoudness / (countLoudness)).toFixed(2),
+    Speechiness: (averageSpeechiness / (countSpeechiness)).toFixed(2),
+    Tempo: (averageTempo / (countTempo)).toFixed(2)
   }
+
+  console.log(countAcousticness)
+  console.log(countDanceability)
+  console.log(countEnergy)
+  console.log(countInstrumentalness)
+  console.log(countLiveness)
+  console.log(countLoudness)
+  console.log(countSpeechiness)
+  console.log(countTempo)
 
   console.log(ret)
 
@@ -210,9 +198,6 @@ async function analyzePlaylist(spotifyApi, playlistId) {
 
 
 module.exports = {
-  getMyData,
-  getUserPlaylists,
-  getPlaylistTracks,
   getUserTaste,
   getSongFromColors,
   analyzePlaylist
