@@ -460,12 +460,10 @@ app.get('/getSong',checkAuthenticated,async function (req, res) {
 				if(photo.path !== undefined){
 					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ req.session.user.tastes, songsChosen)
 					songsChosen.push(song)
-					console.log(songsChosen)
 					console.log('CIAO')					
 				}
 				else{
 					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */ req.session.user.tastes, songsChosen)
-					console.log(songsChosen)
 					songsChosen.push(song)
 				}
 			
