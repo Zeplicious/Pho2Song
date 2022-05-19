@@ -1,6 +1,7 @@
 
 const fs = require('fs');
 const { isBuffer } = require('util');
+const { getPhotos } = require('./googleUtils');
 var ret = '';
 
 async function getUserTaste(spotifyApi) {
@@ -45,6 +46,8 @@ async function getUserTaste(spotifyApi) {
 
 async function getSongFromColors(colors, songs) {
 
+  
+
   var max = songs[0];
   var red = 0;
   var green = 0;
@@ -55,7 +58,6 @@ async function getSongFromColors(colors, songs) {
     green += colors[colorIndex].g
     blue += colors[colorIndex].b
   }
-  console.log(red,green,blue)
   red = red/colors.length
   green = green/colors.length
   blue = blue/colors.length
@@ -65,11 +67,25 @@ async function getSongFromColors(colors, songs) {
     g: green,
     b: blue,
   }
-  
-  console.log(averageColor)
+
+  console.log(songChosen)
+
   for(songIndex = 1; songIndex < songs.length; songIndex++){
-    if(averageColor.r > averageColor.g && averageColor.r > averageColor.b){
+    songChosen.forEach((song) => {
+      if(songs[songIndex].name == song){
+        alreadyChosen = true;
+      }
+    })
+    if(alreadyChosen == true) continue;
+    //rosso
+    if(averageColor.r > averageColor.b && averageColor.r > averageColor.g){
       if (songs[songIndex].energy > max.energy){
+        max = songs[songIndex]
+      }
+    }
+    //arancione
+    else if(averageColor.r > averageColor.g && averageColor.r > averageColor.b && averageColor.r/averageColor.g < averageColor.r/averageColor.b && averageColor.r/averageColor.g > 1.25){
+      if( songs[songIndex].energy > max.energy && songs[songIndex].acousticness > max.acousticness){
         max = songs[songIndex]
       }
     }
@@ -78,18 +94,38 @@ async function getSongFromColors(colors, songs) {
         max = songs[songIndex]
       }
     } */
+
+    //giallo
+    else if(averageColor.r > averageColor.g && averageColor.g > averageColor.b && averageColor.r/averageColor.g <= 1.25 && averageColor.r/averageColor.g >= 0.75 &&  averageColor.r/averageColor.g < averageColor.r/averageColor.b){
+      if(songs[songIndex].energy > max.energy && songs[songIndex].acousticness > max.acousticness ){
+        max = songs[songIndex]
+      }
+    }
+
+    //verde
     else if(averageColor.g > averageColor.r && averageColor.g > averageColor.b){
       if (songs[songIndex].acousticness > max.acousticness){
         max = songs[songIndex]
       }
     }
+
+    //blu
     else if(averageColor.b > averageColor.r && averageColor.b > averageColor.g){
       if (songs[songIndex].danceability > max.danceability){
         max = songs[songIndex]
       }
     }
+
+    //viola
+    else if(averageColor.b > averageColor.r && averageColor.b > averageColor.g && averageColor.b/averageColor.r > averageColor.b/averageColor.g){
+      if(songs[songIndex].danceability > max.danceability && songs[songIndex].energy > max.energy){
+        max = songs[songIndex]
+      }
+    }
+
+    //bianco,grigio,nero
     else if(averageColor.r == averageColor.g && averageColor.r == averageColor.b){
-      if(songs[songIndex].acousticness > max.acoustiness && songs[songIndex].energy < 0.25 && song[songIndex].energy < max.energy){
+      if(songs[songIndex].acousticness < max.acoustiness && songs[songIndex].energy < max.energy && songs[songIndex.danceability] < max.danceability){
         max = songs[songIndex]
       }
     }
@@ -100,10 +136,17 @@ async function getSongFromColors(colors, songs) {
     uri: songs[index % songs.length].uri,
     name: songs[index % songs.length].name
   } */
+
+
   ret = {
     uri: max.uri,
     name: max.name
   }
+
+  songChosen.push(max.name);
+  songChosenIndex++;
+  alreadyChosen = false
+
   console.log("finito")
 
   return ret
