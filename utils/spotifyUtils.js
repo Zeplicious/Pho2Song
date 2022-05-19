@@ -4,21 +4,23 @@ const { isBuffer } = require('util');
 const { getPhotos } = require('./googleUtils');
 var ret = '';
 
+var alreadyChosen = false;
+
 async function getUserTaste(spotifyApi) {
-  var data = await spotifyApi.getMyTopTracks({limit: 100})
-  
-  ids=Array()
-  names=Array()
-  if(data.body.total<50){
-    let data = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50})
-    for(let track of data.body.items){
+  var data = await spotifyApi.getMyTopTracks({ limit: 100 })
+
+  ids = Array()
+  names = Array()
+  if (data.body.total < 50) {
+    let data = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50 })
+    for (let track of data.body.items) {
       ids.push(track.track.id);
       names.push(track.track.name);
     }
-    
+
   }
-  if(data.body.total!=0){
-    for(let track of data.body.items){
+  if (data.body.total != 0) {
+    for (let track of data.body.items) {
       ids.push(track.id);
       names.push(track.name);
     }
@@ -29,10 +31,10 @@ async function getUserTaste(spotifyApi) {
 
   //parse dei parametri utili
   var index = 0
-  for(let track of data.body.audio_features){
+  for (let track of data.body.audio_features) {
     ret.push(
       {
-        uri: ('spotify:track:'+track.id),
+        uri: ('spotify:track:' + track.id),
         name: names[index],
         danceability: track.danceability * 255,
         energy: track.energy * 255,
@@ -44,23 +46,21 @@ async function getUserTaste(spotifyApi) {
 }
 
 
-async function getSongFromColors(colors, songs) {
+async function getSongFromColors(colors, songs, songsChosen) {
 
-  
-
-  var max = songs[0];
+  var max = null
   var red = 0;
   var green = 0;
   var blue = 0;
 
-  for(colorIndex = 0; colorIndex < colors.length; colorIndex++){
+  for (colorIndex = 0; colorIndex < colors.length; colorIndex++) {
     red += colors[colorIndex].r
     green += colors[colorIndex].g
     blue += colors[colorIndex].b
   }
-  red = red/colors.length
-  green = green/colors.length
-  blue = blue/colors.length
+  red = red / colors.length
+  green = green / colors.length
+  blue = blue / colors.length
 
   var averageColor = {
     r: red,
@@ -68,69 +68,73 @@ async function getSongFromColors(colors, songs) {
     b: blue,
   }
 
-  console.log(songChosen)
+  for (songIndex = 0; songIndex < songs.length; songIndex++) {
+    //controllo se è stata già scelta la stessa canzone
+    for(chosenIndex = 0; chosenIndex < songsChosen.length; chosenIndex++){
 
-  for(songIndex = 1; songIndex < songs.length; songIndex++){
-    songChosen.forEach((song) => {
-      if(songs[songIndex].name == song){
+      console.log("indice: " + songIndex, songs[songIndex].uri, songsChosen[chosenIndex.uri])
+      
+      if (songs[songIndex].uri == songsChosen[chosenIndex].uri) {
         alreadyChosen = true;
+        break;
       }
-    })
-    if(alreadyChosen == true) continue;
+    }
+    if (alreadyChosen == true){
+      alreadyChosen = false;
+      continue;
+    } 
+
+    if(max == null) max = songs[songIndex]
+
     //rosso
-    if(averageColor.r > averageColor.b && averageColor.r > averageColor.g){
-      if (songs[songIndex].energy > max.energy){
+    if (averageColor.r > averageColor.b && averageColor.r > averageColor.g) {
+      if (songs[songIndex].energy > max.energy) {
         max = songs[songIndex]
       }
     }
     //arancione
-    else if(averageColor.r > averageColor.g && averageColor.r > averageColor.b && averageColor.r/averageColor.g < averageColor.r/averageColor.b && averageColor.r/averageColor.g > 1.25){
-      if( songs[songIndex].energy > max.energy && songs[songIndex].acousticness > max.acousticness){
+    else if (averageColor.r > averageColor.g && averageColor.r > averageColor.b && averageColor.r / averageColor.g < averageColor.r / averageColor.b && averageColor.r / averageColor.g > 1.25) {
+      if (songs[songIndex].energy > max.energy && songs[songIndex].acousticness > max.acousticness) {
         max = songs[songIndex]
       }
     }
-    /* else if(){
-      if (songs[songIndex].energy > max.energy){
-        max = songs[songIndex]
-      }
-    } */
 
     //giallo
-    else if(averageColor.r > averageColor.g && averageColor.g > averageColor.b && averageColor.r/averageColor.g <= 1.25 && averageColor.r/averageColor.g >= 0.75 &&  averageColor.r/averageColor.g < averageColor.r/averageColor.b){
-      if(songs[songIndex].energy > max.energy && songs[songIndex].acousticness > max.acousticness ){
+    else if (averageColor.r > averageColor.g && averageColor.g > averageColor.b && averageColor.r / averageColor.g <= 1.25 && averageColor.r / averageColor.g >= 0.75 && averageColor.r / averageColor.g < averageColor.r / averageColor.b) {
+      if (songs[songIndex].energy > max.energy && songs[songIndex].acousticness > max.acousticness) {
         max = songs[songIndex]
       }
     }
 
     //verde
-    else if(averageColor.g > averageColor.r && averageColor.g > averageColor.b){
-      if (songs[songIndex].acousticness > max.acousticness){
+    else if (averageColor.g > averageColor.r && averageColor.g > averageColor.b) {
+      if (songs[songIndex].acousticness > max.acousticness) {
         max = songs[songIndex]
       }
     }
 
     //blu
-    else if(averageColor.b > averageColor.r && averageColor.b > averageColor.g){
-      if (songs[songIndex].danceability > max.danceability){
+    else if (averageColor.b > averageColor.r && averageColor.b > averageColor.g) {
+      if (songs[songIndex].danceability > max.danceability) {
         max = songs[songIndex]
       }
     }
 
     //viola
-    else if(averageColor.b > averageColor.r && averageColor.b > averageColor.g && averageColor.b/averageColor.r > averageColor.b/averageColor.g){
-      if(songs[songIndex].danceability > max.danceability && songs[songIndex].energy > max.energy){
+    else if (averageColor.b > averageColor.r && averageColor.b > averageColor.g && averageColor.b / averageColor.r > averageColor.b / averageColor.g) {
+      if (songs[songIndex].danceability > max.danceability && songs[songIndex].energy > max.energy) {
         max = songs[songIndex]
       }
     }
 
     //bianco,grigio,nero
-    else if(averageColor.r == averageColor.g && averageColor.r == averageColor.b){
-      if(songs[songIndex].acousticness < max.acoustiness && songs[songIndex].energy < max.energy && songs[songIndex.danceability] < max.danceability){
+    else if (averageColor.r == averageColor.g && averageColor.r == averageColor.b) {
+      if (songs[songIndex].acousticness <= max.acoustiness && songs[songIndex].energy <= max.energy && songs[songIndex.danceability] <= max.danceability) {
         max = songs[songIndex]
       }
     }
   }
-  
+
   //scegli una foto per i colori
   /* ret={
     uri: songs[index % songs.length].uri,
@@ -143,8 +147,6 @@ async function getSongFromColors(colors, songs) {
     name: max.name
   }
 
-  songChosen.push(max.name);
-  songChosenIndex++;
   alreadyChosen = false
 
   console.log("finito")
@@ -176,38 +178,38 @@ async function analyzePlaylist(spotifyApi, playlistId) {
 
   for (let track of data2.body.audio_features) {
     if (track !== undefined && track != null) {
-      if(track.acousticness !== undefined && track.acousticness != null) {
+      if (track.acousticness !== undefined && track.acousticness != null) {
         averageAcousticness += track.acousticness * 100
         countAcousticness++
       }
-      if(track.danceability !== undefined && track.danceability != null) {
+      if (track.danceability !== undefined && track.danceability != null) {
         averageDanceability += track.danceability * 100
         countDanceability++
       }
-      if(track.energy !== undefined && track.energy != null) {
+      if (track.energy !== undefined && track.energy != null) {
         averageEnergy += track.energy * 100
         countEnergy++
       }
-      if(track.instrumentalness !== undefined && track.instrumentalness != null) {
+      if (track.instrumentalness !== undefined && track.instrumentalness != null) {
         averageInstrumentalness += track.instrumentalness * 100
         countInstrumentalness++
       }
-      if(track.liveness !== undefined && track.liveness != null) {
+      if (track.liveness !== undefined && track.liveness != null) {
         averageLiveness += track.liveness * 100
         countLiveness++
       }
-      if(track.loudness !== undefined && track.loudness != null) {
+      if (track.loudness !== undefined && track.loudness != null) {
         averageLoudness += track.loudness
         countLoudness++
       }
-      if(track.speechiness !== undefined && track.speechiness != null) {
+      if (track.speechiness !== undefined && track.speechiness != null) {
         averageSpeechiness += track.speechiness * 100
         countSpeechiness++
       }
-      if(track.tempo !== undefined && track.tempo != null) {
+      if (track.tempo !== undefined && track.tempo != null) {
         averageTempo += track.tempo
         countTempo++
-      } 
+      }
     }
   }
 

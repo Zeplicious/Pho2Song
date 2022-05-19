@@ -305,33 +305,8 @@ app.get('/input', checkAuthenticated, function (req, res) { // input prima del l
 
 const userData = new Map();
 
-var colorsArray = [
-	{
-		r: "255",
-		g: "0",
-		b:	"0" 
-	},
-	{
-		r: "255", 
-		g: "20",
-		b: "20"
-	},
-	{
-		r: "255",
-		g: "40",
-		b: "5"
-	}, 
-	{
-		r: "200",
-		g: "10",
-		b: "0"
-	},
-	{
-		r: "220",
-		g: "10",
-		b: "30"
-	}
-]
+var songsChosen = new Array();
+
 async function work(userTasteInfo,userData) {
 	try{
 		var photo = userData.photos.pop();
@@ -363,6 +338,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 	})
 	spotifyApi.setAccessToken(accessToken);
 	req.session.user.tastes=spotifyUtils.getUserTaste(spotifyApi) */
+	songsChosen = []
 	userData.set(req.session.user.id,{
 		photos: Array(),
 		names: Array(),
@@ -482,12 +458,15 @@ app.get('/getSong',checkAuthenticated,async function (req, res) {
 			else{
 				let song
 				if(photo.path !== undefined){
-					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ req.session.user.tastes)
-					console.log('CIAO')
-					
+					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ req.session.user.tastes, songsChosen)
+					songsChosen.push(song)
+					console.log(songsChosen)
+					console.log('CIAO')					
 				}
 				else{
-					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */ req.session.user.tastes)
+					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */ req.session.user.tastes, songsChosen)
+					console.log(songsChosen)
+					songsChosen.push(song)
 				}
 			
 				userData.get(req.session.user.id).songsDB.push({
@@ -500,7 +479,7 @@ app.get('/getSong',checkAuthenticated,async function (req, res) {
 			console.log(e)
 			data='error'
 		}
-		console.log(data)
+		//console.log(data)
 		if (data=='error') res.redirect('/')
 		else if (data) res.send(data)
 		else res.send('end')
