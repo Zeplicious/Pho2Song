@@ -71,6 +71,8 @@ async function getSongFromColors(colors, songs, songsChosen) {
   for (songIndex = 0; songIndex < songs.length; songIndex++) {
     //controllo se è stata già scelta la stessa canzone
     for(chosenIndex = 0; chosenIndex < songsChosen.length; chosenIndex++){
+
+      console.log("indice: " + songIndex, songs[songIndex].uri, songsChosen[chosenIndex.uri])
       
       if (songs[songIndex].uri == songsChosen[chosenIndex].uri) {
         alreadyChosen = true;
