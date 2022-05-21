@@ -404,7 +404,7 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 
 app.post('/playlist', checkAuthenticated, function (req, res) {
 
-	let songsDB = Array.from(userData.get(req.session.user.id))
+	let songsDB = Array.from(userData.get(req.session.user.id).songsDB)
 	if (songsDB.length==0)res.redirect('/input')
 
 	let spotifyApi=  new SpotifyWebApi({
