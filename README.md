@@ -9,3 +9,5 @@ escludendo i dettagli
 ##### Backend
 - [x] algoritmo scelta canzoni
 - [x] database
+
+run docker-compose up

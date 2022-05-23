@@ -125,7 +125,7 @@ passport.use('spotify',
 				prof_pic: prof_pic,
 				accessToken: accessToken,
 				//timer: intervalID,
-				tastes: tastes,
+				tastes: tastes, 
 
 				accessTokenGoogle: '',
 				albums: null
@@ -256,14 +256,21 @@ app.post('/logout', checkAuthenticated, (req, res) => {
 /************** Listening section of the server setup **************/
 
 //questo setup fa solo da ponte, al click sul pulsante "log me in with spotify" il browser dell'utente effettua una get a /spotify-login...
-app.get('/spotify-login', checkNotAuthenticated, passport.authenticate('spotify', { scope: spotify_scopes }));
+app.get('/spotify-login', checkNotAuthenticated, passport.authenticate('spotify', { scope: spotify_scopes }),function(req,res){
+	console.log("ciao-login")
+});
 
 
 app.get('/spotify-login/callback', checkNotAuthenticated,passport.authenticate('spotify', {
 	successRedirect: '/spotify-login/callback/return',
 	failureRedirect: '/'
-}))
+}),
+function(req,res){
+	console.log("ciao-login/callback")
+}
+)
 app.get('/spotify-login/callback/return',function(req,res){
+	console.log("ciao-login/callback/return")
 	req.session.user=req.user
 	res.redirect('/')
 })
@@ -527,13 +534,13 @@ app.post('/plist-analyzer', (req, res) => {
 	})
 })
 
-app.listen(8888, () => {
+app.listen(process.env.PORT||8888, () => {
 	console.log('Server listening on http://localhost:8888/');
 });
 
 /************** Funzionalità: Playlist History ******************* */
 
-app.get('/playlist_history', checkAuthenticated, (req, res) => {
+app.get('/playlist_history', /* checkAuthenticated */(req, res) => {
 	couch.get(dbName, viewUrl ).then(
         (data, headers, status) => {
 			res.render('./pages/song_history.ejs', {
