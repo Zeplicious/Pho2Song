@@ -312,8 +312,6 @@ app.get('/input', checkAuthenticated, function (req, res) { // input prima del l
 
 const userData = new Map();
 
-var songsChosen = new Array();
-
 async function work(userTasteInfo,userData) {
 	try{
 		var photo = userData.photos.pop();
@@ -345,11 +343,12 @@ app.post('/result',upload.array("images", 50), checkAuthenticated, function (req
 	})
 	spotifyApi.setAccessToken(accessToken);
 	req.session.user.tastes=spotifyUtils.getUserTaste(spotifyApi) */
-	songsChosen = []
+	
 	userData.set(req.session.user.id,{
 		photos: Array(),
 		names: Array(),
-		songsDB: Array()
+		songsDB: Array(),
+		songsChosen: Array()
 	})
 	p2sUser={
 		username: req.session.user.name,
@@ -465,15 +464,15 @@ app.get('/getSong',checkAuthenticated,async function (req, res) {
 			else{
 				let song
 				if(photo.path !== undefined){
-					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ req.session.user.tastes, songsChosen)
-					songsChosen.push(song)
-					console.log(songsChosen)
+					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ req.session.user.tastes, userData.get(req.session.user.id).songsChosen)
+					userData.get(req.session.user.id).songsChosen.push(song)
+					console.log(userData.get(req.session.user.id).songsChosen.push(song))
 					console.log('CIAO')					
 				}
 				else{
-					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */ req.session.user.tastes, songsChosen)
-					console.log(songsChosen)
-					songsChosen.push(song)
+					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */ req.session.user.tastes, userData.get(req.session.user.id).songsChosen)
+					userData.get(req.session.user.id).songsChosen.push(song)
+					console.log(userData.get(req.session.user.id).songsChosen.push(song))				
 				}
 			
 				userData.get(req.session.user.id).songsDB.push({
@@ -543,7 +542,7 @@ app.listen(process.env.PORT||8888, () => {
 app.get('/playlist_history', /* checkAuthenticated */(req, res) => {
 	couch.get(dbName, viewUrl ).then(
         (data, headers, status) => {
-			res.render('./pages/song_history.ejs', {
+			res.render('./pages/playlist_history.ejs', {
 				p2sUser: {
 					username: req.session.user.name,
 					user_image: req.session.user.prof_pic

@@ -71,9 +71,6 @@ async function getSongFromColors(colors, songs, songsChosen) {
   for (songIndex = 0; songIndex < songs.length; songIndex++) {
     //controllo se è stata già scelta la stessa canzone
     for(chosenIndex = 0; chosenIndex < songsChosen.length; chosenIndex++){
-
-      console.log("indice: " + songIndex, songs[songIndex].uri, songsChosen[chosenIndex.uri])
-      
       if (songs[songIndex].uri == songsChosen[chosenIndex].uri) {
         alreadyChosen = true;
         break;
@@ -136,12 +133,6 @@ async function getSongFromColors(colors, songs, songsChosen) {
   }
 
   //scegli una foto per i colori
-  /* ret={
-    uri: songs[index % songs.length].uri,
-    name: songs[index % songs.length].name
-  } */
-
-
   ret = {
     uri: max.uri,
     name: max.name
@@ -152,8 +143,6 @@ async function getSongFromColors(colors, songs, songsChosen) {
   console.log("finito")
 
   return ret
-
-
 }
 
 async function analyzePlaylist(spotifyApi, playlistId) {
