@@ -8,6 +8,7 @@ const passport = require('passport');
 const flash = require('express-flash')
 const session = require('express-session')
 
+const Joi = require('joi');
 const methodOverride = require('method-override')
 const NodeCouchDb = require('node-couchdb');
 
@@ -25,6 +26,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');			//Abilita il file upload verso il server
 const res = require('express/lib/response');
 const { runInNewContext } = require('vm');
+const { join } = require('path');
 
 
 
@@ -199,8 +201,6 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
 
 /**************  Aux function multer **************/
 
@@ -556,3 +556,118 @@ app.get('/playlist_history', /* checkAuthenticated */(req, res) => {
         }
     );
 })
+
+/************************** CHIAMATE API *************************** */
+
+app.post('/api/playlists/analyze', (req, res) => {
+	const schema = Joi.object({
+		id: Joi.string().required(),
+		accessToken: Joi.string().required()
+	})
+	const { error } = validate(schema, req.body)
+	if(error) return res.status(400).send(error.details[0].message)
+	let spotifyApi=  new SpotifyWebApi({
+		clientId: spotify_client_id,
+		clientSecret: spotify_client_secret,
+	})
+	spotifyApi.setAccessToken(req.body.accessToken)
+	try{
+		spotifyUtils.analyzePlaylist(spotifyApi, req.body.id).then(data => {
+			res.send(data)
+		})
+	}
+	catch(e){
+		res.status(400).send(e)
+	} 
+})
+
+/* app.post('/api/p2s/album-playlist', async function (req, res){
+	const schema = Joi.object({
+		url: Joi.string().required(),
+		accessToken: Joi.string().required()
+	})
+	const result = schema.validate(req.body)
+	if(result.error){
+		return res.status(400).send(result.error.details[0].message)
+	}
+	let spotifyApi=  new SpotifyWebApi({
+		clientId: spotify_client_id,
+		clientSecret: spotify_client_secret,
+	})
+	spotifyApi.setAccessToken(req.body.accessToken)
+	try{
+		let taste = await spotifyUtils.getUserTaste(spotifyApi)
+		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(req.body.url), taste, [])
+		res.send(song)
+	}
+	catch(e){
+		res.status(400).send(e)
+	} 
+}) */
+
+app.post('/api/p2s/photo-song', async function (req, res){ //è richiesto lo scope user-top-read
+	const schema = Joi.object({
+		url: Joi.string().required(),
+		accessToken: Joi.string().required()
+	})
+	const { error } = validate(schema, req.body)
+	if(error) return res.status(400).send(error.details[0].message)
+	let spotifyApi=  new SpotifyWebApi({
+		clientId: spotify_client_id,
+		clientSecret: spotify_client_secret,
+	})
+	spotifyApi.setAccessToken(req.body.accessToken)
+	
+	try{
+		let taste = await spotifyUtils.getUserTaste(spotifyApi)
+		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(req.body.url), taste, [])
+		res.send(song)
+	}
+	catch(e){
+		res.status(400).send(e)
+	} 
+})
+
+app.get('/api/p2s/playlists', (req, res) => {
+	couch.get(dbName, viewUrl).then (
+		(data, headers, status) => {
+			res.send(data.data.rows)
+		}
+	)
+})
+
+app.get('/api/p2s/playlists/:id', (req, res) => {
+	couch.get(dbName, viewUrl).then (
+		(data, headers, status) => {
+			for(index = 0; index < data.data.rows.length; index++) {
+				if(data.data.rows[index].id === req.params.id){
+					res.send(data.data.rows[index].id);
+				}
+			}
+			res.status(404).send('La playlist con id ' + req.params.id + ' non è stata trovata')
+		}
+	)
+})
+
+app.get('/api/p2s/playlists/users/:user', (req, res) => {
+	user_playlists = new Map()
+	couch.get(dbName, viewUrl).then (
+		(data, headers, status) => {
+			for(index = 0; index < data.data.rows.length; index++) {
+				if(data.data.rows[index].value.user === req.params.user){
+					user_playlists.set("user", req.params.user )
+				}
+			}
+			if(!user_playlists.has(req.params.user)){
+				res.status(404).send('L\'user con id ' + req.params.user + ' non trovato')
+			}
+			else{
+				res.send(user_playlists);
+			}
+		}
+	)
+})
+
+function validate(schema, body){
+	return schema.validate(body)
+}

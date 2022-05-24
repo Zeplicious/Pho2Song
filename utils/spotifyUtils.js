@@ -7,8 +7,12 @@ var ret = '';
 var alreadyChosen = false;
 
 async function getUserTaste(spotifyApi) {
-  var data = await spotifyApi.getMyTopTracks({ limit: 100 })
-
+  try{
+    var data = await spotifyApi.getMyTopTracks({limit: 100})
+  }
+  catch (e){
+    console.log(e)
+  }
   ids = Array()
   names = Array()
   if (data.body.total < 50) {
@@ -25,8 +29,13 @@ async function getUserTaste(spotifyApi) {
       names.push(track.name);
     }
   }
-
-  var data = await spotifyApi.getAudioFeaturesForTracks(ids)
+  try{
+    var data = await spotifyApi.getAudioFeaturesForTracks(ids)
+  }
+  catch (e){
+    console.log(e)
+  }
+  console.log("passato audio features")
   ret = Array()
 
   //parse dei parametri utili
