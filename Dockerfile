@@ -6,6 +6,10 @@ COPY package*.json ./
 
 RUN npm install
 
+RUN apt-get update -y
+
+RUN apt-get install tcpdump -y
+
 COPY . .
 
 ENV PORT=8888
