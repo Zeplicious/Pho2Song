@@ -95,7 +95,7 @@ passport.use('spotify',
 	new SpotifyStrategy({
 		clientID: spotify_client_id,
 		clientSecret: spotify_client_secret,
-		callbackURL: '/spotify-login/callback'
+		callbackURL: 'http://localhost:8080/spotify/callback'
 	},
 		async function (accessToken, refreshToken, expiresIn, profile, done) {
 			let spotifyApi=  new SpotifyWebApi({
@@ -167,7 +167,7 @@ passport.use('google',
 	new GoogleStrategy({
 		clientID: google_client_id,
 		clientSecret: google_client_secret,
-		callbackURL: '/google-login/callback'
+		callbackURL: 'http://localhost:8080/google-login/callback'
 	},
 		async function (accessToken, refreshToken, profile, cb) {
 			//ottengo gli album dell'utente tramite accessToken
@@ -233,6 +233,7 @@ app.get('/', /* checkNotAuthenticated, */(req, res) => {
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o di successo
 
 app.get('/login', checkNotAuthenticated, (req, res) => {
+	console.log("ciao-login");
 	let p2sUser=null
 	if(req.session.user!==undefined){
 		p2sUser={
@@ -247,8 +248,8 @@ app.post('/logout', checkAuthenticated, (req, res) => {
 	spotify_users.delete(req.session.user.id);
 	
 	req.logout()
-	req.session.user=undefined;
 	userData.delete(req.session.user.id)
+	req.session.user=undefined;
 	res.redirect('/')
 })
 
@@ -256,20 +257,15 @@ app.post('/logout', checkAuthenticated, (req, res) => {
 /************** Listening section of the server setup **************/
 
 //questo setup fa solo da ponte, al click sul pulsante "log me in with spotify" il browser dell'utente effettua una get a /spotify-login...
-app.get('/spotify-login', checkNotAuthenticated, passport.authenticate('spotify', { scope: spotify_scopes }),function(req,res){
-	console.log("ciao-login")
-});
+app.get('/spotify',  checkNotAuthenticated, passport.authenticate('spotify', { scope: spotify_scopes }));
 
 
-app.get('/spotify-login/callback', checkNotAuthenticated,passport.authenticate('spotify', {
+app.get('/spotify/callback', checkNotAuthenticated,passport.authenticate('spotify', {
 	successRedirect: '/spotify-login/callback/return',
 	failureRedirect: '/'
-}),
-function(req,res){
-	console.log("ciao-login/callback")
-}
+})
 )
-app.get('/spotify-login/callback/return',function(req,res){
+app.get('/spotify-login/callback/return',checkAuthenticated,function(req,res){
 	console.log("ciao-login/callback/return")
 	req.session.user=req.user
 	res.redirect('/')
