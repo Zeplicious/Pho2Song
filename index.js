@@ -247,8 +247,8 @@ app.post('/logout', checkAuthenticated, (req, res) => {
 	spotify_users.delete(req.session.user.id);
 	
 	req.logout()
-	req.session.user=undefined;
 	userData.delete(req.session.user.id)
+	req.session.user=undefined;
 	res.redirect('/')
 })
 
