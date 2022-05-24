@@ -250,7 +250,6 @@ app.post('/logout', checkAuthenticated, (req, res) => {
 	req.logout()
 	userData.delete(req.session.user.id)
 	req.session.user=undefined;
-	
 	res.redirect('/')
 })
 
