@@ -1,7 +1,5 @@
 version: '3'
-
 services:
-
   nginx:
     build:
       context: .
@@ -19,6 +17,24 @@ services:
     networks:
       - app-network
 
+  couchdb:
+    build:
+      context: .
+      dockerfile: docker/couchdb/Dockerfile
+    restart: always
+    ports:
+      - "5984:5984"
+    environment:
+      - INSTANCE=couchdb
+      - COUCHDB_SERVER=http://couchdb:5984
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=Musazza7
+      - COUCHDB_CREATE_DATABASES=yes
+    networks:
+      - backend-network
+    volumes:
+      - ./dbdata:/opt/couchdb/data
+
   node1:
     build:
       context: .
@@ -29,6 +45,9 @@ services:
       - "8888"
     networks:
       - app-network
+      - backend-network
+    links:
+        - couchdb
   
   node2:
     build:
@@ -40,6 +59,11 @@ services:
       - "8888"
     networks:
       - app-network
+      - backend-network
+    links:
+        - couchdb
+
+        
 
   node3:
     build:
@@ -51,8 +75,16 @@ services:
       - "8888"
     networks:
       - app-network
+      - backend-network
+    links:
+        - couchdb
 
+secrets:
+  my-db-password:
+    file: ./docker/production.env 
 
 networks:
   app-network:
+    driver: bridge
+  backend-network:
     driver: bridge

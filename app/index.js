@@ -48,6 +48,8 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 
 /**************  Creazione CouchDb   ************** */
 const couch = new NodeCouchDb({
+	host: 'couchdb',
+	port: '5984',
 	auth: {
 		user: secrets.database.user,
 		pass: secrets.database.password
@@ -440,7 +442,7 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 		couch.insert(dbName, {
 			_id: id,
 			name: req.body.name,
-			user: p2sUser.id,
+			user: req.session.user.id,
 			description: req.body.description,			
 			song_number: req.body.songs.length,
 			songs: songsDB //penso qui possa andarci songsDB direttamente
@@ -535,7 +537,7 @@ app.listen(process.env.PORT||8080, () => {
 
 /************** Funzionalità: Playlist History ******************* */
 
-app.get('/playlist_history', /* checkAuthenticated */(req, res) => {
+app.get('/playlist_history',  checkAuthenticated ,(req, res) => {
 	couch.get(dbName, viewUrl ).then(
         (data, headers, status) => {
 			res.render('./pages/playlist_history.ejs', {
