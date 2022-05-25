@@ -529,8 +529,8 @@ app.post('/plist-analyzer', (req, res) => {
 	})
 })
 
-app.listen(process.env.PORT||8888, () => {
-	console.log('Server listening on http://localhost:8888/');
+app.listen(process.env.PORT||8080, () => {
+	console.log('Server listening on http://localhost:8080/');
 });
 
 /************** Funzionalità: Playlist History ******************* */

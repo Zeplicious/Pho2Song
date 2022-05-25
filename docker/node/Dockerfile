@@ -2,7 +2,7 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY ../../app/package*.json ./
 
 RUN npm install
 
@@ -10,7 +10,7 @@ RUN apt-get update -y
 
 RUN apt-get install tcpdump -y
 
-COPY . .
+COPY ../../app .
 
 ENV PORT=8888
 

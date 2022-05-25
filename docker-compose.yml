@@ -5,19 +5,53 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: .docker/Dockerfile
+      dockerfile: docker/nginx/Dockerfile
     ports:
       - "8080:80"
+    links:
+      - node1:node1
+      - node2:node2
+      - node3:node3
+    depends_on:
+      - node1
+      - node2
+      - node3
     networks:
       - app-network
 
-  node:
+  node1:
     build:
       context: .
+      dockerfile: docker/node/Dockerfile
+    environment:
+      - INSTANCE=node1
     ports:
       - "8888"
     networks:
       - app-network
+  
+  node2:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    environment:
+      - INSTANCE=node2
+    ports:
+      - "8888"
+    networks:
+      - app-network
+
+  node3:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    environment:
+      - INSTANCE=node3
+    ports:
+      - "8888"
+    networks:
+      - app-network
+
 
 networks:
   app-network:
