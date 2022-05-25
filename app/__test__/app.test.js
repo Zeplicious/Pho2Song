@@ -87,6 +87,4 @@ describe("Get colors from file upload or url", () => {
             expect(response[0]).toBeDefined()
         })
     })
-
-
 })
