@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Zeplicious/Pho2Song#readme",
   "dependencies": {
+    "apidoc": "^0.51.1",
     "bcrypt": "^5.0.1",
     "blob": "^0.1.0",
     "ejs": "^3.1.7",
@@ -38,7 +39,9 @@
     "passport-local": "^1.0.0",
     "passport-spotify": "^2.0.0",
     "request": "^2.88.2",
-    "spotify-web-api-node": "^5.0.2"
+    "spotify-web-api-node": "^5.0.2",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.4.0"
   },
   "devDependencies": {
     "dotenv": "^16.0.0",
