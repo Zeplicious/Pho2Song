@@ -2,46 +2,63 @@ const { get } = require('express/lib/request');
 const res = require('express/lib/response');
 const fetch = require('node-fetch')
 const got = require('got')
-const secrets = require('../secrets')
+/* const secrets = require('../secrets') */
 
 const FormData=require('form-data');
 const fs =require('fs');
 
 
-const client_id = secrets.imagga.client_id
-const client_secret = secrets.imagga.client_secret;
+const client_id = process.env.IMAGGA_CLIENT_ID /* secrets.imagga.client_id */
+const client_secret = process.env.IMAGGA_CLIENT_SECRET /* secrets.imagga.client_secret; */
+
+console.log(client_id)
+console.log(client_secret)
 
 async function getColorsFromUpload(image){
    /* for (let index = 0; index < 1000000000; index++){}
     return null */
-    const filePath = image.path;
-    const formData = new FormData();
-    formData.append("image",fs.createReadStream(filePath));
-    var response;
-    try {
-        response = await got.post('https://api.imagga.com/v2/uploads', {body: formData, username: client_id, password: client_secret}).json();
-    } catch (error) {
-        console.log(error);
-    }
-    var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
-    try {
-        response = await got(url, {username: client_id, password: client_secret}).json(); 
-    } catch (error) {
-        console.log(error);
-    }
-    var temp=Array();
-    for(let color of response.result.colors.image_colors){
+    var temp = Array();
 
+    if(image.mimetype && image.mimetype.startsWith("image/")) {
+        const filePath = image.path;
+        const formData = new FormData();
+        formData.append("image", fs.createReadStream(filePath));
+        var response;
+
+        try {
+            response = await got.post('https://api.imagga.com/v2/uploads', { body: formData, username: client_id, password: client_secret }).json();
+        } catch (error) {
+            console.log(error);
+        }
+
+        var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id + '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
+
+        try {
+            response = await got(url, { username: client_id, password: client_secret }).json();
+        } catch (error) {
+            console.log(error);
+        }
+
+        for (let color of response.result.colors.image_colors) {
+
+            temp.push(
+                {
+                    r: color.r,
+                    g: color.g,
+                    b: color.b
+                }
+            )
+        }
+    }
+    else {
         temp.push(
             {
-                r: color.r,
-                g: color.g,
-                b: color.b
-            })
+                r: 57,
+                g: 105,
+                b: 4
+            }
+        )
     }
-    
-
-
     
     return temp;    
 }
@@ -49,26 +66,42 @@ async function getColorsFromUpload(image){
 async function getColorsFromUrl(imageUrl){
     /* for (let index = 0; index < 1000000000; index++){}
     return; */
+    var temp=Array();
+
     var url = 'https://api.imagga.com/v2/colors?image_url=' + encodeURIComponent(imageUrl)+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0'
     var response
+
     try {
         response = await got(url, {username: client_id, password: client_secret}).json();
         
     } catch (error) {
         console.log(error);
     }
-    var temp=Array();
+
+    if (response.statusCode == 403) {
+        temp.push(
+            {
+                r: 104,
+                g: 104,
+                b: 104
+            }
+        )
+
+        return temp
+    }
+    
     for(let color of response.result.colors.image_colors){
         temp.push(
             {
                 r: color.r,
                 g: color.g,
                 b: color.b
-            })
+            }
+        )
     }
 
 
-        //url: imageUrl,
+    //url: imageUrl,
  
 
     //console.log(imInfo);

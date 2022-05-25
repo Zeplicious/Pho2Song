@@ -1,5 +1,4 @@
 .env
 secrets.json
 node_modules
-
 public/images/*
