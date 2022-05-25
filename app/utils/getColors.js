@@ -8,8 +8,8 @@ const FormData=require('form-data');
 const fs =require('fs');
 
 
-const client_id = secrets.IMAGGA_CLIENT_ID/* secrets.imagga.client_id */
-const client_secret = secrets.IMAGGA_CLIENT_SECRET/* secrets.imagga.client_secret; */
+const client_id = process.env.IMAGGA_CLIENT_ID /* secrets.imagga.client_id */
+const client_secret = process.env.IMAGGA_CLIENT_SECRET /* secrets.imagga.client_secret; */
 
 async function getColorsFromUpload(image){
    /* for (let index = 0; index < 1000000000; index++){}
