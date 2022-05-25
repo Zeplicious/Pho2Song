@@ -36,4 +36,4 @@ jobs:
       env:
         CI: true
         IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
-        IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_SECRET }}
+        IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
