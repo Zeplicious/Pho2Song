@@ -1,5 +1,4 @@
 .env
 secrets.json
 node_modules
-package-lock.json
 public/images/*
