@@ -57,6 +57,13 @@ async function getUserTaste(spotifyApi) {
 
 async function getSongFromColors(colors, songs, songsChosen) {
 
+  if(colors === undefined || colors == null || colors.length == 0) {
+    return {
+      uri: songs[0].uri,
+      name: songs[0].name
+    }
+  }
+
   var max = null
   var red = 0;
   var green = 0;

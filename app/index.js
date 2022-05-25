@@ -460,15 +460,13 @@ app.get('/getSong',checkAuthenticated,async function (req, res) {
 			else{
 				let song
 				if(photo.path !== undefined){
+					console.log(photo)
 					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ req.session.user.tastes, userData.get(req.session.user.id).songsChosen)
-					userData.get(req.session.user.id).songsChosen.push(song)
-					console.log(userData.get(req.session.user.id).songsChosen.push(song))
-					console.log('CIAO')					
+					userData.get(req.session.user.id).songsChosen.push(song)			
 				}
 				else{
 					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */ req.session.user.tastes, userData.get(req.session.user.id).songsChosen)
-					userData.get(req.session.user.id).songsChosen.push(song)
-					console.log(userData.get(req.session.user.id).songsChosen.push(song))				
+					userData.get(req.session.user.id).songsChosen.push(song)					
 				}
 			
 				userData.get(req.session.user.id).songsDB.push({
