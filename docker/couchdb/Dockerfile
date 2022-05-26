@@ -2,7 +2,7 @@ FROM couchdb:latest
 WORKDIR /opt/couchdb/data
 VOLUME ["/opt/couchdb/data:rw"]
 
-COPY  docker/couchdb/local.ini ../etc/ 
+
 
 EXPOSE 5984
 

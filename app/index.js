@@ -434,16 +434,24 @@ app.post('/result', upload.array("images", 50), checkAuthenticated, function (re
 
 app.post('/playlist', checkAuthenticated, function (req, res) {
 
+
 	let songsDB = Array.from(userData.get(req.session.user.id).songsDB)
 	if (songsDB.length == 0) res.redirect('/input')
-
 	let spotifyApi = new SpotifyWebApi({
 		clientId: spotify_client_id,
 		clientSecret: spotify_client_secret,
 	})
 	spotifyApi.setAccessToken(req.session.user.accessToken)
-	let selectedSongs = Array.from(req.body.songs)
-	spotifyApi.createPlaylist(req.body.name, {// creo una nuova playlist
+	let selectedSongs=Array()
+	try {
+		req.body.songs.forEach(element => {
+			selectedSongs.push(element)
+		})
+	} catch (e) {
+		selectedSongs.push(req.body.songs)
+	}
+	console.log(selectedSongs)
+	spotifyApi.createPlaylist(req.body.name || 'Il mio album in musica', {// creo una nuova playlist
 		'description': req.body.description
 	}).then(data => {//aggiungo le tracce selezionate nella nuova playlist (se presenti)
 		if (selectedSongs) {
@@ -495,6 +503,7 @@ app.get('/getSong', checkAuthenticated, async function (req, res) {
 					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */ req.session.user.tastes, userData.get(req.session.user.id).songsChosen)
 					userData.get(req.session.user.id).songsChosen.push(song)					
 				}
+				console.log(song)
 
 				userData.get(req.session.user.id).songsDB.push({
 					song: song,
