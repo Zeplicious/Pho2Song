@@ -14,7 +14,7 @@ describe("Get colors from file upload or url", () => {
             mimetype: 'image/jpeg',
             destination: './public/images',
             filename: '1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg',
-            path: 'public\\images\\1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg',
+            path: 'public/images/1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg',
             size: 751546
         }
 
