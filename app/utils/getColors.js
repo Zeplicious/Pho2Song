@@ -3,7 +3,7 @@ const { get } = require('express/lib/request');
 const res = require('express/lib/response');
 const fetch = require('node-fetch')
 const got = require('got')
-const secrets = require('../secrets')
+/* const secrets = require('../secrets') */
 
 const FormData=require('form-data');
 const fs =require('fs');
@@ -27,33 +27,38 @@ async function getColorsFromUpload(image){
 
     if(image.mimetype && image.mimetype.startsWith("image/")) {
         const filePath = image.path;
+        console.log(filePath)
         const formData = new FormData();
         formData.append("image", fs.createReadStream(filePath));
         var response;
 
         try {
             response = await got.post('https://api.imagga.com/v2/uploads', { body: formData, username: client_id, password: client_secret }).json();
-        } catch (error) {
-            console.log(error);
-        }
 
-        var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id + '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
+            var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id + '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
 
-        try {
             response = await got(url, { username: client_id, password: client_secret }).json();
+        
+
+            for (let color of response.result.colors.image_colors) {
+
+                temp.push(
+                    {
+                        r: color.r,
+                        g: color.g,
+                        b: color.b
+                    }
+                )
+            }
         } catch (error) {
-            console.log(error);
-        }
-
-        for (let color of response.result.colors.image_colors) {
-
             temp.push(
                 {
-                    r: color.r,
-                    g: color.g,
-                    b: color.b
+                    r: 57,
+                    g: 105,
+                    b: 4
                 }
             )
+            console.log(error);
         }
     }
     else {
@@ -87,31 +92,31 @@ async function getColorsFromUrl(imageUrl){
 
     try {
         response = await got(url, {username: client_id, password: client_secret}).json();
+
+        if (response.statusCode!==undefined && response.statusCode == 403) {
+            temp.push(
+                {
+                    r: 104,
+                    g: 104,
+                    b: 104
+                }
+            )
+    
+            return temp
+        }
+
+        for(let color of response.result.colors.image_colors){
+            temp.push(
+                {
+                    r: color.r,
+                    g: color.g,
+                    b: color.b
+                }
+            )
+        }
         
     } catch (error) {
         console.log(error);
-    }
-
-    if (response===undefined || response.statusCode!==undefined && response.statusCode == 403) {
-        temp.push(
-            {
-                r: 104,
-                g: 104,
-                b: 104
-            }
-        )
-
-        return temp
-    }
-    
-    for(let color of response.result.colors.image_colors){
-        temp.push(
-            {
-                r: color.r,
-                g: color.g,
-                b: color.b
-            }
-        )
     }
 
 
