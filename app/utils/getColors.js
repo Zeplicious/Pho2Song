@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { get } = require('express/lib/request');
 const res = require('express/lib/response');
 const fetch = require('node-fetch')
@@ -8,8 +9,8 @@ const FormData=require('form-data');
 const fs =require('fs');
 
 
-const client_id = secrets.imagga.client_id
-const client_secret = secrets.imagga.client_secret;
+const client_id = process.env.IMAGGA_CLIENT_ID;
+const client_secret = process.env.IMAGGA_CLIENT_SECRET;
 
 async function getColorsFromUpload(image){
    /* for (let index = 0; index < 1000000000; index++){}
@@ -75,7 +76,7 @@ async function getColorsFromUrl(imageUrl){
         console.log(error);
     }
 
-    if (response.statusCode == 403) {
+    if (response.statusCode!==undefined && response.statusCode == 403) {
         temp.push(
             {
                 r: 104,

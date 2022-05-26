@@ -1,4 +1,4 @@
-require('dotenv').config
+require('dotenv').config()
 
 const express = require('express');
 const path = require("path");
@@ -47,10 +47,10 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 	return next()
 }
 
-
+console.log(process.env.IMAGGA_CLIENT_ID)
 /**************  Creazione CouchDb   ************** */
 const couch = new NodeCouchDb({
-	host: 'couchdb',
+	host: process.env.COUCHDB_HOST || "localhost",
 	port: '5984',
 	auth: {
 		user: secrets.database.user,
