@@ -19,6 +19,7 @@ async function getColorsFromUpload(image){
 
     if(image.mimetype && image.mimetype.startsWith("image/")) {
         const filePath = image.path;
+        console.log(filePath)
         const formData = new FormData();
         formData.append("image", fs.createReadStream(filePath));
         var response;
@@ -95,7 +96,6 @@ async function getColorsFromUrl(imageUrl){
         }
         
     } catch (error) {
-        console.log(response)
         console.log(error);
     }
 
