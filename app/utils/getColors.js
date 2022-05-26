@@ -76,6 +76,7 @@ async function getColorsFromUrl(imageUrl){
         response = await got(url, {username: client_id, password: client_secret}).json();
         
     } catch (error) {
+        console.log(response)
         console.log(error);
     }
 
