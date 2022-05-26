@@ -12,9 +12,6 @@ const fs =require('fs');
 const client_id = process.env.IMAGGA_CLIENT_ID;
 const client_secret = process.env.IMAGGA_CLIENT_SECRET;
 
-console.log(client_id)
-console.log(client_secret)
-
 async function getColorsFromUpload(image){
    /* for (let index = 0; index < 1000000000; index++){}
     return null */
@@ -74,32 +71,32 @@ async function getColorsFromUrl(imageUrl){
 
     try {
         response = await got(url, {username: client_id, password: client_secret}).json();
+
+        if (response.statusCode!==undefined && response.statusCode == 403) {
+            temp.push(
+                {
+                    r: 104,
+                    g: 104,
+                    b: 104
+                }
+            )
+    
+            return temp
+        }
+
+        for(let color of response.result.colors.image_colors){
+            temp.push(
+                {
+                    r: color.r,
+                    g: color.g,
+                    b: color.b
+                }
+            )
+        }
         
     } catch (error) {
         console.log(response)
         console.log(error);
-    }
-
-    if (response.statusCode!==undefined && response.statusCode == 403) {
-        temp.push(
-            {
-                r: 104,
-                g: 104,
-                b: 104
-            }
-        )
-
-        return temp
-    }
-    
-    for(let color of response.result.colors.image_colors){
-        temp.push(
-            {
-                r: color.r,
-                g: color.g,
-                b: color.b
-            }
-        )
     }
 
 
