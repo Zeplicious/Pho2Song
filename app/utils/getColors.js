@@ -12,6 +12,9 @@ const fs =require('fs');
 const client_id = process.env.IMAGGA_CLIENT_ID;
 const client_secret = process.env.IMAGGA_CLIENT_SECRET;
 
+console.log(client_id)
+console.log(client_secret)
+
 async function getColorsFromUpload(image){
    /* for (let index = 0; index < 1000000000; index++){}
     return null */
