@@ -35,7 +35,6 @@ async function getUserTaste(spotifyApi) {
   catch (e){
     console.log(e)
   }
-  console.log("passato audio features")
   ret = Array()
 
   //parse dei parametri utili
