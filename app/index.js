@@ -712,12 +712,12 @@ app.get('/playlist_history',  checkAuthenticated ,(req, res) => {
  * 
  *    - name: Playlists
  *      description: Le playlist di Spotify
- * 
- *    - name: Users
- *      description: Gli user di Spotify che hanno salvato almeno una playlist tramite Pho2Song
  *    
  *    - name: Photo To Song
  *      description: Chiamata alla funzione Photo To Song per analizzare una foto e restituirne una canzone
+ * 
+ *    - name: Palette To Song
+ *      description: Chiamata alla funzione Photo To Song per analizzare una palette di colori e restituirne una canzone
  */
 
 /**
@@ -782,78 +782,6 @@ app.get('/playlists/:id', (req, res) => {
 				}
 			}
 			res.status(404).send('La playlist con id ' + req.params.id + ' non è stata trovata')
-		}
-	)
-})
-
-/**
- * @swagger
- * /users:
- *      get:
- *          summary: Ritorna gli utenti che hanno salvato almeno una playlist tramite Pho2Song
- *          tags: [Users]
- *          responses:
- *              200:
- *                  description: Array degli utenti
- *                  contents:
- *                      application/json:
- *                          schema:
- *                              type: array
- *                              items:
- *                                  '#/components/schemas/User'
- * 
- */
-
- app.get('/users', (req, res) => {
-	couch.get(dbName, viewUser).then(
-		(data, headers, status) => {
-			res.send(data.data.rows)
-		}
-	)
-})
-
-/**
- * @swagger
- * /users/{user}:
- *      get:
- *          summary: Ritorna l'utente che hanno salvato almeno una playlist tramite Pho2Song con l'user specificato
- *          tags: [Users]
- *          parameters:
- *            - in: path
- *              name: user
- *              schema:
- *                  type: string
- *              required: true
- *              description: L'user dell'utente
- *          responses:
- *              200:
- *                  description: L'user dell'utente
- *                  contents:
- *                      application/json:
- *                          schema:
- *                              items:
- *                                  '#/components/schemas/User'
- *              404:
- *                  description: L'utente con user <code>{user}</code> non è stato trovato        
- * 
- */
-
-// codice per route get '/:id'
-app.get('/users/:user', (req, res) => {
-	user_playlists = new Map()
-	couch.get(dbName, viewUrl).then(
-		(data, headers, status) => {
-			for (index = 0; index < data.data.rows.length; index++) {
-				if (data.data.rows[index].value.user === req.params.user) {
-					user_playlists.set("user", req.params.user)
-				}
-			}
-			if (user_playlists.has("user") == false) {
-				res.status(404).send('L\'utente con user ' + req.params.user + ' non è stato trovato')
-			}
-			else {
-				res.send(user_playlists.get("user"));
-			}
 		}
 	)
 })
@@ -961,7 +889,83 @@ app.post('/photo-song', async function (req, res) { //è richiesto lo scope user
 	}
 })
 
+/**
+ * @swagger
+ * /palette-song:  
+ *  post:
+ *      summary: Dalla palette di colori data in input ne viene restituita una canzone
+ *      tags: [Palette To Song]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          palette:
+ *                              type: array
+ *                              items:
+ *                                   type: object
+ *                                   red:
+ *                                        type: integer
+ *                                   green:
+ *                                        type: integer
+ *                                   blue:
+ *                                        type: integer
+ *                          accessToken:
+ *                              type: string
+ *                  example:
+ *                       {
+ *                       palette:
+ *                           [
+ *                                {
+ *                                    red: 255,
+ *                                    green: 255,
+ *                                    blue: 255
+ *                                }
+ *                           ],
+ *                       accessToken: accessTokenArbitrario
+ *                       }           
+ *      responses:
+ *          200:
+ *              description: 
+ *              contents:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Song'
+ *          400:
+ *              description: Errore nella richiesta
+ */
 
+app.post('/palette-song', async function (req, res) {
+	const schema = Joi.object({
+		palette: Joi.array().items(
+			Joi.object({
+				red: Joi.number().min(0).max(255).required(),
+				green: Joi.number().min(0).max(255).required(),
+				blue: Joi.number().min(0).max(255).required(),
+			})
+		),
+		accessToken: Joi.string().required()
+	})
+	
+	const { error } = validate(schema, req.body)
+	if (error) return res.status(400).send(error.details[0].message)
+	let spotifyApi = new SpotifyWebApi({
+		clientId: spotify_client_id,
+		clientSecret: spotify_client_secret,
+	})
+	spotifyApi.setAccessToken(req.body.accessToken)
+	let colors = schema.palette
+	try {
+		let taste = await spotifyUtils.getUserTaste(spotifyApi)
+		song = await spotifyUtils.getSongFromColors(colors, taste, [])
+		res.send(song)
+	}
+	catch (e) {
+		res.status(400).send(e)
+	}
+})
 
 function validate(schema, body) {
 	return schema.validate(body)
