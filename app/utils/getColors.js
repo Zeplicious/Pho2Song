@@ -116,6 +116,13 @@ async function getColorsFromUrl(imageUrl){
         }
         
     } catch (error) {
+        temp.push(
+            {
+                r: 104,
+                g: 104,
+                b: 104
+            }
+        )
         console.log(error);
     }
 
