@@ -8,22 +8,22 @@ describe("Get colors from file upload or url", () => {
 
     describe("Given a file that is a photo", () => {
 
-        let photoPath
-
-        const input = {
+        let input = {
             fieldname: 'images',
             originalname: '1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg',
             encoding: '7bit',
             mimetype: 'image/jpeg',
             destination: './public/images',
             filename: '1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg',
-            path: photoPath,
+            path: "",
             size: 751546
         }
 
         test("Should respond with a defined Array of lenght > 0 containing objects with rgb parameters inside", async () => {
 
             await result
+
+            let photoPath
 
             if (os.type() == "Windows_NT") {
                 //
@@ -40,7 +40,7 @@ describe("Get colors from file upload or url", () => {
                 photoPath = 'public/images/1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg'
                 console.log("Siamo su un sistema Linux")
             }
-            input.photoPath = photoPath
+            input.path = photoPath
 
             result = imaggaUtils.getColorsFromUpload(input)
             let response = await result
@@ -53,22 +53,22 @@ describe("Get colors from file upload or url", () => {
 
     describe("Given a file that is not a photo", () => {
 
-        let photoPath
-
-        const input = {
+        let input = {
             fieldname: 'images',
             originalname: '1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg',
             encoding: '7bit',
             mimetype: 'text/plain',
             destination: './public/images',
             filename: '1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg',
-            path: photoPath,
+            path: "",
             size: 751546
         }
 
         test("Should respond with an Array containing a random set of colors", async () => {
 
             await result
+
+            let photoPath
 
             if (os.type() == "Windows_NT") {
                 //Siamo su un sistema Windows
@@ -82,6 +82,7 @@ describe("Get colors from file upload or url", () => {
                 //Siamo su un sistema Unix
                 photoPath = 'public/images/1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg'
             }
+            input.path = photoPath
 
             result = imaggaUtils.getColorsFromUpload(input)
             let response = await result
