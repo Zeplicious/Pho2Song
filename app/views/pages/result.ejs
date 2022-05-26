@@ -16,6 +16,11 @@
 <body onload="connect();highlightLink('main-feature')">
 
     <%- include("../partials/navbar.ejs"); %> 
+    <% if(socket_connect!=null ){ %>
+        <div id="url" style="display: none;"><%=socket_connect%></div>
+    <% } else {%> 
+        <div id="url" style="display: none;"></div>
+    <% }%> 
     <div id="id" style="display: none;" ><%= p2sUser.id %></div>
     <div class="container-fluid result-view">
         <div class="row justify-content-center">

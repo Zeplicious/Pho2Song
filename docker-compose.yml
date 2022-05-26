@@ -6,6 +6,7 @@ services:
       dockerfile: docker/nginx/Dockerfile
     ports:
       - "8080:80"
+      - "8081:443"
     links:
       - node1:node1
       - node2:node2
@@ -38,6 +39,9 @@ services:
       dockerfile: docker/node/Dockerfile
     environment:
       - INSTANCE=node1
+      - SOCKET_URI=https://localhost:8081
+      - SPOTIFY_URI=https://localhost:8081/spotify/callback
+      - GOOGLE_URI=https://localhost:8081/google-login/callback
     ports:
       - "8888"
     networks:
@@ -52,6 +56,9 @@ services:
       dockerfile: docker/node/Dockerfile
     environment:
       - INSTANCE=node2
+      - SOCKET_URI=https://localhost:8081
+      - SPOTIFY_URI=https://localhost:8081/spotify/callback
+      - GOOGLE_URI=https://localhost:8081/google-login/callback
     ports:
       - "8888"
     networks:
@@ -68,6 +75,7 @@ services:
       dockerfile: docker/node/Dockerfile
     environment:
       - INSTANCE=node3
+
     ports:
       - "8888"
     networks:

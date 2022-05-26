@@ -92,11 +92,13 @@ const spotify_scopes = [
 	'user-follow-read',
 	'user-follow-modify'
 ];//da ottimizzare
+console.log( process.env.SPOTIFY_URI)
+console.log(process.env.SPOTIFY_URI || 'http://localhost:8080/spotify/callback')
 passport.use('spotify',
 	new SpotifyStrategy({
 		clientID: spotify_client_id,
 		clientSecret: spotify_client_secret,
-		callbackURL: 'http://localhost:8080/spotify/callback'
+		callbackURL: process.env.SPOTIFY_URI || 'http://localhost:8080/spotify/callback'
 	},
 		async function (accessToken, refreshToken, expiresIn, profile, done) {
 			let spotifyApi = new SpotifyWebApi({
@@ -128,7 +130,6 @@ passport.use('spotify',
 				prof_pic: prof_pic,
 				accessToken: accessToken,
 				//timer: intervalID,
-				tastes: tastes,
 
 				accessTokenGoogle: '',
 				albums: null
@@ -168,7 +169,7 @@ passport.use('google',
 	new GoogleStrategy({
 		clientID: google_client_id,
 		clientSecret: google_client_secret,
-		callbackURL: 'http://localhost:8080/google-login/callback'
+		callbackURL: process.env.GOOGLE_URI || 'http://localhost:8080/google-login/callback'
 	},
 		async function (accessToken, refreshToken, profile, cb) {
 			//ottengo gli album dell'utente tramite accessToken
@@ -183,7 +184,7 @@ passport.use('google',
 		})
 )
 
-
+console.log(process.env.GOOGLE_URI)
 /********* Dichiarazione options per API ******** */
 
 const options = {
@@ -297,7 +298,7 @@ app.get('/spotify-login/callback/return', checkAuthenticated, function (req, res
 
 //anche se non strettamente necessario per comprensibilità ho utilizzato lo stesso "flow" utilizzato per spotify
 //Passport.authenticate per ottenere l'autorizzazione nell'utilizzare lo scope photoslibrary.readonly dell'utente
-app.get('/google-login', checkAuthenticated, passport.authenticate('google', { scope: google_scopes })); //function(req, res){  //chiamato dal file input#.ejs
+app.get('/google-login', checkAuthenticated,passport.authenticate('google', { scope: google_scopes })); //function(req, res){  //chiamato dal file input#.ejs
 
 
 //passport.authenticate per autenticare l'utente all'interno del sito con successivo redirect in caso di fallimento o successo
@@ -421,7 +422,7 @@ app.post('/result', upload.array("images", 50), checkAuthenticated, function (re
 				urls.push(photos[index].path.substring(6));
 			}
 
-			res.render('./pages/result.ejs', { urls: urls, num: photos.length, p2sUser: p2sUser })
+			res.render('./pages/result.ejs', { urls: urls, num: photos.length, p2sUser: p2sUser , socket_connect: process.env.SOCKET_URI})
 		}
 		else res.redirect('/input');
 	}
@@ -438,7 +439,7 @@ app.post('/result', upload.array("images", 50), checkAuthenticated, function (re
 			names.push(req.body.urls)
 		}
 		if (photos.length != 0) {
-			res.render('./pages/result.ejs', { urls: photos, num: photos.length, p2sUser: p2sUser })
+			res.render('./pages/result.ejs', { urls: photos, num: photos.length, p2sUser: p2sUser ,socket_connect: process.env.SOCKET_URI})
 		}
 	}
 	else if (req.body.album) {//finito
@@ -455,7 +456,7 @@ app.post('/result', upload.array("images", 50), checkAuthenticated, function (re
 				});
 
 
-				res.render('./pages/result.ejs', { urls: photos, num: photos.length, p2sUser: p2sUser })
+				res.render('./pages/result.ejs', { urls: photos, num: photos.length, p2sUser: p2sUser ,socket_connect: process.env.SOCKET_URI})
 			})
 	}
 	else res.redirect('/input');

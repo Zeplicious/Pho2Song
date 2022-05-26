@@ -1,6 +1,13 @@
 
 function connect(){
-    var socket = io.connect('http://localhost:8080');
+    let url = document.getElementById('url').innerHTML
+    if(url && url!= null && url!=''){
+        var socket = io.connect(url);
+    }
+    else{    
+        var socket = io.connect('http://localhost:8080');
+    }
+
     socket.emit('message', document.getElementById('id').innerHTML )
     let index=0
     socket.on('message', function(message) {
