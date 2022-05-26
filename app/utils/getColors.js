@@ -13,9 +13,17 @@ const client_id = process.env.IMAGGA_CLIENT_ID;
 const client_secret = process.env.IMAGGA_CLIENT_SECRET;
 
 async function getColorsFromUpload(image){
-   /* for (let index = 0; index < 1000000000; index++){}
-    return null */
     var temp = Array();
+    /* for (let index = 0; index < 1000000000; index++){}
+    temp.push(
+        {
+            r: 104,
+            g: 104,
+            b: 104
+        }
+    )
+    return; */
+    
 
     if(image.mimetype && image.mimetype.startsWith("image/")) {
         const filePath = image.path;
@@ -62,9 +70,17 @@ async function getColorsFromUpload(image){
 }
 
 async function getColorsFromUrl(imageUrl){
-    /* for (let index = 0; index < 1000000000; index++){}
-    return; */
     var temp=Array();
+    /* for (let index = 0; index < 1000000000; index++){}
+    temp.push(
+        {
+            r: 104,
+            g: 104,
+            b: 104
+        }
+    )
+    return; */
+
 
     var url = 'https://api.imagga.com/v2/colors?image_url=' + encodeURIComponent(imageUrl)+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0'
     var response
@@ -76,7 +92,7 @@ async function getColorsFromUrl(imageUrl){
         console.log(error);
     }
 
-    if (response.statusCode!==undefined && response.statusCode == 403) {
+    if (response===undefined || response.statusCode!==undefined && response.statusCode == 403) {
         temp.push(
             {
                 r: 104,

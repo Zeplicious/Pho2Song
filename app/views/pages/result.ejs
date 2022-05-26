@@ -13,10 +13,10 @@
 
     <title>Pho2Song</title>
 </head>
-<body onload="getSong(0);highlightLink('main-feature')">
+<body onload="connect();highlightLink('main-feature')">
 
     <%- include("../partials/navbar.ejs"); %> 
-
+    <div id="id" style="display: none;" ><%= p2sUser.id %></div>
     <div class="container-fluid result-view">
         <div class="row justify-content-center">
             <h2 class="text-center pb-md-5" > Ecco le tue canzoni </h3>
@@ -182,6 +182,7 @@
 
     <!-- Local scripts -->
     <script src="./scripts/navbar_scripts.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="../scripts/main_results_scripts.js"></script>
     <script src="./scripts/back_to_top_of_page_script.js"></script>
 
