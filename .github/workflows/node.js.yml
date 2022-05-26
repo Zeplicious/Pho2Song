@@ -14,10 +14,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    #defaults:
-      #run:
-        #working-directory: app/
-
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
@@ -35,6 +31,6 @@ jobs:
         cd app/
         npm ci
     - run: npm test
-      #env:
-        #IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
-        #IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
+      env:
+        IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
+        IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
