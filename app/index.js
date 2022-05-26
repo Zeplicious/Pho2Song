@@ -50,7 +50,7 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 
 /**************  Creazione CouchDb   ************** */
 const couch = new NodeCouchDb({
-	host: 'couchdb',
+	host: process.env.COUCHDB_HOST || "localhost",
 	port: '5984',
 	auth: {
 		user: secrets.database.user,

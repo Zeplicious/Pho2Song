@@ -78,7 +78,7 @@ async function getColorsFromUrl(imageUrl){
         console.log(error);
     }
 
-    if (response.statusCode == 403) {
+    if (response.statusCode!==undefined && response.statusCode == 403) {
         temp.push(
             {
                 r: 104,

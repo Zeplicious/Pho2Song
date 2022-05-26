@@ -27,13 +27,10 @@ services:
     environment:
       - INSTANCE=couchdb
       - COUCHDB_SERVER=http://couchdb:5984
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=Musazza7
-      - COUCHDB_CREATE_DATABASES=yes
     networks:
       - backend-network
     volumes:
-      - ./dbdata:/opt/couchdb/data
+      - db_data:/opt/couchdb/data:rw
 
   node1:
     build:
@@ -82,6 +79,9 @@ services:
 secrets:
   my-db-password:
     file: ./docker/production.env 
+    
+volumes:
+  db_data:
 
 networks:
   app-network:
