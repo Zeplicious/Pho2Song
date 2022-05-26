@@ -26,17 +26,21 @@ describe("Get colors from file upload or url", () => {
             await result
 
             if (os.type() == "Windows_NT") {
-                //Siamo su un sistema Windows
+                //
                 photoPath = 'public\\images\\1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg'
+                console.log("Siamo su un sistema Windows")
             }
             else if(os.type() == "Darwin") {
-                //Siamo su un sistema macOS
+                //
                 photoPath = 'public/images/1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg'
+                console.log("Siamo su un sistema macOS")
             }
             else if(os.type() == "Linux") {
-                //Siamo su un sistema Unix
+                //
                 photoPath = 'public/images/1653478147460--1. AWx ROG wallpaper-2560 x 1440 pixel-20200728-1.jpg'
+                console.log("Siamo su un sistema Linux")
             }
+            input.photoPath = photoPath
 
             result = imaggaUtils.getColorsFromUpload(input)
             let response = await result
