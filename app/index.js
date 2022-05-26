@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express');
+const http = require('http');
 const path = require("path");
 const secrets = require('./secrets');
 const passport = require('passport');
@@ -22,15 +23,16 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const spotifyUtils = require("./utils/spotifyUtils.js");
 const googleUtils = require('./utils/googleUtils.js')
 const colorUtil = require("./utils/getColors.js");
-const { render } = require('express/lib/response');
+
 
 const bodyParser = require('body-parser');
 const multer = require('multer');			//Abilita il file upload verso il server
-const res = require('express/lib/response');
-const { runInNewContext } = require('vm');
-const { join } = require('path');
 
 
+const app = express();
+var server = http.createServer(app);
+
+var io = require('socket.io')(server);
 
 /**************  Passport declarations **************/
 function checkAuthenticated(req, res, next) { //controllo se l'utente è autenticato
@@ -47,7 +49,6 @@ function checkNotAuthenticated(req, res, next) { //controllo se l'utente NON è 
 	return next()
 }
 
-console.log(process.env.IMAGGA_CLIENT_ID)
 /**************  Creazione CouchDb   ************** */
 const couch = new NodeCouchDb({
 	host: process.env.COUCHDB_HOST || "localhost",
@@ -57,7 +58,6 @@ const couch = new NodeCouchDb({
 		pass: secrets.database.password
 	}
 })
-
 const dbName = 'p2splaylists';
 const viewUrl = '_design/all_playlists/_view/all';
 const viewUser = '_design/all_users/_view/all';
@@ -68,6 +68,7 @@ function view(doc) {
 
 //STRATEGIA PASSPORT SPOTIFY
 const spotify_users = new Map();
+const spotify_users_tastes = new Map();
 const spotify_client_id = secrets.spotify.client_id;
 const spotify_client_secret = secrets.spotify.client_secret;
 const spotify_scopes = [
@@ -91,11 +92,6 @@ const spotify_scopes = [
 	'user-follow-read',
 	'user-follow-modify'
 ];//da ottimizzare
-
-/* var spotifyApi = new SpotifyWebApi({
-	clientId: spotify_client_id,
-	clientSecret: spotify_client_secret,
-}); */
 passport.use('spotify',
 	new SpotifyStrategy({
 		clientID: spotify_client_id,
@@ -125,7 +121,7 @@ passport.use('spotify',
 			if (profile.photos.length == 0) prof_pic = './images/skuffed_def_prof_pic_spotify.jpg'
 			else prof_pic = profile.photos[0].value
 
-
+			spotify_users_tastes.set(profile.id,tastes)
 			spotify_users.set(profile.id, {
 				id: profile.id,
 				name: profile.displayName,
@@ -209,7 +205,6 @@ const options = {
 
 const specs = swaggerJsDoc(options)
 
-const app = express();
 /**************  **************/
 
 app.set('view-engine', 'ejs');
@@ -359,15 +354,49 @@ async function work(userTasteInfo, userData) {
 	})
 	return song
 }
-
-app.post('/result', upload.array("images", 50), checkAuthenticated, function (req, res) {
-	/* let spotifyApi=  new SpotifyWebApi({
-		clientId: spotify_client_id,
-		clientSecret: spotify_client_secret,
+io.on('connection', function (socket) {
+    console.log("Connected succesfully to the socket ...");
+	socket.on('message', async function(message){
+		while(true){
+			let data
+			try {
+				let photo = userData.get(message).photos.pop();
+				let imgName = userData.get(message).names.pop();
+				console.log((typeof photo) == String)
+				if (photo == null) data = null
+				else {
+					let song
+					if(photo.path !== undefined){
+						song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ spotify_users_tastes.get(message), userData.get(message).songsChosen)
+						userData.get(message).songsChosen.push(song)			
+					}
+					else {
+						song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */spotify_users_tastes.get(message),userData.get(message).songsChosen)
+						userData.get(message).songsChosen.push(song)					
+					}
+					userData.get(message).songsDB.push({
+						song: song,
+						photo: imgName
+					})
+					data = song
+				}
+			} catch (e) {
+				console.log(e)
+				data = 'error'
+			}
+			if (data=='error') break;
+			else if (data) socket.emit('message',data)
+			else {
+				socket.emit('message','end')
+				break
+			}
+		}
 	})
-	spotifyApi.setAccessToken(accessToken);
-	req.session.user.tastes=spotifyUtils.getUserTaste(spotifyApi) */
-
+	socket.on('disconnect', function() {
+		console.log('Got disconnect!');
+	});
+});
+app.post('/result', upload.array("images", 50), checkAuthenticated, function (req, res) {
 	userData.set(req.session.user.id, {
 		photos: Array(),
 		names: Array(),
@@ -376,7 +405,8 @@ app.post('/result', upload.array("images", 50), checkAuthenticated, function (re
 	})
 	p2sUser = {
 		username: req.session.user.name,
-		user_image: req.session.user.prof_pic
+		user_image: req.session.user.prof_pic,
+		id: req.session.user.id
 	}
 
 	if (req.files) {//finito
@@ -434,16 +464,24 @@ app.post('/result', upload.array("images", 50), checkAuthenticated, function (re
 
 app.post('/playlist', checkAuthenticated, function (req, res) {
 
+
 	let songsDB = Array.from(userData.get(req.session.user.id).songsDB)
 	if (songsDB.length == 0) res.redirect('/input')
-
 	let spotifyApi = new SpotifyWebApi({
 		clientId: spotify_client_id,
 		clientSecret: spotify_client_secret,
 	})
 	spotifyApi.setAccessToken(req.session.user.accessToken)
-	let selectedSongs = Array.from(req.body.songs)
-	spotifyApi.createPlaylist(req.body.name, {// creo una nuova playlist
+	let selectedSongs=Array()
+	try {
+		req.body.songs.forEach(element => {
+			selectedSongs.push(element)
+		})
+	} catch (e) {
+		selectedSongs.push(req.body.songs)
+	}
+	console.log(selectedSongs)
+	spotifyApi.createPlaylist(req.body.name || 'Il mio album in musica', {// creo una nuova playlist
 		'description': req.body.description
 	}).then(data => {//aggiungo le tracce selezionate nella nuova playlist (se presenti)
 		if (selectedSongs) {
@@ -467,7 +505,7 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 		const id = ids[0]
 		couch.insert(dbName, {
 			_id: id,
-			name: req.body.name,
+			name: req.body.name||'Il mio album in musica',
 			user: req.session.user.id,
 			description: req.body.description,			
 			song_number: req.body.songs.length,
@@ -477,52 +515,6 @@ app.post('/playlist', checkAuthenticated, function (req, res) {
 	res.redirect('/')
 })
 
-app.get('/getSong', checkAuthenticated, async function (req, res) {
-	try {
-		let data
-		try {
-			let photo = userData.get(req.session.user.id).photos.pop();
-			let imgName = userData.get(req.session.user.id).names.pop();
-			console.log((typeof photo) == String)
-			if (photo == null) data = null
-			else {
-				let song
-				if(photo.path !== undefined){
-					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ req.session.user.tastes, userData.get(req.session.user.id).songsChosen)
-					userData.get(req.session.user.id).songsChosen.push(song)			
-				}
-				else {
-					song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */ req.session.user.tastes, userData.get(req.session.user.id).songsChosen)
-					userData.get(req.session.user.id).songsChosen.push(song)					
-				}
-
-				userData.get(req.session.user.id).songsDB.push({
-					song: song,
-					photo: imgName
-				})
-				data = song
-			}
-		} catch (e) {
-			console.log(e)
-			data = 'error'
-		}
-		//console.log(data)
-		if (data == 'error') res.redirect('/')
-		else if (data) res.send(data)
-		else res.send('end')
-
-
-		/* work(req.session.user.tastes,userData.get(req.session.user.id)).then(data => {
-			console.log(data)
-			if (data=='error') res.redirect('/')
-			else if (data) res.send(data)
-			else res.send('end')
-
-		}) */
-	} catch (error) {
-		res.send('end')
-	}
-})
 
 /************** Funzionalità: Playlist analyzer **************/
 app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
@@ -556,7 +548,7 @@ app.post('/plist-analyzer', (req, res) => {
 	})
 })
 
-app.listen(process.env.PORT || 8080, () => {
+server.listen(process.env.PORT || 8080, () => {
 	console.log('Server listening on http://localhost:8080/');
 });
 

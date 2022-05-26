@@ -13,9 +13,17 @@ const client_id = process.env.IMAGGA_CLIENT_ID;
 const client_secret = process.env.IMAGGA_CLIENT_SECRET;
 
 async function getColorsFromUpload(image){
-   /* for (let index = 0; index < 1000000000; index++){}
-    return null */
     var temp = Array();
+    /* for (let index = 0; index < 1000000000; index++){}
+    temp.push(
+        {
+            r: 104,
+            g: 104,
+            b: 104
+        }
+    )
+    return; */
+    
 
     if(image.mimetype && image.mimetype.startsWith("image/")) {
         const filePath = image.path;
@@ -26,27 +34,31 @@ async function getColorsFromUpload(image){
 
         try {
             response = await got.post('https://api.imagga.com/v2/uploads', { body: formData, username: client_id, password: client_secret }).json();
-        } catch (error) {
-            console.log(error);
-        }
 
-        var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id + '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
+            var url = 'https://api.imagga.com/v2/colors?image_upload_id=' + response.result.upload_id + '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0';
 
-        try {
             response = await got(url, { username: client_id, password: client_secret }).json();
+        
+
+            for (let color of response.result.colors.image_colors) {
+
+                temp.push(
+                    {
+                        r: color.r,
+                        g: color.g,
+                        b: color.b
+                    }
+                )
+            }
         } catch (error) {
-            console.log(error);
-        }
-
-        for (let color of response.result.colors.image_colors) {
-
             temp.push(
                 {
-                    r: color.r,
-                    g: color.g,
-                    b: color.b
+                    r: 57,
+                    g: 105,
+                    b: 4
                 }
             )
+            console.log(error);
         }
     }
     else {
@@ -63,9 +75,17 @@ async function getColorsFromUpload(image){
 }
 
 async function getColorsFromUrl(imageUrl){
-    /* for (let index = 0; index < 1000000000; index++){}
-    return; */
     var temp=Array();
+    /* for (let index = 0; index < 1000000000; index++){}
+    temp.push(
+        {
+            r: 104,
+            g: 104,
+            b: 104
+        }
+    )
+    return; */
+
 
     var url = 'https://api.imagga.com/v2/colors?image_url=' + encodeURIComponent(imageUrl)+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0'
     var response
