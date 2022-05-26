@@ -14,9 +14,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: app/
+    #defaults:
+      #run:
+        #working-directory: app/
 
     strategy:
       matrix:
@@ -33,7 +33,6 @@ jobs:
         cache-dependency-path: app/package-lock.json
     - run: npm ci
     - run: npm test
-      env:
-        CI: true
-        IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
-        IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
+      #env:
+        #IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
+        #IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}

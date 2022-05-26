@@ -2,17 +2,14 @@ const { get } = require('express/lib/request');
 const res = require('express/lib/response');
 const fetch = require('node-fetch')
 const got = require('got')
-/* const secrets = require('../secrets') */
+const secrets = require('../secrets')
 
 const FormData=require('form-data');
 const fs =require('fs');
 
 
-const client_id = process.env.IMAGGA_CLIENT_ID /* secrets.imagga.client_id */
-const client_secret = process.env.IMAGGA_CLIENT_SECRET /* secrets.imagga.client_secret; */
-
-console.log(client_id)
-console.log(client_secret)
+const client_id = secrets.imagga.client_id
+const client_secret = secrets.imagga.client_secret;
 
 async function getColorsFromUpload(image){
    /* for (let index = 0; index < 1000000000; index++){}

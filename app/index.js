@@ -60,6 +60,7 @@ const couch = new NodeCouchDb({
 
 const dbName = 'p2splaylists';
 const viewUrl = '_design/all_playlists/_view/all';
+const viewUser = '_design/all_users/_view/all';
 
 function view(doc) {
 	emit(doc._id, { name: doc.name, user: doc.user, song_number: doc.song_number, songs: doc.songs });
@@ -727,7 +728,7 @@ app.get('/playlist_history',  checkAuthenticated ,(req, res) => {
  *          tags: [P2S Playlists]
  *          responses: 
  *              200:
- *                  description: Lista delle playlist
+ *                  description: Array delle playlist
  *                  content:
  *                      application/json:
  *                          schema:
@@ -787,9 +788,35 @@ app.get('/playlists/:id', (req, res) => {
 
 /**
  * @swagger
+ * /users:
+ *      get:
+ *          summary: Ritorna gli utenti che hanno salvato almeno una playlist tramite Pho2Song
+ *          tags: [Users]
+ *          responses:
+ *              200:
+ *                  description: Array degli utenti
+ *                  contents:
+ *                      application/json:
+ *                          schema:
+ *                              type: array
+ *                              items:
+ *                                  '#/components/schemas/User'
+ * 
+ */
+
+ app.get('/users', (req, res) => {
+	couch.get(dbName, viewUser).then(
+		(data, headers, status) => {
+			res.send(data.data.rows)
+		}
+	)
+})
+
+/**
+ * @swagger
  * /users/{user}:
  *      get:
- *          summary: Ritorna l'utente che ha utlizzato Pho2Song salvando almeno una playlist con l'user specificato
+ *          summary: Ritorna l'utente che hanno salvato almeno una playlist tramite Pho2Song con l'user specificato
  *          tags: [Users]
  *          parameters:
  *            - in: path
@@ -805,9 +832,9 @@ app.get('/playlists/:id', (req, res) => {
  *                      application/json:
  *                          schema:
  *                              items:
- *                                  user: string
+ *                                  '#/components/schemas/User'
  *              404:
- *                  description: L'utente con user <code>{user}</code> non è stata trovato        
+ *                  description: L'utente con user <code>{user}</code> non è stato trovato        
  * 
  */
 
@@ -821,11 +848,11 @@ app.get('/users/:user', (req, res) => {
 					user_playlists.set("user", req.params.user)
 				}
 			}
-			if (!user_playlists.has(req.params.user)) {
-				res.status(404).send('L\'user con id ' + req.params.user + ' non trovato')
+			if (user_playlists.has("user") == false) {
+				res.status(404).send('L\'utente con user ' + req.params.user + ' non è stato trovato')
 			}
 			else {
-				res.send(user_playlists);
+				res.send(user_playlists.get("user"));
 			}
 		}
 	)
@@ -833,7 +860,7 @@ app.get('/users/:user', (req, res) => {
 
 /**
  * @swagger
- * /playlists:  
+ * /playlists/analyze:  
  *  post:
  *      summary: Analizza una playlist di Spotify
  *      tags: [Playlists]
