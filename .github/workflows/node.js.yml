@@ -45,5 +45,6 @@ jobs:
       with:
         image: spyrogiants/pho2song
         registry: docker.io
+        dockerfile: app/Dockerfile
         username: ${{secrets.DOCKER_USERNAME}}
         password: ${{secrets.DOCKER_PASSWORD}}
