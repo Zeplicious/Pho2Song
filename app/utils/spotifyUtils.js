@@ -1,7 +1,5 @@
 
-const fs = require('fs');
-const { isBuffer } = require('util');
-const { getPhotos } = require('./googleUtils');
+
 var ret = '';
 
 var alreadyChosen = false;
