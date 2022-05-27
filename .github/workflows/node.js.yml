@@ -42,14 +42,7 @@ jobs:
 
     - name: Build and Push App Docker Image to Docker Hub
       uses: mr-smithers-excellent/docker-build-push@v5
-      with:
-        image: spyrogiants/pho2song
-        tags: v1, latest
-        registry: docker.io
-        dockerfile: docker/node/Dockerfile
-        username: ${{secrets.DOCKER_USERNAME}}
-        password: ${{secrets.DOCKER_PASSWORD}}
-        env:
+      env:
           IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
           IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
 
@@ -61,9 +54,20 @@ jobs:
 
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      with:
+        image: spyrogiants/pho2song
+        tags: v1, latest
+        registry: docker.io
+        dockerfile: docker/node/Dockerfile
+        username: ${{secrets.DOCKER_USERNAME}}
+        password: ${{secrets.DOCKER_PASSWORD}}
+        
     
     - name: Build and Push DB Docker Image to Docker Hub
       uses: mr-smithers-excellent/docker-build-push@v5
+      env:
+        COUCHDB_USER: ${{ secrets.DB_USER }}
+        COUCHDB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       with:
         image: spyrogiants/pho2song-db
         tags: v1, latest
@@ -71,7 +75,5 @@ jobs:
         dockerfile: docker/couchdb/Dockerfile
         username: ${{secrets.DOCKER_USERNAME}}
         password: ${{secrets.DOCKER_PASSWORD}}
-        env:
-          COUCHDB_USER: ${{ secrets.DB_USER }}
-          COUCHDB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      
 
