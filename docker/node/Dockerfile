@@ -1,8 +1,9 @@
 FROM node:latest
 
-#WORKDIR /app
+WORKDIR /app
 
-COPY ../../app/package*.json ./
+#../../app
+COPY package*.json ./
 
 RUN npm install
 
@@ -10,7 +11,8 @@ RUN apt-get update -y
 
 RUN apt-get install tcpdump -y
 
-COPY ../../app .
+#../../app
+COPY ./ ./
 
 ENV PORT=8888
 ENV COUCHDB_HOST="couchdb"
