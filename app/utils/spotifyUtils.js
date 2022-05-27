@@ -68,6 +68,8 @@ async function getSongFromColors(colors, songs, songsChosen) {
   var green = 0;
   var blue = 0;
 
+  
+
   for (colorIndex = 0; colorIndex < colors.length; colorIndex++) {
     red += colors[colorIndex].r
     green += colors[colorIndex].g
@@ -75,7 +77,7 @@ async function getSongFromColors(colors, songs, songsChosen) {
   }
   red = red / colors.length
   green = green / colors.length
-  blue = blue / colors.length
+  blue =  blue / colors.length
 
   var averageColor = {
     r: red,
@@ -97,6 +99,8 @@ async function getSongFromColors(colors, songs, songsChosen) {
     } 
 
     if(max == null) max = songs[songIndex]
+
+    
 
     //rosso
     if (averageColor.r > averageColor.b && averageColor.r > averageColor.g) {
