@@ -75,6 +75,18 @@ services:
     links:
         - couchdb
 
+  api:
+    image: spyrogiants/pho2song-api:latest
+    environment:
+      - INSTANCE=api
+    ports:
+      - "8888"
+    networks:
+      - app-network
+      - backend-network
+    links:
+        - couchdb
+
 secrets:
   my-db-password:
     file: ./docker/production.env 

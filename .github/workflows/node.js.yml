@@ -63,4 +63,14 @@ jobs:
         password: ${{secrets.DOCKER_PASSWORD}}
         addLatest: true
       
+    - name: Build and Push Api Docker Image to Docker Hub
+      uses: mr-smithers-excellent/docker-build-push@v5
+      with:
+        image: spyrogiants/pho2song-api
+        registry: docker.io
+        buildArgs: IMAGGA_CLIENT_ID=${{ secrets.IMAGGA_CLIENT_ID }}, IMAGGA_CLIENT_SECRET=${{ secrets.IMAGGA_CLIENT_SECRET }}, SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}, SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}, DB_USER=${{ secrets.DB_USER }}, DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+        dockerfile: docker/api/Dockerfile
+        username: ${{secrets.DOCKER_USERNAME}}
+        password: ${{secrets.DOCKER_PASSWORD}}
+        addLatest: true
 
