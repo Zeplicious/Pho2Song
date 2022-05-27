@@ -14,8 +14,8 @@ RUN apt-get install tcpdump -y
 #../../api
 COPY /api ./
 
-COPY /app/utils/spotifyUtils.js ./utils
-COPY /app/utils/getColors.js ./utils
+COPY /app/utils/spotifyUtils.js ./utils/
+COPY /app/utils/getColors.js ./utils/
 
 ARG DB_PASSWORD
 ENV DB_PASSWORD=${DB_PASSWORD}

@@ -69,9 +69,7 @@ console.log()
 const spotify_users = new Map();
 const spotify_users_tastes = new Map();
 const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
-console.log(spotify_client_id)
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-console.log(spotify_client_secret)
 const spotify_scopes = [
 	'ugc-image-upload',
 	'user-read-playback-state',
@@ -93,8 +91,6 @@ const spotify_scopes = [
 	'user-follow-read',
 	'user-follow-modify'
 ];//da ottimizzare
-console.log( process.env.SPOTIFY_URI)
-console.log(process.env.SPOTIFY_URI || 'http://localhost:8080/spotify/callback')
 passport.use('spotify',
 	new SpotifyStrategy({
 		clientID: spotify_client_id,
