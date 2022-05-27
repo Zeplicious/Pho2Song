@@ -10,8 +10,8 @@ const NodeCouchDb = require('node-couchdb');
 
 var SpotifyWebApi = require('spotify-web-api-node');
 
-const spotifyUtils = require("../app/utils/spotifyUtils.js");
-const colorUtil = require("../app/utils/getColors.js");
+const spotifyUtils = require((process.env.UTILS_PATH||"../app/utils")+"/spotifyUtils.js");
+const colorUtil = require((process.env.UTILS_PATH||"../app/utils")+"/getColors.js");
 
 const bodyParser = require('body-parser');
 

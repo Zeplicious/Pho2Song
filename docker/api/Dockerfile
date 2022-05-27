@@ -13,7 +13,8 @@ RUN apt-get install tcpdump -y
 
 #../../api
 COPY /api ./
-
+COPY app/utils/spotifyUtils.js ./utils
+COPY app/utils/getColors.js ./utils
 ARG DB_PASSWORD
 ENV DB_PASSWORD=${DB_PASSWORD}
 
@@ -34,6 +35,7 @@ ENV SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
 
 ENV PORT=8888
 ENV COUCHDB_HOST="couchdb"
+ENV UTILS_PATH="./utils"
 
 EXPOSE 8888
 

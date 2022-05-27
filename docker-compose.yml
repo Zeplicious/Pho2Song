@@ -80,7 +80,7 @@ services:
     environment:
       - INSTANCE=api
     ports:
-      - "8888"
+      - "8888:8888"
     networks:
       - app-network
       - backend-network
