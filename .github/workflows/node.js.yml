@@ -42,21 +42,10 @@ jobs:
 
     - name: Build and Push App Docker Image to Docker Hub
       uses: mr-smithers-excellent/docker-build-push@v5
-      env:
-          IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
-          IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
-
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-
-          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
-          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       with:
         image: spyrogiants/pho2song
         registry: docker.io
+        buildArgs: IMAGGA_CLIENT_ID=${{ secrets.IMAGGA_CLIENT_ID }}, IMAGGA_CLIENT_SECRET=${{ secrets.IMAGGA_CLIENT_SECRET }}, GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}, GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}, SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}, SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}, DB_USER=${{ secrets.DB_USER }}, DB_PASSWORD=${{ secrets.DB_PASSWORD }}
         dockerfile: docker/node/Dockerfile
         username: ${{secrets.DOCKER_USERNAME}}
         password: ${{secrets.DOCKER_PASSWORD}}
@@ -65,12 +54,10 @@ jobs:
     
     - name: Build and Push DB Docker Image to Docker Hub
       uses: mr-smithers-excellent/docker-build-push@v5
-      env:
-        COUCHDB_USER: ${{ secrets.DB_USER }}
-        COUCHDB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       with:
         image: spyrogiants/pho2song-db
         registry: docker.io
+        buildArgs: COUCHDB_USER=${{ secrets.DB_USER }}, COUCHDB_PASSWORD=${{ secrets.DB_PASSWORD }}
         dockerfile: docker/couchdb/Dockerfile
         username: ${{secrets.DOCKER_USERNAME}}
         password: ${{secrets.DOCKER_PASSWORD}}
