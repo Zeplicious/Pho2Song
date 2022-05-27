@@ -56,11 +56,11 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       with:
         image: spyrogiants/pho2song
-        tags: v1, latest
         registry: docker.io
         dockerfile: docker/node/Dockerfile
         username: ${{secrets.DOCKER_USERNAME}}
         password: ${{secrets.DOCKER_PASSWORD}}
+        addLatest: true
         
     
     - name: Build and Push DB Docker Image to Docker Hub
@@ -70,10 +70,10 @@ jobs:
         COUCHDB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       with:
         image: spyrogiants/pho2song-db
-        tags: v1, latest
         registry: docker.io
         dockerfile: docker/couchdb/Dockerfile
         username: ${{secrets.DOCKER_USERNAME}}
         password: ${{secrets.DOCKER_PASSWORD}}
+        addLatest: true
       
 
