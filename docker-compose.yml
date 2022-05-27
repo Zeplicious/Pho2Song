@@ -19,9 +19,7 @@ services:
       - app-network
 
   couchdb:
-    build:
-      context: .
-      dockerfile: docker/couchdb/Dockerfile
+    image: docker.io/spyrogiants/pho2song-db:latest
     restart: always
     ports:
       - "5984:5984"

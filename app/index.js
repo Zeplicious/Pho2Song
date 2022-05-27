@@ -64,12 +64,14 @@ const viewUser = '_design/all_users/_view/all';
 function view(doc) {
 	emit(doc._id, { name: doc.name, user: doc.user, song_number: doc.song_number, songs: doc.songs });
 }
-
+console.log()
 //STRATEGIA PASSPORT SPOTIFY
 const spotify_users = new Map();
 const spotify_users_tastes = new Map();
 const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
+console.log(spotify_client_id)
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+console.log(spotify_client_secret)
 const spotify_scopes = [
 	'ugc-image-upload',
 	'user-read-playback-state',
