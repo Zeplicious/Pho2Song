@@ -20,5 +20,8 @@
     "spotify-web-api-node": "^5.0.2",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }

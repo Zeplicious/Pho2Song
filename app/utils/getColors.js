@@ -1,7 +1,4 @@
 require('dotenv').config()
-const { get } = require('express/lib/request');
-const res = require('express/lib/response');
-const fetch = require('node-fetch')
 const got = require('got')
 /* const secrets = require('../secrets') */
 

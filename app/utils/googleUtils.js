@@ -1,4 +1,4 @@
-const res = require('express/lib/response');
+
 const fetch = require('node-fetch')
 
 async function getAlbums(accessToken){

@@ -1,8 +1,6 @@
 require('dotenv').config()
 const express = require('express');
 const http = require('http');
-const path = require("path");
-const secrets = require("../app/secrets");
 const swaggerUI = require('swagger-ui-express')
 const swaggerJsDoc = require('swagger-jsdoc')
 
@@ -13,7 +11,6 @@ const NodeCouchDb = require('node-couchdb');
 var SpotifyWebApi = require('spotify-web-api-node');
 
 const spotifyUtils = require("../app/utils/spotifyUtils.js");
-const googleUtils = require('../app/utils/googleUtils.js')
 const colorUtil = require("../app/utils/getColors.js");
 
 const bodyParser = require('body-parser');
@@ -27,8 +24,8 @@ const couch = new NodeCouchDb({
 	host: process.env.COUCHDB_HOST || "localhost",
 	port: '5984',
 	auth: {
-		user: secrets.database.user,
-		pass: secrets.database.password
+		user: process.env.DB_USER,
+		pass: process.env.DB_PASSWORD
 	}
 })
 const dbName = 'p2splaylists';
@@ -305,11 +302,12 @@ app.post('/playlists/analyze', (req, res) => {
 		id: Joi.string().required(),
 		accessToken: Joi.string().required()
 	})
+	
 	const { error } = validate(schema, req.body)
 	if (error) return res.status(400).send(error.details[0].message)
 	let spotifyApi = new SpotifyWebApi({
-		clientId: secrets.spotify_client_id,
-		clientSecret: secrets.spotify_client_secret,
+		clientId: process.env.SPOTIFY_CLIENT_ID,
+		clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 	})
 	spotifyApi.setAccessToken(req.body.accessToken)
 	try {
@@ -359,8 +357,8 @@ app.post('/photo-song', async function (req, res) { //è richiesto lo scope user
 	const { error } = validate(schema, req.body)
 	if (error) return res.status(400).send(error.details[0].message)
 	let spotifyApi = new SpotifyWebApi({
-		clientId: secrets.spotify_client_id,
-		clientSecret: secrets.spotify_client_secret,
+		clientId: process.env.SPOTIFY_CLIENT_ID,
+		clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 	})
 	spotifyApi.setAccessToken(req.body.accessToken)
 
@@ -436,8 +434,8 @@ app.post('/palette-song', async function (req, res) { //è richiesto lo scope us
 	const { error } = validate(schema, req.body)
 	if (error) return res.status(400).send(error.details[0].message)
 	let spotifyApi = new SpotifyWebApi({
-		clientId: secrets.spotify_client_id,
-		clientSecret: secrets.spotify_client_secret,
+		clientId: process.env.SPOTIFY_CLIENT_ID,
+		clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 	})
 	spotifyApi.setAccessToken(req.body.accessToken)
     let colors = new Array()

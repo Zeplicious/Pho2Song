@@ -34,9 +34,7 @@ services:
       - db_data:/opt/couchdb/data:rw
 
   node1:
-    build:
-      context: .
-      dockerfile: docker/node/Dockerfile
+    image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node1
       - SOCKET_URI=https://localhost:8081
@@ -51,9 +49,7 @@ services:
         - couchdb
   
   node2:
-    build:
-      context: .
-      dockerfile: docker/node/Dockerfile
+    image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node2
       - SOCKET_URI=https://localhost:8081
@@ -70,12 +66,9 @@ services:
         
 
   node3:
-    build:
-      context: .
-      dockerfile: docker/node/Dockerfile
+    image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node3
-
     ports:
       - "8888"
     networks:

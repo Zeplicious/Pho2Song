@@ -3,7 +3,6 @@ require('dotenv').config()
 const express = require('express');
 const http = require('http');
 const path = require("path");
-const secrets = require('./secrets');
 const passport = require('passport');
 const swaggerUI = require('swagger-ui-express')
 const swaggerJsDoc = require('swagger-jsdoc')
@@ -54,8 +53,8 @@ const couch = new NodeCouchDb({
 	host: process.env.COUCHDB_HOST || "localhost",
 	port: '5984',
 	auth: {
-		user: secrets.database.user,
-		pass: secrets.database.password
+		user: process.env.DB_USER,
+		pass: process.env.DB_PASSWORD
 	}
 })
 const dbName = 'p2splaylists';
@@ -69,8 +68,8 @@ function view(doc) {
 //STRATEGIA PASSPORT SPOTIFY
 const spotify_users = new Map();
 const spotify_users_tastes = new Map();
-const spotify_client_id = secrets.spotify.client_id;
-const spotify_client_secret = secrets.spotify.client_secret;
+const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
+const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const spotify_scopes = [
 	'ugc-image-upload',
 	'user-read-playback-state',
@@ -158,8 +157,8 @@ passport.deserializeUser(function (id, done) {
 	}
 })
 //STRATEGIA PASSPORT GOOGLE
-const google_client_id = secrets.google.client_id;
-const google_client_secret = secrets.google.client_secret;
+const google_client_id = process.env.GOOGLE_CLIENT_ID;
+const google_client_secret = process.env.GOOGLE_CLIENT_SECRET;
 const google_scopes = [
 	'https://www.googleapis.com/auth/photoslibrary.readonly',
 	'https://www.googleapis.com/auth/userinfo.profile'
