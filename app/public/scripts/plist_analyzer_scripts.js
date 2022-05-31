@@ -1,9 +1,11 @@
 var socket
 
+//Creo la connessione con la socket
 function connectToSocket() {
     socket = io.connect('http://localhost:8080')
 }
 
+//Viene mostrata la sezione dei risultati corrispondente alla lista di playlist da cui è generata
 function showAnalysis(id, place, plist_name) {
     
     var userID = document.getElementById("userID").innerHTML
@@ -100,7 +102,7 @@ function showAnalysis(id, place, plist_name) {
     })
 }
 
-
+//Viene nascosto il bottono per far apparire la seconda lista di playlist e viene mostrata la seconda lista di playlist
 function choosePlaylistToCompare() {
     document.getElementById("aggiungi-scelta").style.display = "none"
 
@@ -115,6 +117,7 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
 window.onbeforeunload = closingCode;
 
+//Quando la risorsa Plist Analyzer non è più utilizzata, ovvero quando si abbandona la pagina, la connessione con la socket viene chiusa
 function closingCode() {
     socket.disconnect()
     return null;
