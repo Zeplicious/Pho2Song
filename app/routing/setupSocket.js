@@ -17,11 +17,11 @@ async function work(spotifyId) {
         else {
             let song
             if(photo.path !== undefined){
-                song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ spotify_users_tastes.get(spotifyId), userData.get(spotifyId).songsChosen)
+                song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUpload(photo),/* await */ spotify_users_tastes.get(spotifyId).tastes, userData.get(spotifyId).songsChosen)
                 userData.get(spotifyId).songsChosen.push(song)			
             }
             else {
-                song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */spotify_users_tastes.get(spotifyId),userData.get(spotifyId).songsChosen)
+                song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(photo),/*  await */spotify_users_tastes.get(spotifyId).tastes,userData.get(spotifyId).songsChosen)
                 userData.get(spotifyId).songsChosen.push(song)					
             }
             userData.get(spotifyId).songsDB.push({
@@ -36,9 +36,9 @@ async function work(spotifyId) {
     }
     return data
 }
-module.exports=function setup(server,data,tastes, users){
+module.exports=function setup(server,data, users){
     userData=data
-    spotify_users_tastes=tastes
+    spotify_users_tastes= users
     const io = require('socket.io')(server);
     io.on('connection', function (socket) {
         console.log("Connected succesfully to the socket ...");

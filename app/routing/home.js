@@ -57,6 +57,8 @@ module.exports= function build(passport){
     router.post('/logout', passportConfig.checkAuthenticated, (req, res) => {
         console.log(req.session.user.id)
         spotify_users.delete(req.session.user.id);
+        clearInterval(spotify_timers.get(req.session.user.id));
+	    spotify_timers.delete(req.session.user.id)
         req.logout()
         
         req.session.user = undefined;

@@ -9,12 +9,15 @@ async function getAlbums(accessToken){
     return  data.albums
 }
 async function getPhotos(accessToken,albumId){
-
     let url = 'https://photoslibrary.googleapis.com/v1/mediaItems:search'
 	let headers = {'Authorization': 'Bearer '+accessToken};
     let body = '{"albumId" : "'+albumId+'"}'
-    var data = await got.post(url, {headers: headers, body: body}).json();
-    return data.mediaItems
+    try {
+        var data = await got.post(url, {headers: headers, body: body}).json();
+        return data.mediaItems
+    } catch (error) {
+        console.log("getPhotos: "+error)
+    }
 }
 //getToken,
 module.exports={

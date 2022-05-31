@@ -89,18 +89,22 @@ module.exports = function build(userData){
 		else if (req.body.album) {//finito
 			i = req.body.album
 			let album = req.session.user.albums[i]
-
 			googleUtils.getPhotos(req.session.user.accessTokenGoogle, album.id)
 				.then(data => {
 					let photos = userData.get(req.session.user.id).photos
 					let names = userData.get(req.session.user.id).names
-					data.forEach(element => { //concateno <titolo dell'album>.<nome della foto> come identificatore delle foto per il DB 
-						names.push(album.title + "." + element.filename);
-						photos.push(element.baseUrl)
-					});
+					try{
+						data.forEach(element => { //concateno <titolo dell'album>.<nome della foto> come identificatore delle foto per il DB 
+							names.push(album.title + "." + element.filename);
+							photos.push(element.baseUrl)
+						});
 
 
-					res.render('./pages/result.ejs', { urls: photos, num: photos.length, p2sUser: p2sUser ,socket_connect: process.env.SOCKET_URI})
+						res.render('./pages/result.ejs', { urls: photos, num: photos.length, p2sUser: p2sUser ,socket_connect: process.env.SOCKET_URI})
+					} catch(e){
+						console.log('google accesstoken expired')
+						res.redirect('/google-login')
+					}
 				})
 		}
 		else res.redirect('/input');

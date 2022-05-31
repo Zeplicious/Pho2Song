@@ -2,6 +2,7 @@
 const SpotifyStrategy = require('passport-spotify').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 var SpotifyWebApi = require('spotify-web-api-node');
+const got = require('got')
 const spotifyUtils = require("./spotifyUtils.js");
 const googleUtils = require("./googleUtils.js");
 
@@ -10,7 +11,7 @@ const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const google_client_id = process.env.GOOGLE_CLIENT_ID;
 const google_client_secret = process.env.GOOGLE_CLIENT_SECRET;
 
-function initialize(passport, spotify_users, spotify_timers, spotify_users_tastes, google_users){
+function initialize(passport, spotify_users, spotify_timers, spotify_users_data, google_users){
     //STRATEGIA PASSPORT SPOTIFY
     passport.use('spotify',
         new SpotifyStrategy({
@@ -35,21 +36,21 @@ function initialize(passport, spotify_users, spotify_timers, spotify_users_taste
                     let data = await spotifyApi.refreshAccessToken();
                     let access_token = data.body['access_token'];
                     spotifyApi.setAccessToken(access_token);
-                }, expiresIn / 2 * 1000);
+                    spotify_users_data.set(profile.id,{tastes:tastes, accessToken: access_token})
+                    console.log("accesstoken refreshed: " + spotify_users_data.get(profile.id).accessToken)
+                }, expiresIn / 240 * 1000);
                 spotify_timers.set(profile.id,intervalID)
 
                 let prof_pic
                 if (profile.photos.length == 0) prof_pic = './images/skuffed_def_prof_pic_spotify.jpg'
                 else prof_pic = profile.photos[0].value
 
-                spotify_users_tastes.set(profile.id,tastes)
+                spotify_users_data.set(profile.id,{tastes:tastes, accessToken: accessToken})
                 spotify_users.set(profile.id, {
                     id: profile.id,
                     name: profile.displayName,
                     prof_pic: prof_pic,
-                    accessToken: accessToken,
                     //timer: intervalID,
-
                     accessTokenGoogle: '',
                     albums: null
                 })
@@ -66,13 +67,11 @@ function initialize(passport, spotify_users, spotify_timers, spotify_users_taste
             callbackURL: process.env.GOOGLE_URI || 'http://localhost:8080/google-login/callback'
         },
             async function (accessToken, refreshToken, profile, cb) {
-                //ottengo gli album dell'utente tramite accessToken
-
                 let data = await googleUtils.getAlbums(accessToken)
                 google_users.set(profile.id, {
                     id: profile.id,
                     albums: data,
-                    accessToken: accessToken
+                    accessToken: accessToken,
                 })
                 return cb(null, profile)
             })

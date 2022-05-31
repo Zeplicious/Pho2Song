@@ -18,15 +18,15 @@ var server = http.createServer(app);
 //strutture deserializzazione
 const spotify_users = new Map();
 const spotify_timers = new Map();
-const spotify_users_tastes = new Map();
+const spotify_users_data = new Map();
 const google_users = new Map();
 const userData = new Map();
 //
 
-passportConfig.initialize(passport, spotify_users, spotify_timers, spotify_users_tastes, google_users)
+passportConfig.initialize(passport, spotify_users, spotify_timers, spotify_users_data, google_users)
 
 /**************  **************/
-require("./routing/setupSocket.js")(server,userData,spotify_users_tastes, spotify_users) //setup della socket
+require("./routing/setupSocket.js")(server,userData,spotify_users_data) //setup della socket
 
 
 app.set('view-engine', 'ejs');
