@@ -61,7 +61,7 @@ module.exports=function setup(server,data,tastes, users){
             })
             spotifyApi.setAccessToken(users.get(message.userID).accessToken)
             spotifyUtils.analyzePlaylist(spotifyApi, message.playlistID).then(data => {
-                res.send(data)
+                socket.emit("plist-stats", data)
             })
         })
 
