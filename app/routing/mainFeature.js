@@ -26,7 +26,7 @@ const couch = new NodeCouchDb({
 })
 
 const dbName = 'p2splaylists';
-module.exports = function build(userData){
+module.exports = function build(userData,users){
 	const router = require('express').Router();
 	/************** Gestione dell'input **************/
 	router.get('/input', passportConfig.checkAuthenticated, function (req, res) { // input prima del login con google 
@@ -119,7 +119,7 @@ module.exports = function build(userData){
 			clientId: process.env.SPOTIFY_CLIENT_ID,
 			clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 		})
-		spotifyApi.setAccessToken(req.session.user.accessToken)
+		spotifyApi.setAccessToken(users.get(req.session.user.id).accessToken)
 		let selectedSongs=Array()
 		try {
 			req.body.songs.forEach(element => {
