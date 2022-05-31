@@ -26,7 +26,7 @@ const userData = new Map();
 passportConfig.initialize(passport, spotify_users, spotify_timers, spotify_users_tastes, google_users)
 
 /**************  **************/
-require("./routing/setupSocket.js")(server,userData,spotify_users_tastes) //setup della socket
+require("./routing/setupSocket.js")(server,userData,spotify_users_tastes, spotify_users) //setup della socket
 
 
 app.set('view-engine', 'ejs');

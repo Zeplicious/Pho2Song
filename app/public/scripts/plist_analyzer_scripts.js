@@ -1,7 +1,9 @@
 function showAnalysis(id, place, plist_name) {
     var socket = io.connect('http://localhost:8080')
+    
+    var userID = document.getElementById("userID").innerHTML
 
-    socket.emit("plist-analyzer-message", id)
+    socket.emit("plist-analyzer-message", {playlistID: id, userID: userID})
 
     socket.on("plist-stats", (values) => {
         if (document.getElementById("sezione-risultato").style.display == "none") {

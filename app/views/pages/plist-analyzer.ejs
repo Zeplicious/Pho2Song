@@ -17,9 +17,11 @@
     <title>Pho2Song-P.list analyzer</title>
 </head>
 
-<body onload="connectToSocket(); highlightLink('second-feature')">
+<body onload="highlightLink('second-feature')">
 
     <%- include("../partials/navbar.ejs"); %>
+
+    <div id="userID" style="display: none;"><%= p2sUser.userID %></div>
 
     <section id="sezione-scelta">
         <div class="container-fluid">
