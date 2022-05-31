@@ -18,6 +18,7 @@ router.get('/plist-analyzer',  passportConfig.checkAuthenticated, (req, res) => 
         var playlists = data.body.items.filter(item => item.tracks.total != 0)
         res.render('./pages/plist-analyzer.ejs', {
             playlists: playlists, p2sUser: {
+                userID: req.session.user.id,
                 username: req.session.user.name,
                 user_image: req.session.user.prof_pic
             }
@@ -26,7 +27,7 @@ router.get('/plist-analyzer',  passportConfig.checkAuthenticated, (req, res) => 
 })
 
 
-router.post('/plist-analyzer', (req, res) => {
+/* router.post('/plist-analyzer', (req, res) => {
     let spotifyApi = new SpotifyWebApi({
         clientId: spotify_client_id,
         clientSecret: spotify_client_secret,
@@ -35,6 +36,6 @@ router.post('/plist-analyzer', (req, res) => {
     spotifyUtils.analyzePlaylist(spotifyApi, req.body.playlistID).then(data => {
         res.send(data)
     })
-})
+}) */
 
 module.exports = router

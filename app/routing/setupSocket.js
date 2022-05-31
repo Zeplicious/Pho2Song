@@ -1,5 +1,9 @@
+var SpotifyWebApi = require('spotify-web-api-node');
 const spotifyUtils = require("../utils/spotifyUtils.js");
 const colorUtil = require("../utils/getColors.js");
+
+const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
+const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 
 var userData
 var spotify_users_tastes
@@ -32,7 +36,7 @@ async function work(spotifyId) {
     }
     return data
 }
-module.exports=function setup(server,data,tastes){
+module.exports=function setup(server,data,tastes, users){
     userData=data
     spotify_users_tastes=tastes
     const io = require('socket.io')(server);
@@ -49,6 +53,18 @@ module.exports=function setup(server,data,tastes){
                 }
             }
         })
+
+        socket.on("plist-analyzer-message", async (message) => {
+            let spotifyApi = new SpotifyWebApi({
+                clientId: spotify_client_id,
+                clientSecret: spotify_client_secret,
+            })
+            spotifyApi.setAccessToken(users.get(message.userID).accessToken)
+            spotifyUtils.analyzePlaylist(spotifyApi, message.playlistID).then(data => {
+                socket.emit("plist-stats", data)
+            })
+        })
+
         socket.on('disconnect', function() {
             console.log('Got disconnect!');
         });
