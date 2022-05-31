@@ -13,7 +13,7 @@ async function getColorsFromUpload(image){
     var temp = Array();
 
     
-    for (let index = 0; index < 1000000000; index++){}      //Scommentare solo quando si intende fare prove in locale. Ricordare di commentare nuovamente prima di effetturare un push
+    /* for (let index = 0; index < 1000000000; index++){}      //Scommentare solo quando si intende fare prove in locale. Ricordare di commentare nuovamente prima di effetturare un push
     temp.push(
         {
             r: 104,
@@ -21,7 +21,7 @@ async function getColorsFromUpload(image){
             b: 104
         }
     )
-    return;
+    return; */
     
 
     if(image.mimetype && image.mimetype.startsWith("image/")) {
@@ -77,7 +77,7 @@ async function getColorsFromUrl(imageUrl){
     var temp=Array();
 
 
-    for (let index = 0; index < 1000000000; index++){}       //Scommentare solo quando si intende fare prove in locale. Ricordare di commentare nuovamente prima di effetturare un push
+    /* for (let index = 0; index < 1000000000; index++){}       //Scommentare solo quando si intende fare prove in locale. Ricordare di commentare nuovamente prima di effetturare un push
     temp.push(
         {
             r: 104,
@@ -85,7 +85,7 @@ async function getColorsFromUrl(imageUrl){
             b: 104
         }
     )
-    return;
+    return; */
 
 
     var url = 'https://api.imagga.com/v2/colors?image_url=' + encodeURIComponent(imageUrl)+ '&extract_overall_colors=1&extract_object_colors=0&overall_count=5&separated_count=0'

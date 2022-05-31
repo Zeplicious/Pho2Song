@@ -38,7 +38,7 @@ function initialize(passport, spotify_users, spotify_timers, spotify_users_data,
                     spotifyApi.setAccessToken(access_token);
                     spotify_users_data.set(profile.id,{tastes:tastes, accessToken: access_token})
                     console.log("accesstoken refreshed: " + spotify_users_data.get(profile.id).accessToken)
-                }, expiresIn / 240 * 1000);
+                }, expiresIn / 2  * 1000);
                 spotify_timers.set(profile.id,intervalID)
 
                 let prof_pic
