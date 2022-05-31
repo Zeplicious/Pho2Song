@@ -1,6 +1,6 @@
 require('dotenv').config()
 const got = require('got')
-/* const secrets = require('../secrets') */
+
 
 const FormData=require('form-data');
 const fs =require('fs');
