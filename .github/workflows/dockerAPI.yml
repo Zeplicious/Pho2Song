@@ -1,0 +1,31 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Docker API CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_push:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build and Push Api Docker Image to Docker Hub
+      uses: mr-smithers-excellent/docker-build-push@v5
+      with:
+        image: spyrogiants/pho2song-api
+        registry: docker.io
+        buildArgs: IMAGGA_CLIENT_ID=${{ secrets.IMAGGA_CLIENT_ID }}, IMAGGA_CLIENT_SECRET=${{ secrets.IMAGGA_CLIENT_SECRET }}, SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}, SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}, DB_USER=${{ secrets.DB_USER }}, DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+        dockerfile: docker/api/Dockerfile
+        username: ${{secrets.DOCKER_USERNAME}}
+        password: ${{secrets.DOCKER_PASSWORD}}
+        addLatest: true
+
