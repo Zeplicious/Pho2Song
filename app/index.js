@@ -530,7 +530,7 @@ app.get('/plist-analyzer', checkAuthenticated, (req, res) => {
 				username: req.session.user.name,
 				user_image: req.session.user.prof_pic
 			}
-		})  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
+		})  /* Invia al frontend le playlist da cui l'utente sceglie quella da analizzare */
 	})
 })
 
