@@ -14,8 +14,8 @@ async function getUserTaste(spotifyApi) {
   ids = Array()
   names = Array()
   if (data.body.total < 50) {
-    let data = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50 })
-    for (let track of data.body.items) {
+    let response = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50 })
+    for (let track of response.body.items) {
       ids.push(track.track.id);
       names.push(track.track.name);
     }
@@ -23,6 +23,7 @@ async function getUserTaste(spotifyApi) {
   }
   if (data.body.total != 0) {
     for (let track of data.body.items) {
+      console.log(track.name)
       ids.push(track.id);
       names.push(track.name);
     }
@@ -38,6 +39,7 @@ async function getUserTaste(spotifyApi) {
   //parse dei parametri utili
   var index = 0
   for (let track of data.body.audio_features) {
+    console.log(index +" "+ track.id)
     ret.push(
       {
         uri: ('spotify:track:' + track.id),
