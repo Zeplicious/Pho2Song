@@ -1,5 +1,4 @@
 var socket
-
 //Creo la connessione con la socket
 function connectToSocket() {
     let url = document.getElementById("url").innerHTML
@@ -9,6 +8,94 @@ function connectToSocket() {
     else{    
         socket = io.connect("http://localhost:8080");
     }
+    socket.on("plist-stats", (values) => {
+        console.log(values.place)
+        if (document.getElementById("sezione-risultato").style.display == "none") {
+            document.getElementById("sezione-risultato").style.display = "initial"
+        }
+
+        if (document.getElementById("stats" + values.place).style.display == "none") {
+            document.getElementById("stats" + values.place).style.display = "initial"
+        }
+
+        if ((document.getElementById("aggiungi-scelta").style.display == "none") && (document.getElementById("scelta2").style.display == "none")) {
+            document.getElementById("aggiungi-scelta").style.display = "initial"
+        }
+
+        document.getElementById("plist" + values.place).innerHTML = values.plist_name
+        
+        let string = ''
+        if (values.place == 1) {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Acousticness + '%;" aria-valuenow=" ' + values.data.Acousticness + ' " aria-valuemin="0" aria-valuemax="100">' + values.data.Acousticness + '%</div>'
+        }
+        else {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Acousticness + '%;" aria-valuenow=" ' + values.data.Acousticness + ' " aria-valuemin="0" aria-valuemax="100">' + values.data.Acousticness + '%</div>'
+        }
+        
+        document.getElementById("acousticness" + values.place).innerHTML = string
+
+        if (values.place == 1) {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Danceability + '%;"aria-valuenow=" ' + values.data.Danceability + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Danceability + '%</div>'
+        }
+        else {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Danceability + '%;" aria-valuenow=" ' + values.data.Danceability + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Danceability + '%</div>'
+        }
+        
+        document.getElementById("danceability" + values.place).innerHTML = string
+
+        if (values.place == 1) {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Energy + '%;" aria-valuenow=" ' + values.data.Energy + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Energy + '%</div>'
+        }
+        else {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Energy + '%;" aria-valuenow=" ' + values.data.Energy + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Energy + '%</div>'
+        }
+        
+        document.getElementById("energy" + values.place).innerHTML = string
+
+        if (values.place == 1) {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Instrumentalness + '%;"aria-valuenow=" ' + values.data.Instrumentalness + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Instrumentalness + '%</div>'
+        }
+        else {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Instrumentalness + '%;" aria-valuenow=" ' + values.data.Instrumentalness + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Instrumentalness + '%</div>'
+        }
+        
+        document.getElementById("instrumentalness" + values.place).innerHTML = string
+
+        if (values.place == 1) {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Liveness + '%;"aria-valuenow=" ' + values.data.Liveness + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Liveness + '%</div>'
+        }
+        else {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Liveness + '%;" aria-valuenow=" ' + values.data.Liveness + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Liveness + '%</div>'
+        }
+        
+        document.getElementById("liveness" + values.place).innerHTML = string
+
+        if (values.place == 1) {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Speechiness + '%;"aria-valuenow=" ' + values.data.Speechiness + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Speechiness + '%</div>'
+        }
+        else {
+            string = '<div class="progress-bar" role="progressbar" style="width:' + values.data.Speechiness + '%;" aria-valuenow=" ' + values.data.Speechiness + ' " aria-valuemin="0"aria-valuemax="100">' + values.data.Speechiness + '%</div>'
+        }
+        
+        document.getElementById("speechiness" + values.place).innerHTML = string
+
+        if (values.place == 1) {
+            string = '<h6>Volume medio in decibel: ' + values.data.Loudness + ' dB</h6>'
+        } else {
+            string = '<h6>' + values.data.Loudness + ' dB: ' + 'Volume medio in decibel</h6>'
+        }
+        
+        document.getElementById("loudness" + values.place).innerHTML = string
+
+        if (values.place == 1) {
+            string = '<h6>Tempo medio: ' + values.data.Tempo + ' BPM</h6>'
+        }
+        else {
+            string = '<h6>' + values.data.Tempo + ' BPM: ' + 'Tempo medio</h6>'
+        }
+        
+        document.getElementById("tempo" + values.place).innerHTML = string 
+    })
 }
 
 //Viene mostrata la sezione dei risultati corrispondente alla lista di playlist da cui è generata
@@ -16,96 +103,9 @@ function showAnalysis(id, place, plist_name) {
     
     var userID = document.getElementById("userID").innerHTML
 
-    socket.emit("plist-analyzer-message", {playlistID: id, userID: userID})
+    socket.emit("plist-analyzer-message", {playlistID: id, playlistName: plist_name, userID: userID, place: place})
 
-    socket.on("plist-stats", (values) => {
-        if (document.getElementById("sezione-risultato").style.display == "none") {
-            document.getElementById("sezione-risultato").style.display = "initial"
-        }
-
-        if (document.getElementById("stats" + place).style.display == "none") {
-            document.getElementById("stats" + place).style.display = "initial"
-        }
-
-        if ((document.getElementById("aggiungi-scelta").style.display == "none") && (document.getElementById("scelta2").style.display == "none")) {
-            document.getElementById("aggiungi-scelta").style.display = "initial"
-        }
-
-        document.getElementById("plist" + place).innerHTML = plist_name
-        
-        let string = ''
-
-        if (place == 1) {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Acousticness + '%;" aria-valuenow=" ' + values.Acousticness + ' " aria-valuemin="0" aria-valuemax="100">' + values.Acousticness + '%</div>'
-        }
-        else {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Acousticness + '%;" aria-valuenow=" ' + values.Acousticness + ' " aria-valuemin="0" aria-valuemax="100">' + values.Acousticness + '%</div>'
-        }
-        
-        document.getElementById("acousticness" + place).innerHTML = string
-
-        if (place == 1) {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Danceability + '%;"aria-valuenow=" ' + values.Danceability + ' " aria-valuemin="0"aria-valuemax="100">' + values.Danceability + '%</div>'
-        }
-        else {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Danceability + '%;" aria-valuenow=" ' + values.Danceability + ' " aria-valuemin="0"aria-valuemax="100">' + values.Danceability + '%</div>'
-        }
-        
-        document.getElementById("danceability" + place).innerHTML = string
-
-        if (place == 1) {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Energy + '%;" aria-valuenow=" ' + values.Energy + ' " aria-valuemin="0"aria-valuemax="100">' + values.Energy + '%</div>'
-        }
-        else {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Energy + '%;" aria-valuenow=" ' + values.Energy + ' " aria-valuemin="0"aria-valuemax="100">' + values.Energy + '%</div>'
-        }
-        
-        document.getElementById("energy" + place).innerHTML = string
-
-        if (place == 1) {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Instrumentalness + '%;"aria-valuenow=" ' + values.Instrumentalness + ' " aria-valuemin="0"aria-valuemax="100">' + values.Instrumentalness + '%</div>'
-        }
-        else {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Instrumentalness + '%;" aria-valuenow=" ' + values.Instrumentalness + ' " aria-valuemin="0"aria-valuemax="100">' + values.Instrumentalness + '%</div>'
-        }
-        
-        document.getElementById("instrumentalness" + place).innerHTML = string
-
-        if (place == 1) {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Liveness + '%;"aria-valuenow=" ' + values.Liveness + ' " aria-valuemin="0"aria-valuemax="100">' + values.Liveness + '%</div>'
-        }
-        else {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Liveness + '%;" aria-valuenow=" ' + values.Liveness + ' " aria-valuemin="0"aria-valuemax="100">' + values.Liveness + '%</div>'
-        }
-        
-        document.getElementById("liveness" + place).innerHTML = string
-
-        if (place == 1) {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Speechiness + '%;"aria-valuenow=" ' + values.Speechiness + ' " aria-valuemin="0"aria-valuemax="100">' + values.Speechiness + '%</div>'
-        }
-        else {
-            string = '<div class="progress-bar" role="progressbar" style="width:' + values.Speechiness + '%;" aria-valuenow=" ' + values.Speechiness + ' " aria-valuemin="0"aria-valuemax="100">' + values.Speechiness + '%</div>'
-        }
-        
-        document.getElementById("speechiness" + place).innerHTML = string
-
-        if (place == 1) {
-            string = '<h6>Volume medio in decibel: ' + values.Loudness + ' dB</h6>'
-        } else {
-            string = '<h6>' + values.Loudness + ' dB: ' + 'Volume medio in decibel</h6>'
-        }
-        
-        document.getElementById("loudness" + place).innerHTML = string
-
-        if (place == 1) {
-            string = '<h6>Tempo medio: ' + values.Tempo + ' BPM</h6>'
-        }
-        else {
-            string = '<h6>' + values.Tempo + ' BPM: ' + 'Tempo medio</h6>'
-        }
-        
-        document.getElementById("tempo" + place).innerHTML = string 
-    })
+   
 }
 
 //Viene nascosto il bottono per far apparire la seconda lista di playlist e viene mostrata la seconda lista di playlist
