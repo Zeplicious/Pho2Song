@@ -39,6 +39,7 @@ async function getUserTaste(spotifyApi) {
   //parse dei parametri utili
   var index = 0
   for (let track of data.body.audio_features) {
+    if(track === undefined || track==null)continue
     console.log(index +" "+ track.id)
     ret.push(
       {
