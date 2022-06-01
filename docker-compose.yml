@@ -11,10 +11,14 @@ services:
       - node1:node1
       - node2:node2
       - node3:node3
+      - api1:api1
+      - api2:api2
     depends_on:
       - node1
       - node2
       - node3
+      - api1
+      - api2
     networks:
       - app-network
 
@@ -75,12 +79,26 @@ services:
     links:
         - couchdb
 
-  api:
+  api1:
     image: spyrogiants/pho2song-api:latest
     environment:
-      - INSTANCE=api
+      - INSTANCE=api1
+      - API_URI = "https://localhost:8081"
     ports:
-      - "8888:8888"
+      - "8888"
+    networks:
+      - app-network
+      - backend-network
+    links:
+        - couchdb
+
+  api2:
+    image: spyrogiants/pho2song-api:latest
+    environment:
+      - INSTANCE=api2
+      - API_URI = "https://localhost:8081"
+    ports:
+      - "8888"
     networks:
       - app-network
       - backend-network

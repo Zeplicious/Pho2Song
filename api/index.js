@@ -46,7 +46,7 @@ const options = {
 		},
 		servers: [
 			{
-				url: "http://localhost:8080"
+				url: process.env.API_URI || "http://localhost:8080"
 			}
 		]
 	},
