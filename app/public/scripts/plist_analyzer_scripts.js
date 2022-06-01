@@ -1,4 +1,5 @@
 var socket
+
 //Creo la connessione con la socket
 function connectToSocket() {
     let url = document.getElementById("url").innerHTML
@@ -8,6 +9,12 @@ function connectToSocket() {
     else{    
         socket = io.connect("http://localhost:8080");
     }
+
+    listenOnSocket()
+}
+
+//Il corpo effettivo della funzione showAnalysis
+function listenOnSocket() {
     socket.on("plist-stats", (values) => {
         console.log(values.place)
         if (document.getElementById("sezione-risultato").style.display == "none") {
@@ -98,20 +105,15 @@ function connectToSocket() {
     })
 }
 
-//Viene mostrata la sezione dei risultati corrispondente alla lista di playlist da cui è generata
+//Viene mostrata la sezione dei risultati corrispondente alla lista di playlist da cui è generata (funzione wrapper che scrive sulla WebSocket)
 function showAnalysis(id, place, plist_name) {
-    
     var userID = document.getElementById("userID").innerHTML
-
     socket.emit("plist-analyzer-message", {playlistID: id, playlistName: plist_name, userID: userID, place: place})
-
-   
 }
 
 //Viene nascosto il bottono per far apparire la seconda lista di playlist e viene mostrata la seconda lista di playlist
 function choosePlaylistToCompare() {
     document.getElementById("aggiungi-scelta").style.display = "none"
-
     document.getElementById("scelta2").style.display = "initial"
 }
 
@@ -121,9 +123,9 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl)
 })
 
+//Quando la risorsa Plist Analyzer non è più utilizzata, ovvero quando si abbandona la pagina, la connessione con la socket viene chiusa
 window.onbeforeunload = closingCode;
 
-//Quando la risorsa Plist Analyzer non è più utilizzata, ovvero quando si abbandona la pagina, la connessione con la socket viene chiusa
 function closingCode() {
     socket.disconnect()
     return null;
