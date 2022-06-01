@@ -24,7 +24,7 @@ const google_scopes = [
 	'https://www.googleapis.com/auth/photoslibrary.readonly',
 	'https://www.googleapis.com/auth/userinfo.profile'
 ]
-module.exports= function build(passport){
+module.exports= function build(passport,spotify_users,spotify_timers){
     /**************  Gestione della home **************/
     const router = require("express").Router();
 

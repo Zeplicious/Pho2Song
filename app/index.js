@@ -43,7 +43,7 @@ app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, "/public")));
 
 // mounting delle routes
-app.use('/', require("./routing/home.js")(passport))
+app.use('/', require("./routing/home.js")(passport,spotify_users, spotify_timers))
 app.use('/',  require("./routing/mainFeature.js")(userData,spotify_users_data));
 app.use('/', require("./routing/analyzerFeature.js")( spotify_users_data))
 app.use('/', require("./routing/historyFeature.js"))
