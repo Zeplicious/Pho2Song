@@ -21,8 +21,9 @@ module.exports =function build(users){
                     userID: req.session.user.id,
                     username: req.session.user.name,
                     user_image: req.session.user.prof_pic
-                }
-            })  /* Invia al frontend le playlist da cui l'utente sceglie quella da anallizare */
+                },                                          /* Invia al frontend le playlist da cui l'utente sceglie quella da analizzare */
+                socket_connect: process.env.SOCKET_URI      /* Questo serve ad aprire la connessione della socket con il giusto protocollo */
+            })
         })
     })
     return router
