@@ -2,7 +2,13 @@ var socket
 
 //Creo la connessione con la socket
 function connectToSocket() {
-    socket = io.connect('http://localhost:8080')
+    let url = document.getElementById("url").innerHTML
+    if(url && url!= null && url!=""){
+        socket = io.connect(url);
+    }
+    else{    
+        socket = io.connect("http://localhost:8080");
+    }
 }
 
 //Viene mostrata la sezione dei risultati corrispondente alla lista di playlist da cui è generata
