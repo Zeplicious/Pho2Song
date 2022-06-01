@@ -5,18 +5,15 @@ services:
       context: .
       dockerfile: docker/nginx/Dockerfile
     ports:
-      - "8080:80"
-      - "8081:443"
+      - "8080:443"
     links:
       - node1:node1
       - node2:node2
-      - node3:node3
       - api1:api1
       - api2:api2
     depends_on:
       - node1
       - node2
-      - node3
       - api1
       - api2
     networks:
@@ -39,9 +36,9 @@ services:
     image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node1
-      - SOCKET_URI=https://localhost:8081
-      - SPOTIFY_URI=https://localhost:8081/spotify/callback
-      - GOOGLE_URI=https://localhost:8081/google-login/callback
+      - SOCKET_URI=https://localhost:8080
+      - SPOTIFY_URI=https://localhost:8080/spotify/callback
+      - GOOGLE_URI=https://localhost:8080/google-login/callback
     ports:
       - "8888"
     networks:
@@ -54,23 +51,9 @@ services:
     image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node2
-      - SOCKET_URI=https://localhost:8081
-      - SPOTIFY_URI=https://localhost:8081/spotify/callback
-      - GOOGLE_URI=https://localhost:8081/google-login/callback
-    ports:
-      - "8888"
-    networks:
-      - app-network
-      - backend-network
-    links:
-        - couchdb
-
-        
-
-  node3:
-    image: spyrogiants/pho2song:latest
-    environment:
-      - INSTANCE=node3
+      - SOCKET_URI=https://localhost:8080
+      - SPOTIFY_URI=https://localhost:8080/spotify/callback
+      - GOOGLE_URI=https://localhost:8080/google-login/callback
     ports:
       - "8888"
     networks:
@@ -83,7 +66,7 @@ services:
     image: spyrogiants/pho2song-api:latest
     environment:
       - INSTANCE=api1
-      - API_URI="https://localhost:8081"
+      - API_URI="https://localhost:8080"
     ports:
       - "8888"
     networks:
@@ -96,7 +79,7 @@ services:
     image: spyrogiants/pho2song-api:latest
     environment:
       - INSTANCE=api2
-      - API_URI="https://localhost:8081"
+      - API_URI="https://localhost:8080"
     ports:
       - "8888"
     networks:
