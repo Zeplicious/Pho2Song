@@ -62,6 +62,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 
+app.use("/api", require("./api") (Joi, couch, SpotifyWebApi, spotifyUtils, colorUtil))
+
 /************************** CHIAMATE API *************************** */
 
 /**
@@ -204,7 +206,7 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 
 /**
  * @swagger
- * /playlists:
+ * /api/playlists:
  *      get:
  *          summary: Ritorna la lista di playlist generate da Pho2Song
  *          tags: [P2S Playlists]
@@ -220,17 +222,10 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
  * 
  */
 
- app.get('/playlists', (req, res) => {
-	couch.get(dbName, viewUrl).then(
-		(data, headers, status) => {
-			res.send(data.data.rows)
-		}
-	)
-})
 
 /**
  * @swagger
- * /playlists/{id}:
+ * /api/playlists/{id}:
  *      get:
  *          summary: Ritorna la playlist di Pho2Song tramite con l'id specificato
  *          tags: [P2S Playlists]
@@ -254,23 +249,10 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
  * 
  */
 
-// codice per route get '/:id'
-app.get('/playlists/:id', (req, res) => {
-	couch.get(dbName, viewUrl).then(
-		(data, headers, status) => {
-			for (index = 0; index < data.data.rows.length; index++) {
-				if (data.data.rows[index].id === req.params.id) {
-					return res.send(data.data.rows[index].id);
-				}
-			}
-			res.status(404).send('La playlist con id ' + req.params.id + ' non è stata trovata')
-		}
-	)
-})
 
 /**
  * @swagger
- * /playlists/analyze:  
+ * /api/playlists/analyze:  
  *  post:
  *      summary: Analizza una playlist di Spotify
  *      tags: [Playlists]
@@ -296,33 +278,9 @@ app.get('/playlists/:id', (req, res) => {
  *              description: Errore nella richiesta
  */
 
-//codice per route post '/'
-app.post('/playlists/analyze', (req, res) => {
-	const schema = Joi.object({
-		id: Joi.string().required(),
-		accessToken: Joi.string().required()
-	})
-	
-	const { error } = validate(schema, req.body)
-	if (error) return res.status(400).send(error.details[0].message)
-	let spotifyApi = new SpotifyWebApi({
-		clientId: process.env.SPOTIFY_CLIENT_ID,
-		clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-	})
-	spotifyApi.setAccessToken(req.body.accessToken)
-	try {
-		spotifyUtils.analyzePlaylist(spotifyApi, req.body.id).then(data => {
-			res.send(data)
-		})
-	}
-	catch (e) {
-		res.status(400).send(e)
-	}
-})
-
 /**
  * @swagger
- * /photo-song:  
+ * /api/photo-song:  
  *  post:
  *      summary: Dalla foto data in input ne viene restituita una canzone (è richiesto un accesstoken con scope 'user-top-read' abilitato!)
  *      tags: [Photo To Song]
@@ -348,33 +306,9 @@ app.post('/playlists/analyze', (req, res) => {
  *              description: Errore nella richiesta
  */
 
-//codice per route post '/'
-app.post('/photo-song', async function (req, res) { //è richiesto lo scope user-top-read
-	const schema = Joi.object({
-		url: Joi.string().required(),
-		accessToken: Joi.string().required()
-	})
-	const { error } = validate(schema, req.body)
-	if (error) return res.status(400).send(error.details[0].message)
-	let spotifyApi = new SpotifyWebApi({
-		clientId: process.env.SPOTIFY_CLIENT_ID,
-		clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-	})
-	spotifyApi.setAccessToken(req.body.accessToken)
-
-	try {
-		let taste = await spotifyUtils.getUserTaste(spotifyApi)
-		song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(req.body.url), taste, [])
-		res.send(song)
-	}
-	catch (e) {
-		res.status(400).send(e)
-	}
-})
-
 /**
  * @swagger
- * /palette-song:  
+ * /api/palette-song:  
  *  post:
  *      summary: Dalla palette di colori data in input ne viene restituita una canzone (è richiesto un accesstoken con scope 'user-top-read' abilitato!)
  *      tags: [Palette To Song]
@@ -419,43 +353,6 @@ app.post('/photo-song', async function (req, res) { //è richiesto lo scope user
  *          400:
  *              description: Errore nella richiesta
  */
-
-app.post('/palette-song', async function (req, res) { //è richiesto lo scope user-top-read
-	const schema = Joi.object({
-		colors: Joi.array().items(
-			Joi.object({
-				r: Joi.number().min(0).max(255).required(),
-				g: Joi.number().min(0).max(255).required(),
-				b: Joi.number().min(0).max(255).required(),
-			})
-		),
-		accessToken: Joi.string().required()
-	})
-	const { error } = validate(schema, req.body)
-	if (error) return res.status(400).send(error.details[0].message)
-	let spotifyApi = new SpotifyWebApi({
-		clientId: process.env.SPOTIFY_CLIENT_ID,
-		clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-	})
-	spotifyApi.setAccessToken(req.body.accessToken)
-    let colors = new Array()
-    for(index = 0; index < req.body.colors.length; index++){
-        colors[index] = req.body.colors[index]
-    }
-    console.log("colori: " + colors)
-	try {
-		let taste = await spotifyUtils.getUserTaste(spotifyApi)
-		song = await spotifyUtils.getSongFromColors(colors, taste, [])
-		res.send(song)
-	}
-	catch (e) {
-		res.status(400).send(e)
-	}
-})
-
-function validate(schema, body) {
-	return schema.validate(body)
-}
 
 /************** Server Listening ************ */
 
