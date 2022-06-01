@@ -83,7 +83,7 @@ services:
     image: spyrogiants/pho2song-api:latest
     environment:
       - INSTANCE=api1
-      - API_URI = "https://localhost:8081"
+      - API_URI="https://localhost:8081"
     ports:
       - "8888"
     networks:
@@ -96,7 +96,7 @@ services:
     image: spyrogiants/pho2song-api:latest
     environment:
       - INSTANCE=api2
-      - API_URI = "https://localhost:8081"
+      - API_URI="https://localhost:8081"
     ports:
       - "8888"
     networks:
