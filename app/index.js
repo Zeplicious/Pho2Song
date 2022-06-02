@@ -49,6 +49,6 @@ app.use('/', require("./routing/analyzerFeature.js")( spotify_users_data))
 app.use('/', require("./routing/historyFeature.js"))
 
 server.listen(process.env.PORT || 8080, () => {
-	console.log('Application server '+(process.env.INSTANCE||'')+'listening on '+ (process.env.SOCKET_URI || 'http://localhost:8080/'));
+	console.log('Application server '+(process.env.INSTANCE||'\b')+' listening on '+ (process.env.SOCKET_URI || 'http://localhost:8080/'));
 });
  
