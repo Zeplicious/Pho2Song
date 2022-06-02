@@ -38,7 +38,7 @@ jobs:
     - run: npm test
       env:
         SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
-        SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_ID }}
+        SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
         IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
         IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
 
