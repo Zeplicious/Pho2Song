@@ -15,7 +15,7 @@
                     <a id="second-feature" class="nav-link" href="./plist-analyzer" >P.list analyzer</a>
                 </li>
                 <li class="nav-item">
-                    <a id="third-feature" class="nav-link" href="./playlist_history">Song hystory</a>
+                    <a id="third-feature" class="nav-link" href="./playlist_history">P.list History</a>
                 </li>
             </ul>
             <% if (!p2sUser) { %>
@@ -33,16 +33,9 @@
                             aria-labelledby="dropdownUser2"
                             style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 34px);"
                             data-popper-placement="bottom-end">
-                            <li><a class="dropdown-item" href="#">New project...</a></li>
-                            <li><a class="dropdown-item" href="#">Settings</a></li>
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
                             <li>
                                 <form action="./logout" method="post">
                                     <input class="dropdown-item btn btn-outline-danger" type="submit" value="Sign out">
-                                    <!-- <a class="dropdown-item" type="submit">Sign out</a> -->
                                 </form>
                             </li>
                         </ul>

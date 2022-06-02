@@ -6,7 +6,7 @@ services:
       dockerfile: docker/nginx/Dockerfile
     ports:
       - "8080:443"
-      - "8081:80"
+
     links:
       - node1:node1
       - node2:node2
@@ -27,7 +27,7 @@ services:
       - "5984:5984"
     environment:
       - INSTANCE=couchdb
-      - COUCHDB_SERVER=http://couchdb:5984
+      - COUCHDB_SERVER=http://couchdb:5984/
     networks:
       - backend-network
     volumes:
@@ -37,7 +37,7 @@ services:
     image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node1
-      - SOCKET_URI=https://localhost:8080
+      - SOCKET_URI=https://localhost:8080/
       - SPOTIFY_URI=https://localhost:8080/spotify/callback
       - GOOGLE_URI=https://localhost:8080/google-login/callback
     ports:
@@ -52,7 +52,7 @@ services:
     image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node2
-      - SOCKET_URI=https://localhost:8080
+      - SOCKET_URI=https://localhost:8080/
       - SPOTIFY_URI=https://localhost:8080/spotify/callback
       - GOOGLE_URI=https://localhost:8080/google-login/callback
     ports:
@@ -67,7 +67,7 @@ services:
     image: spyrogiants/pho2song-api:latest
     environment:
       - INSTANCE=api1
-      - API_URI="https://localhost:8080"
+      - API_URI=https://localhost:8080/
     ports:
       - "8888"
     networks:
@@ -80,7 +80,7 @@ services:
     image: spyrogiants/pho2song-api:latest
     environment:
       - INSTANCE=api2
-      - API_URI="https://localhost:8080"
+      - API_URI=https://localhost:8080/
     ports:
       - "8888"
     networks:

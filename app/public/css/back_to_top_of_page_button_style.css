@@ -5,7 +5,8 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    border: 2px solid rgb(61, 61, 61);
+    background-color: rgb(30 215 96);
+    border: 2px solid rgb(68, 209, 139);
     border-radius: 50%;
 }
 

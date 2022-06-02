@@ -1,3 +1,5 @@
+/*** stile body e main ***/
+
 * {
     padding: 0;
     margin: 0;
@@ -8,6 +10,18 @@ body {
     background-color: rgb(255, 255, 255);
     padding-top: 65px;
 }
+
+.form-check-input:checked{
+    background-color: rgb(68, 209, 139);
+    border-color:  rgb(40, 128, 84);
+    
+}
+.form-check-input:focus{
+    border-color: rgb(40, 128, 84);
+    box-shadow: 0 0 0 0.20rem rgb(68, 209, 139);
+}
+
+/*** stile bottoni ***/
 
 .btn-primary{
     background-color: rgb(30, 215, 96);
@@ -28,17 +42,6 @@ body {
 .btn-primary:disabled {
     background-color: rgba(30, 215, 96, 0.7);
     border-color: rgb(30, 215, 96, 0.5);
-}
-
-.p-file{
-    display: inline-block;
-}
-
-.bi{
-    margin-right: 0.5em;
-    display: inline-block;
-    vertical-align: -0.120em;
-    color:rgb(30, 215, 96, 0.7);
 }
 
 .bi-google{
@@ -94,32 +97,4 @@ a {
     color: #842029;
     background-color: #f8d7da;
     border-color: #f5c2c7;
-}
-
-/* Stile footer */
-
-footer {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-}
-
-.list-inline-item svg {
-    font-size: 30px;
-}
-
-.link_footer a:any-link {
-    color: rgb(30 215 96);
-    text-decoration-line: none;
-}
-
-.link_footer a:hover {
-    color: rgb(40, 128, 84);
-}
-
-.social_footer a:any-link {
-    color: rgb(30 215 96);
-}
-
-.social_footer a:hover {
-    color: rgb(30 215 96);
 }
