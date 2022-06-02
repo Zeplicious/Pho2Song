@@ -354,5 +354,5 @@ app.use("/api", require("./api") (joi, couch, spotifyWebApi, spotifyUtils, color
 /************** Server Listening ************ */
 
 server.listen(process.env.PORT || 8080, () => {
-	console.log('Api server '+(process.env.INSTANCE||'\b')+' listening on '+ (process.env.API_URI+'/api-docs' || 'http://localhost:8080/api-docs'));;
+	console.log('Api server '+(process.env.INSTANCE||'\b')+' listening on '+ (process.env.API_URI || 'http://localhost:8080') + '/api-docs');;
 });
