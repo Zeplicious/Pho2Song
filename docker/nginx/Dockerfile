@@ -7,3 +7,4 @@ RUN apt-get update -y
 RUN apt-get install tcpdump -y
 
 EXPOSE 443
+EXPOSE 80
