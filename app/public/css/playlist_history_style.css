@@ -1,3 +1,5 @@
+/*** stile body e main ***/
+
 body {
     min-height: 100vh;
     min-height: -webkit-fill-available;
@@ -18,9 +20,13 @@ main {
     overflow-y: hidden;
 }
 
+/*** stili aggiuntivi nav ***/
+
 .nav-flush .nav-link {
     border-radius: 0;
 }
+
+/*** stile playlist viewer ***/
 
 .playlist-name{
     color:rgb(30, 215, 96);
@@ -38,17 +44,12 @@ main {
     word-break: break-all;
 }
 
+/*** stile redirect ***/
+
 .anchor-url{
     text-decoration: none;
     color: rgb(30, 215, 96);
 }
-
-/* .song-text{
-    display: inline-block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 60%;
-} */
 
 .bd-placeholder-img {
     font-size: 1.125rem;
@@ -68,58 +69,4 @@ main {
         font-size: 3.5rem;
     }
 
-} 
-
-/* @media screen and (max-width: 320px){
-    .playlist-name{
-        max-width: 13ch;
-        text-overflow: ellipsis;
-    }
-    .playlist-description{
-        max-width: 13ch;
-        text-overflow: ellipsis;
-    }
-    .song-text{
-        display: inline-block;
-        max-width: 13ch;
-        text-overflow: ellipsis;
-        overflow: hidden;
-    } 
 }
-
-@media screen and (max-width: 768px){
-    .playlist-name{
-       max-width: 25ch;
-        text-overflow: ellipsis;
-    }
-    .playlist-description{
-        max-width: 25ch;
-        text-overflow: ellipsis;
-    }
-    .song-text{
-        display: inline-block;
-        max-width: 25ch; 
-        
-        text-overflow: ellipsis;
-        overflow: hidden;
-    } 
-} */
-
-/* @media screen and (min-width: 1440px){
-    .playlist-name{
-       max-width: 25ch;
-        text-overflow: ellipsis;
-    }
-    .playlist-description{
-        max-width: 25ch;
-        text-overflow: ellipsis;
-    }
-    .song-text{
-        display: inline-block;
-        max-width: 50%; 
-        
-        text-overflow: ellipsis;
-        overflow: hidden;
-    } 
-}
- */

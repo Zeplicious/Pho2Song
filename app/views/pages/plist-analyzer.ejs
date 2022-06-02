@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="./css/back_to_top_of_page_button_style.css">
     <link rel="stylesheet" href="./css/footer_style.css">
 
-    <title>Pho2Song-P.list analyzer</title>
+    <title>Pho2Song-P.list Analyzer</title>
 </head>
 
-<body onload="connectToSocket(); highlightLink('second-feature')">
+<body onload="connectToSocket(); highlightLink('second-feature')">  <!-- Utilizzato solo per passare socket_connect alla WebSocket -->
 
     <%- include("../partials/navbar.ejs"); %>
 
@@ -27,7 +27,7 @@
         <div id="url" style="display: none;"></div>
     <% }%> 
 
-    <div id="userID" style="display: none;"><%= p2sUser.userID %></div>
+    <div id="userID" style="display: none;"><%= p2sUser.userID %></div> <!-- Utilizzato solo per passare p2sUser.userID al server -->
 
     <section id="sezione-scelta">
         <div class="container-fluid">

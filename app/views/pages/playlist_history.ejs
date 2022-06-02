@@ -12,7 +12,7 @@
     <link href="/css/playlist_history_style.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/footer_style.css">
     
-    <title>Pho2Song - History Feature</title>
+    <title>Pho2Song - P.list History</title>
 </head>
 
 <body onload='highlightLink("third-feature")'>
@@ -24,18 +24,21 @@
         <div class="container-fluid">
             <div class="row mx-auto mt-2 p-1 mb-1">
                 <div class="col-12 mx-auto">
-                    <h1 class="text-center">Hey <%= p2suser %>!</h1> 
-                </div>
-            </div>
-            <div class="row mx-auto mt-1 mb-3 p-2">
-                <div class="col-12 mx-auto">
-                    <h2 class="text-center">Ecco com'è andata la tua esperienza su Pho2Song!</h2>
+                    <h2 class="text-center">Hey <%= p2sUser.username %>!</h2> 
                 </div>
             </div>
 
+            <% if(p2splaylists.length != 0){ %>
+                <div class="row mx-auto mt-1 mb-3 p-2">
+                    <div class="col-12 mx-auto">
+                        <h4 class="text-center">Ecco com'è andata la tua esperienza su Pho2Song!</h4>
+                    </div>
+                </div>
+            <% } %>
+
             <div class="row mx-auto p-2">
                 <% for(i=0; i < p2splaylists.length; i++) { %>
-                    <% if(p2suser==p2splaylists[i].value.user){ %>
+                    <% if(p2sUser.id==p2splaylists[i].value.user){ %>
                         <div class="col-lg-4 col-xl-4 col-xxl-4 my-2">
                             <ul class="list-group">
                                 <button type="button" class="list-group-item d-flex justify-content-between align-items-start"
@@ -44,16 +47,19 @@
                                         <div class="fw-bold text-start playlist-name">
                                             <%= p2splaylists[i].value.name %>
                                         </div>
+
                                         <div class="text-start playlist-description">
                                             <%= p2splaylists[i].value.description %>
                                         </div>
                                     </div>
+
                                     <span class="badge bg-black rounded-pill">
                                         <%= p2splaylists[i].value.song_number %>
                                     </span>
                                 </button>
                             </ul>
                         </div>
+
                         <div class="col-lg-8 col-xl-8 col-xxl-8 my-2">
                             <ul class="list-group mx-auto" id="<%=p2splaylists[i].id%>Songs" style="display: none;">
                                 <% p2splaylists[i].value.songs.forEach((songData)=> { %>
@@ -88,17 +94,17 @@
             <% if(playlistDisplayIsNotEmpty === false){ %> 
                 <div class="row mx-auto p-2 text-center align-items-center">
                     <div class="col-lg-6 col-xl-6 col-xxl-6 mx-auto">
-                        <h3>Sembra che tu non abbia ancora utilizzato Pho2Song :(</h3>
+                        <h4>Sembra che tu non abbia ancora utilizzato Pho2Song :(</h4>
                     </div>
                 </div>
+
                 <div class="row mx-auto p-2 text-center align-items-center my-2">
                     <div class="col-lg-6 col-xl-6 col-xxl-6 mx-auto">
-                        <h3>Perché non provi a rimediare <a class="plist-analyzer-link" href="/input">cliccando qui! </a></h3>
+                        <h4>Perché non provi a rimediare <a class="plist-analyzer-link" href="/input">cliccando qui! </a></h4>
                     </div>
                 </div>
-            <% } %> 
 
-            <% if(p2splaylists.length != 0){ %> 
+            <% } else {%>  
                 <div class="row my-5 text-center">
                     <div class="col-lg-6 col-xl-6 col-xxl-6 mx-auto my-2">
                         <h4>Questi risultati non ti bastano?</h4>
