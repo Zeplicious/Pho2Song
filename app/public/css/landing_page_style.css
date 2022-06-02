@@ -10,6 +10,10 @@
     background-blend-mode: multiply;
 }
 
+.main-header{
+    font-family: "Montserrat", sans-serif
+}
+
 /* Stile commenti con icone */
 
 .sezione-icone {
@@ -30,30 +34,6 @@
 
 .sezione-image .txt {
     padding: 3rem;
-}
-
-/* Stile sezione recensioni */
-
-.recensioni {
-    padding-top: 7rem;
-    padding-bottom: 7rem;
-}
-
-.recensione-singola img {
-    height: 200px;
-    width: 200px;
-}
-
-/* Stile newsletter */
-
-.newsletter {
-    background-color: rgb(85, 85, 85);
-    padding-top: 8rem;
-    padding-bottom: 8rem;
-    background-image: url('https://storage.googleapis.com/pr-newsroom-wp/1/2021/04/triangle_burst2-green-nocopy-1920x733.png');
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: multiply;
 }
 
 @media screen and (min-width: 768px) {
