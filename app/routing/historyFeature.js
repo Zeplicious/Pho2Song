@@ -4,6 +4,7 @@ const passportConfig = require("../utils/passport-config.js")
 /* function view(doc) {
 	emit(doc._id, { name: doc.name, user: doc.user, song_number: doc.song_number, songs: doc.songs });
 } */
+console.log(process.env.COUCHDB_HOST || "localhost");
 const couch = new NodeCouchDb({
 	host: process.env.COUCHDB_HOST || "localhost",
 	port: '5984',
@@ -26,7 +27,7 @@ router.get('/playlist_history',  passportConfig.checkAuthenticated ,(req, res) =
 					user_image: req.session.user.prof_pic
 				},
 				p2suser: req.session.user.id,
-				p2splaylists: data.data.rows.reverse()
+				p2splaylists: data.data.rows
 			})
 		},
 		(err) => {
