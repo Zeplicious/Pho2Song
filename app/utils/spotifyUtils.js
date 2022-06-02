@@ -35,7 +35,7 @@ async function getUserTaste(spotifyApi) {
       ids.push(track.track.id);
       names.push(track.track.name);
     }
-    
+
     console.log(e)
   }
   try{
@@ -44,7 +44,7 @@ async function getUserTaste(spotifyApi) {
   catch (e){
     console.log(e)
   }
-  ret = Array()
+  ret = []
 
   //parse dei parametri utili
   var index = 0
