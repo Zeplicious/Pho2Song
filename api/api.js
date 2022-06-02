@@ -5,7 +5,7 @@ function validate(schema, body) {
 const dbName = 'p2splaylists';
 const viewUrl = '_design/all_playlists/_view/all';
 
-module.exports = function build(Joi, couch, SpotifyWebApi, spotifyUtils, colorUtil) {
+module.exports = function build(joi, couch, spotifyWebApi, spotifyUtils, colorUtil) {
     const Router = require("express").Router()
 
     Router.get('/playlists', (req, res) => {
@@ -30,14 +30,14 @@ module.exports = function build(Joi, couch, SpotifyWebApi, spotifyUtils, colorUt
     })
     
     Router.post('/playlists/analyze', (req, res) => {
-        const schema = Joi.object({
-            id: Joi.string().required(),
-            accessToken: Joi.string().required()
+        const schema = joi.object({
+            id: joi.string().required(),
+            accessToken: joi.string().required()
         })
         
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
-        let spotifyApi = new SpotifyWebApi({
+        let spotifyApi = new spotifyWebApi({
             clientId: process.env.SPOTIFY_CLIENT_ID,
             clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         })
@@ -53,13 +53,13 @@ module.exports = function build(Joi, couch, SpotifyWebApi, spotifyUtils, colorUt
     })
     
     Router.post('/photo-song', async function (req, res) { //è richiesto lo scope user-top-read
-        const schema = Joi.object({
-            url: Joi.string().required(),
-            accessToken: Joi.string().required()
+        const schema = joi.object({
+            url: joi.string().required(),
+            accessToken: joi.string().required()
         })
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
-        let spotifyApi = new SpotifyWebApi({
+        let spotifyApi = new spotifyWebApi({
             clientId: process.env.SPOTIFY_CLIENT_ID,
             clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         })
@@ -76,19 +76,19 @@ module.exports = function build(Joi, couch, SpotifyWebApi, spotifyUtils, colorUt
     })
 
     Router.post('/palette-song', async function (req, res) { //è richiesto lo scope user-top-read
-        const schema = Joi.object({
-            colors: Joi.array().items(
-                Joi.object({
-                    r: Joi.number().min(0).max(255).required(),
-                    g: Joi.number().min(0).max(255).required(),
-                    b: Joi.number().min(0).max(255).required(),
+        const schema = joi.object({
+            colors: joi.array().items(
+                joi.object({
+                    r: joi.number().min(0).max(255).required(),
+                    g: joi.number().min(0).max(255).required(),
+                    b: joi.number().min(0).max(255).required(),
                 })
             ),
-            accessToken: Joi.string().required()
+            accessToken: joi.string().required()
         })
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
-        let spotifyApi = new SpotifyWebApi({
+        let spotifyApi = new spotifyWebApi({
             clientId: process.env.SPOTIFY_CLIENT_ID,
             clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         })
@@ -107,8 +107,6 @@ module.exports = function build(Joi, couch, SpotifyWebApi, spotifyUtils, colorUt
             res.status(400).send(e)
         }
     })
-
-
 
     return Router
 }
