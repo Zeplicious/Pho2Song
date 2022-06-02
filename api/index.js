@@ -4,11 +4,11 @@ const http = require('http');
 const swaggerUI = require('swagger-ui-express')
 const swaggerJsDoc = require('swagger-jsdoc')
 
-const Joi = require('joi');
+const joi = require('joi');
 
-const NodeCouchDb = require('node-couchdb');
+const nodeCouchDb = require('node-couchdb');
 
-var SpotifyWebApi = require('spotify-web-api-node');
+var spotifyWebApi = require('spotify-web-api-node');
 
 const spotifyUtils = require((process.env.UTILS_PATH||"../app/utils")+"/spotifyUtils.js");
 const colorUtil = require((process.env.UTILS_PATH||"../app/utils")+"/getColors.js");
@@ -20,7 +20,7 @@ const app = express();
 var server = http.createServer(app);
 
 /**************  Creazione CouchDb   ************** */
-const couch = new NodeCouchDb({
+const couch = new nodeCouchDb({
 	host: process.env.COUCHDB_HOST || "localhost",
 	port: '5984',
 	auth: {
@@ -28,9 +28,6 @@ const couch = new NodeCouchDb({
 		pass: process.env.DB_PASSWORD
 	}
 })
-const dbName = 'p2splaylists';
-const viewUrl = '_design/all_playlists/_view/all';
-const viewUser = '_design/all_users/_view/all';
 
 /********* Dichiarazione options per API ******** */
 
@@ -62,7 +59,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 
-app.use("/api", require("./api") (Joi, couch, SpotifyWebApi, spotifyUtils, colorUtil))
+app.use("/api", require("./api") (joi, couch, spotifyWebApi, spotifyUtils, colorUtil))
 
 /************************** CHIAMATE API *************************** */
 
@@ -357,5 +354,5 @@ app.use("/api", require("./api") (Joi, couch, SpotifyWebApi, spotifyUtils, color
 /************** Server Listening ************ */
 
 server.listen(process.env.PORT || 8080, () => {
-	console.log('Api server '+(process.env.INSTANCE||'\b')+' listening on '+ (process.env.API_URI+'/api-docs' || 'http://localhost:8080/api-docs'));;
+	console.log('Api server '+(process.env.INSTANCE||'\b')+' listening on '+ (process.env.API_URI || 'http://localhost:8080') + '/api-docs');;
 });
