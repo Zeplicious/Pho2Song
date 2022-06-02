@@ -1,6 +1,58 @@
 //Dipendenze necessarie
 const imaggaUtils = require("../utils/getColors")
+const spotifyUtils = require("../utils/spotifyUtils")
+const SpotifyWebApi = require("spotify-web-api-node")
+const got = require("got")
 
+var userTastes
+var colors
+
+/* Testing del workflow completo della funzinalità principale */
+
+//Ottengo i gusti musicali di un utente simulandolo
+describe("Get user's taste from his Spotify account", () => {
+
+    let result
+
+    describe("Given a correct spotifyApi struct", () => {
+
+        //Creazione struttura di autorizzazione per Client Credentials Auth. Flow
+        var client_id = process.env.SPOTIFY_CLIENT_ID
+        var client_secret = process.env.SPOTIFY_CLIENT_SECRET
+
+        let url = 'https://accounts.spotify.com/api/token'
+        let headers = { 'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64')) }
+        let form = { grant_type: 'client_credentials' }
+
+        test("Should return an array containing objects that identifies a song with its uri, name and main stats", async () => {
+
+            let data = await got.post(url, {
+                headers: headers,
+                form: form
+            }).json()
+    
+            let spotifyApi = new SpotifyWebApi({
+                clientId: client_id,
+                clientSecret: client_secret,
+            })
+            
+            spotifyApi.setAccessToken(data.access_token)
+
+            let input = spotifyApi
+
+            result = spotifyUtils.getUserTaste(input)
+
+            let response = await result
+            userTastes = response
+
+            expect(response).toBeDefined()
+            expect(response.length).toBeGreaterThan(0)
+            expect(response[0]).toBeDefined()
+        })
+    })
+})
+
+//Ottengo i colori da una foto dummy e da un url dummy
 describe("Get colors from file upload or url", () => {
 
     let result
@@ -23,7 +75,9 @@ describe("Get colors from file upload or url", () => {
             await result
 
             result = imaggaUtils.getColorsFromUpload(input)
+
             let response = await result
+            colors = response
 
             expect(response).toBeDefined()
             expect(response.length).toBeGreaterThan(0)
@@ -86,6 +140,33 @@ describe("Get colors from file upload or url", () => {
             expect(response).toBeDefined()
             expect(response.length).toBeGreaterThan(0)
             expect(response[0]).toBeDefined()
+        })
+    })
+})
+
+//Ottengo una canzone dai gusti dell'utente simulato iniziali, più i colori ottenuti dalla foto dummy
+describe("Get song from user's tastes and an Array of colors", () => {
+
+    let result
+
+    describe("Given a correct user's tastes array and a correct array of color objects", () => {
+
+        
+
+        test("Should return an object with uri and name of the new song", async () =>  {
+
+            let input = {
+                userTastes: await userTastes,
+                colors: await colors,
+                songsChosen: new Array()
+            }
+
+            result = spotifyUtils.getSongFromColors(input.colors, input.userTastes, input.songsChosen)
+            let response = await result
+
+            expect(response).toBeDefined()
+            expect(response.uri).toBeDefined()
+            expect(response.name).toBeDefined()
         })
     })
 })

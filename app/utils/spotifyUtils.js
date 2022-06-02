@@ -5,28 +5,38 @@ var ret = '';
 var alreadyChosen = false;
 
 async function getUserTaste(spotifyApi) {
-  try{
-    var data = await spotifyApi.getMyTopTracks({limit: 100})
-  }
-  catch (e){
-    console.log(e)
-  }
   ids = Array()
   names = Array()
-  if (data.body.total < 50) {
+
+  try{
+    var data = await spotifyApi.getMyTopTracks({limit: 100})
+  
+  
+    if (data.body.total < 50) {
+      let response = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50 })
+      for (let track of response.body.items) {
+        ids.push(track.track.id);
+        names.push(track.track.name);
+      }
+
+    }
+    if (data.body.total != 0) {
+      for (let track of data.body.items) {
+        console.log(track.name)
+        ids.push(track.id);
+        names.push(track.name);
+      }
+    }
+  }
+  catch (e){
     let response = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50 })
+
     for (let track of response.body.items) {
       ids.push(track.track.id);
       names.push(track.track.name);
     }
-
-  }
-  if (data.body.total != 0) {
-    for (let track of data.body.items) {
-      console.log(track.name)
-      ids.push(track.id);
-      names.push(track.name);
-    }
+    
+    console.log(e)
   }
   try{
     var data = await spotifyApi.getAudioFeaturesForTracks(ids)
