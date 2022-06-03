@@ -128,10 +128,12 @@ module.exports = function build(userData,users){
 		} catch (e) {
 			selectedSongs.push(req.body.songs)
 		}
+		let playlist_id
 		console.log(selectedSongs)
 		spotifyApi.createPlaylist(req.body.name || 'Il mio album in musica', {// creo una nuova playlist
 			'description': req.body.description
 		}).then(data => {//aggiungo le tracce selezionate nella nuova playlist (se presenti)
+			playlist_id=data.body.id
 			if (selectedSongs) {
 				spotifyApi.addTracksToPlaylist(data.body.id, selectedSongs)
 			}
@@ -152,6 +154,7 @@ module.exports = function build(userData,users){
 			couch.insert(dbName, {
 				_id: id,
 				name: req.body.name||'Il mio album in musica',
+				playlist_id: playlist_id,
 				user: req.session.user.id,
 				description: req.body.description,			
 				song_number: selectedSongs.length,
@@ -165,7 +168,7 @@ module.exports = function build(userData,users){
 								_id: "_design/all_playlists",
 								"views": {
 									"all": {
-									"map": "function (doc) {\n  emit(doc._id, {name: doc.name, user: doc.user, song_number: doc.song_number, description: doc.description, songs: doc.songs});\n}"
+									"map": "function (doc) {\n  emit(doc._id, {name: doc.name,playlist_id: doc.playlist_id, user: doc.user, song_number: doc.song_number, description: doc.description, songs: doc.songs});\n}"
 									}
 								},
 								"language": "javascript"
@@ -173,6 +176,7 @@ module.exports = function build(userData,users){
 								couch.insert(dbName, {
 									_id: id,
 									name: req.body.name||'Il mio album in musica',
+									playlist_id: playlist_id,
 									user: req.session.user.id,
 									description: req.body.description,			
 									song_number: selectedSongs.length,
