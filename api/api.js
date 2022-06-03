@@ -13,7 +13,33 @@ module.exports = function build(joi, couch, spotifyWebApi, spotifyUtils, colorUt
             (data, headers, status) => {
                 res.send(data.data.rows)
             }
-        )
+        ),err=>{
+            if(err.body.reason=="Database does not exist."){
+            couch.createDatabase(dbName).then(() => {
+                couch.insert(dbName, {
+                    _id: "_design/all_playlists",
+                    "views": {
+                        "all": {
+                          "map": "function (doc) {\n  emit(doc._id, {name: doc.name, user: doc.user, song_number: doc.song_number, description: doc.description, songs: doc.songs});\n}"
+                        }
+                      },
+                      "language": "javascript"
+                }).then(({data, headers, status}) => {
+                    couch.get(dbName, viewUrl).then(
+                        (data, headers, status) => {
+                            res.send(data.data.rows)
+                        }
+                    )            
+                }, err => {
+                    res.send(err);
+                });
+            }, 	
+            err => {
+                res.send(err);
+            });
+            }
+            else res.send(err);	
+        }
     })
 
     Router.get('/playlists/:id', (req, res) => {
@@ -26,7 +52,38 @@ module.exports = function build(joi, couch, spotifyWebApi, spotifyUtils, colorUt
                 }
                 res.status(404).send('La playlist con id ' + req.params.id + ' non è stata trovata')
             }
-        )
+        ),err=>{
+            if(err.body.reason=="Database does not exist."){
+            couch.createDatabase(dbName).then(() => {
+                couch.insert(dbName, {
+                    _id: "_design/all_playlists",
+                    "views": {
+                        "all": {
+                          "map": "function (doc) {\n  emit(doc._id, {name: doc.name, user: doc.user, song_number: doc.song_number, description: doc.description, songs: doc.songs});\n}"
+                        }
+                      },
+                      "language": "javascript"
+                }).then(({data, headers, status}) => {
+                    couch.get(dbName, viewUrl).then(
+                        (data, headers, status) => {
+                            for (index = 0; index < data.data.rows.length; index++) {
+                                if (data.data.rows[index].id === req.params.id) {
+                                    return res.send(data.data.rows[index].id);
+                                }
+                            }
+                            res.status(404).send('La playlist con id ' + req.params.id + ' non è stata trovata')
+                        }
+                    )
+                }, err => {
+                    res.send(err);
+                });
+            }, 	
+            err => {
+                res.send(err);
+            });
+            }
+            else res.send(err);	
+        }
     })
     
     Router.post('/playlists/analyze', (req, res) => {

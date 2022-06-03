@@ -156,7 +156,38 @@ module.exports = function build(userData,users){
 				description: req.body.description,			
 				song_number: selectedSongs.length,
 				songs: songsDB //penso qui possa andarci songsDB direttamente
-			})
+			}).then(
+				()=>console.log("documento creato"),
+				err=>{
+					if(err.body.reason=="Database does not exist."){
+						couch.createDatabase(dbName).then(() => {
+							couch.insert(dbName, {
+								_id: "_design/all_playlists",
+								"views": {
+									"all": {
+									"map": "function (doc) {\n  emit(doc._id, {name: doc.name, user: doc.user, song_number: doc.song_number, description: doc.description, songs: doc.songs});\n}"
+									}
+								},
+								"language": "javascript"
+							}).then(({data, headers, status}) => {
+								couch.insert(dbName, {
+									_id: id,
+									name: req.body.name||'Il mio album in musica',
+									user: req.session.user.id,
+									description: req.body.description,			
+									song_number: selectedSongs.length,
+									songs: songsDB //penso qui possa andarci songsDB direttamente
+								}).then(()=>console.log("documento creato"))
+							}, err => {
+								res.send(err);
+							});
+						}, 	
+						err => {
+							res.send(err);
+						});
+					}
+				})
+			
 		})
 		res.redirect('/')
 	})
