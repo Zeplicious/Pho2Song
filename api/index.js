@@ -1,39 +1,14 @@
-require('dotenv').config()
-const express = require('express');
 const http = require('http');
+const app = require('./server.js')
+
 const swaggerUI = require('swagger-ui-express')
 const swaggerJsDoc = require('swagger-jsdoc')
-
-const joi = require('joi');
-
-const nodeCouchDb = require('node-couchdb');
-
-var spotifyWebApi = require('spotify-web-api-node');
-
-const spotifyUtils = require((process.env.UTILS_PATH||"../app/utils")+"/spotifyUtils.js");
-const colorUtil = require((process.env.UTILS_PATH||"../app/utils")+"/getColors.js");
-
-const bodyParser = require('body-parser');
-
-
-const app = express();
-var server = http.createServer(app);
-
-/**************  Creazione CouchDb   ************** */
-const couch = new nodeCouchDb({
-	host: process.env.COUCHDB_HOST || "localhost",
-	port: '5984',
-	auth: {
-		user: process.env.DB_USER,
-		pass: process.env.DB_PASSWORD
-	}
-})
 
 /********* Dichiarazione options per API ******** */
 
 const options = {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: "Pho2Song API",
+	customCss: '.swagger-ui .topbar { display: none }',
+	customSiteTitle: "Pho2Song API",
 	definition: {
 		openapi: "3.0.0",
 		info: {
@@ -51,16 +26,11 @@ const options = {
 }
 
 const specs = swaggerJsDoc(options)
-
-/**************  ***************/
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+var server = http.createServer(app);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
-
-app.use("/api", require("./api") (joi, couch, spotifyWebApi, spotifyUtils, colorUtil))
-
+server.listen(process.env.PORT || 8080, () => {
+	console.log('Api server '+(process.env.INSTANCE||'\b')+' listening on '+ (process.env.API_URI || 'http://localhost:8080/') + 'api-docs');;
+});
 /************************** CHIAMATE API *************************** */
 
 /**
@@ -350,9 +320,3 @@ app.use("/api", require("./api") (joi, couch, spotifyWebApi, spotifyUtils, color
  *          400:
  *              description: Errore nella richiesta
  */
-
-/************** Server Listening ************ */
-
-server.listen(process.env.PORT || 8080, () => {
-	console.log('Api server '+(process.env.INSTANCE||'\b')+' listening on '+ (process.env.API_URI || 'http://localhost:8080/') + 'api-docs');;
-});

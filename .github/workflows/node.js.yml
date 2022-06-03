@@ -41,7 +41,23 @@ jobs:
         SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
         IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
         IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
+        
+    - run: cd ../api
 
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: api/package-lock.json
+    - run: npm ci
+    - run: npm test
+      env:
+        SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+        SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        IMAGGA_CLIENT_ID: ${{ secrets.IMAGGA_CLIENT_ID }}
+        IMAGGA_CLIENT_SECRET: ${{ secrets.IMAGGA_CLIENT_SECRET }}
+      
     - name: Build and Push App Docker Image to Docker Hub
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
