@@ -77,8 +77,6 @@ async function getFeaturesFromAlbum(spotifyApi, album_id) {
     let ids = new Array()
     let names = new Array()
 
-    console.log("entrato")
-
     try {
         let response = await spotifyApi.getAlbumTracks(album_id)
         for (let track of response.body.items) {
@@ -251,8 +249,6 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
             colors[index] = req.body.colors[index]
         }
 
-        console.log(colors)
-
         try {
             song = await spotifyUtils.getSongFromColors(colors, await getFeaturesFromAlbum(spotifyApi, req.body.album_id), [])
             res.send(song)
@@ -329,8 +325,6 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         for (index = 0; index < req.body.colors.length; index++) {
             colors[index] = req.body.colors[index]
         }
-
-        console.log(colors)
 
         try {
             song = await spotifyUtils.getSongFromColors(colors, await getFeaturesFromPlaylist(spotifyApi, req.body.playlist_id), [])
