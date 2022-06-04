@@ -1,7 +1,7 @@
 # Pho2Song
 
 
-![alt text](scheme.png)
+![alt text](_Diagramma vuoto.svg)
 
 ### Testing
 
