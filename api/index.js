@@ -117,7 +117,7 @@ server.listen(process.env.PORT || 8080, () => {
  *                              type: string
  *                  example:
  *                      {
- *                          album_id: 7x0QV22Ci2ZOm9HweqBLhn
+ *                          album_id: 5Z9iiGl2FcIfa3BMiv6OIw
  *                      }    
  *      responses:
  *          200:
@@ -149,8 +149,8 @@ server.listen(process.env.PORT || 8080, () => {
  *                              type: string
  *                  example:
  *                      {
- *                          album_id: 7x0QV22Ci2ZOm9HweqBLhn,
- *                          url: https://www.psicosocial.it/wp-content/uploads/2020/10/immagine-fissa-si-muove.jpg
+ *                          album_id: 5Z9iiGl2FcIfa3BMiv6OIw,
+ *                          url: https://via.placeholder.com/660x300/ebebeb/808080/?text=Immagine
  *                      }    
  *      responses:
  *          200:
@@ -198,7 +198,7 @@ server.listen(process.env.PORT || 8080, () => {
  *                                    b: 255
  *                                }
  *                           ],
- *                       album_id: 7x0QV22Ci2ZOm9HweqBLhn
+ *                       album_id: 5Z9iiGl2FcIfa3BMiv6OIw
  *                       }           
  *      responses:
  *          200:
@@ -228,7 +228,7 @@ server.listen(process.env.PORT || 8080, () => {
  *                              type: string
  *                  example:
  *                      {
- *                          playlist_id: 37i9dQZF1DX2a5qdpzYkGY
+ *                          playlist_id: 4InSVyiXzVO59xUQOAByT9
  *                      }    
  *      responses:
  *          200:
@@ -260,8 +260,8 @@ server.listen(process.env.PORT || 8080, () => {
  *                              type: string
  *                  example:
  *                      {
- *                          playlist_id: 37i9dQZF1DX2a5qdpzYkGY,
- *                          url: https://www.psicosocial.it/wp-content/uploads/2020/10/immagine-fissa-si-muove.jpg
+ *                          playlist_id: 4InSVyiXzVO59xUQOAByT9,
+ *                          url: https://via.placeholder.com/660x300/ebebeb/808080/?text=Immagine
  *                      }         
  *      responses:
  *          200:
@@ -309,7 +309,7 @@ server.listen(process.env.PORT || 8080, () => {
  *                                    b: 255
  *                                }
  *                           ],
- *                       playlist_id: 37i9dQZF1DX2a5qdpzYkGY
+ *                       playlist_id: 4InSVyiXzVO59xUQOAByT9
  *                       }           
  *      responses:
  *          200:
