@@ -3,7 +3,6 @@ require('dotenv').config()
 
 const joi = require('joi');
 
-const nodeCouchDb = require('node-couchdb');
 
 var spotifyWebApi = require('spotify-web-api-node');
 
@@ -14,26 +13,13 @@ const bodyParser = require('body-parser');
 
 
 
-const app = require('express')();
-
-
-/**************  Creazione CouchDb   ************** */
-const couch = new nodeCouchDb({
-	host: process.env.COUCHDB_HOST || "localhost",
-	port: '5984',
-	auth: {
-		user: process.env.DB_USER,
-		pass: process.env.DB_PASSWORD
-	}
-})
-
-
+const app = require('express')();	
 
 /**************  ***************/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/api", require("./api") (joi, couch, spotifyWebApi, spotifyUtils, colorUtil))
+app.use("/api", require("./api") (joi, spotifyWebApi, spotifyUtils, colorUtil))
 
 
 

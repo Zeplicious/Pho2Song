@@ -37,103 +37,33 @@ server.listen(process.env.PORT || 8080, () => {
  * @swagger
  *   components:
  *     schemas:
- *       p2sPlaylist:
- *         type: object
- *         required:
- *           - _id
- *           - name
- *           - user
- *         properties: 
- *           _id:
- *             type: string
- *             description: Id della playlist nel database di Pho2Song
- *           name:
- *             type: string
- *             description: Nome della playlist
- *           description: 
- *             type: string
- *             description: Descrizione della playlist
- *           user:
- *             type: string
- *             description: Id dell'user di Spotify che possiede la playlist
- *           song_number:
- *             type: integer
- *             description: Numero di canzoni nella playlist
- *           songs:
- *             type: array
- *             items:
- *               song:
- *                 type: object
- *                 parameters:
- *                   uri:
- *                     type: string
- *                     description: uri della canzone
- *                   name: 
- *                     type: string
- *                     description: nome della canzone
- *               photo:
- *                 type: string
- *                 description: nome della foto
- *         example:
- *           _id: 24fb273c0f893217232726f58001c1d0
- *           name: La mia playlist
- *           description: La mia playlist generata da Pho2Song
- *           user: luigi_rossi10
- *           song_number: 2
- *           songs:
- *             [
- *               {
- *                  song:
- *                    {
- *                       uri: spotify:track:3xKsGYkJKy0bbQuUHRYrei,
- *                       name: My Honest Face,
- *                    },
- *                  photo: IMGL7731.jpg,
- *               },
- *               {
- *                 song:
- *                   {
- *                      uri: spotify:track:33B1XmfncHqnfkrYZIcHbD,
- *                      name: Any Other Name,
- *                   },
- *                 photo: IMGL7669.jpg,
- *               }
- *             ]
- * 
- *       User:
- *         type: string
- *         properties:
- *           user:
- *             type: string
- *             description: L'user dell'utente
- *       
- *       PlaylistAnalysis:
+ *       Analysis:
  *         type: object
  *         properties: 
  *           Acousticness:
  *             type: decimal
- *             description: L'acustica media in percentuale della playlist
+ *             description: L'acustica media in percentuale dell'album o della playlist
  *           Danceability:
  *             type: decimal
- *             description: La danzabilità media in percentuale della playlist
+ *             description: La danzabilità media in percentuale dell'album o della playlist
  *           Energy:
  *             type: decimal
- *             description: L'energia media in percentuale della playlist
+ *             description: L'energia media in percentuale dell'album o della playlist
  *           Instrumentalness:
  *             type: decimal
- *             description: La strumentabilità media in percentuale della playlist
+ *             description: La strumentabilità media in percentuale dell'album o della playlist
  *           Liveness:
  *             type: decimal
- *             description: La media di musica live in percentuale della playlist
+ *             description: La media di musica live in percentuale dell'album o della playlist
  *           Loudness:
  *             type: decimal
- *             description: Il volume medio in decibel della playlist
+ *             description: Il volume medio in decibel dell'album o della playlist
  *           Speechiness:
  *             type: decimal
- *             description: La discorsività media in percentuale della playlist
+ *             description: La discorsività media in percentuale dell'album o della playlist
  *           Tempo:
  *             type: decimal
- *             description: Il tempo medio in bpm della playlist
+ *             description: Il tempo medio in bpm della dell'album o della playlist
  *         example:
  *           Acousticness: 69.72
  *           Danceability: 47.01
@@ -153,76 +83,29 @@ server.listen(process.env.PORT || 8080, () => {
  *           name:
  *             type: string
  *             description: nome della canzone  
+ *         example:
+ *           uri: 2WfaOiMkCvy7F5fcp2zZ8L
+ *           name: Take On Me
  */
 
 /**
  * @swagger
  * tags: 
- *    - name: P2S Playlists
- *      description: Le playlist create con Pho2Song
  * 
- *    - name: Playlists
+ *    - name: Album
+ *      description: Gli album di Spotify
+ * 
+ *    - name: Playlist
  *      description: Le playlist di Spotify
  *    
- *    - name: Photo To Song
- *      description: Chiamata alla funzione Photo To Song per analizzare una foto e restituirne una canzone
- * 
- *    - name: Palette To Song
- *      description: Chiamata alla funzione Photo To Song per analizzare una palette di colori e restituirne una canzone
  */
 
 /**
  * @swagger
- * /api/playlists:
- *      get:
- *          summary: Ritorna la lista di playlist generate da Pho2Song
- *          tags: [P2S Playlists]
- *          responses: 
- *              200:
- *                  description: Array delle playlist
- *                  content:
- *                      application/json:
- *                          schema:
- *                              type: array
- *                              items:
- *                                  $ref: '#/components/schemas/p2sPlaylist'
- * 
- */
-
-
-/**
- * @swagger
- * /api/playlists/{id}:
- *      get:
- *          summary: Ritorna la playlist di Pho2Song tramite con l'id specificato
- *          tags: [P2S Playlists]
- *          parameters:
- *            - in: path
- *              name: id
- *              schema:
- *                  type: string
- *              required: true
- *              description: L'id della playlist
- *          responses:
- *              200:
- *                  description: L'id della playlist
- *                  contents:
- *                      application/json:
- *                          schema:
- *                              items:
- *                                id: string
- *              404:
- *                  description: La playlist con id <code>{id}</code> non è stata trovata        
- * 
- */
-
-
-/**
- * @swagger
- * /api/playlists/analyze:  
+ * /api/album/analyze:  
  *  post:
- *      summary: Analizza una playlist di Spotify
- *      tags: [Playlists]
+ *      summary: Analizza un album di Spotify
+ *      tags: [Album]
  *      requestBody:
  *          required: true
  *          content:
@@ -230,27 +113,29 @@ server.listen(process.env.PORT || 8080, () => {
  *                  schema:
  *                      type: object
  *                      properties:
- *                          id:
+ *                          album_id:
  *                              type: string
- *                          accessToken:
- *                              type: string
+ *                  example:
+ *                      {
+ *                          album_id: 7x0QV22Ci2ZOm9HweqBLhn
+ *                      }    
  *      responses:
  *          200:
- *              description: 
- *              contents:
+ *              description: L'analisi dell'album
+ *              content:
  *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/PlaylistAnalysis'
+ *                       schema:
+ *                            $ref: "#/components/schemas/Analysis"
  *          400:
  *              description: Errore nella richiesta
  */
 
 /**
  * @swagger
- * /api/photo-song:  
+ * /api/album/photo-song:  
  *  post:
- *      summary: Dalla foto data in input ne viene restituita una canzone (è richiesto un accesstoken con scope 'user-top-read' abilitato!)
- *      tags: [Photo To Song]
+ *      summary: Dall'url di una foto dato in input ne viene restituita una canzone dall'album dato in input
+ *      tags: [Album]
  *      requestBody:
  *          required: true
  *          content:
@@ -258,14 +143,19 @@ server.listen(process.env.PORT || 8080, () => {
  *                  schema:
  *                      type: object
  *                      properties:
+ *                          album_id:
+ *                              type: string
  *                          url:
  *                              type: string
- *                          accessToken:
- *                              type: string
+ *                  example:
+ *                      {
+ *                          album_id: 7x0QV22Ci2ZOm9HweqBLhn,
+ *                          url: https://www.psicosocial.it/wp-content/uploads/2020/10/immagine-fissa-si-muove.jpg
+ *                      }    
  *      responses:
  *          200:
  *              description: 
- *              contents:
+ *              content:
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/Song'
@@ -275,10 +165,10 @@ server.listen(process.env.PORT || 8080, () => {
 
 /**
  * @swagger
- * /api/palette-song:  
+ * /api/album/palette-song:  
  *  post:
- *      summary: Dalla palette di colori data in input ne viene restituita una canzone (è richiesto un accesstoken con scope 'user-top-read' abilitato!)
- *      tags: [Palette To Song]
+ *      summary: Dalla palette di colori data in input ne viene restituita una canzone dall'album dato in input
+ *      tags: [Album]
  *      requestBody:
  *          required: true
  *          content:
@@ -296,7 +186,7 @@ server.listen(process.env.PORT || 8080, () => {
  *                                        type: integer
  *                                   b:
  *                                        type: integer
- *                          accessToken:
+ *                          album_id:
  *                              type: string
  *                  example:
  *                       {
@@ -308,12 +198,123 @@ server.listen(process.env.PORT || 8080, () => {
  *                                    b: 255
  *                                }
  *                           ],
- *                       accessToken: accessTokenArbitrario
+ *                       album_id: 7x0QV22Ci2ZOm9HweqBLhn
  *                       }           
  *      responses:
  *          200:
  *              description: 
- *              contents:
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Song'
+ *          400:
+ *              description: Errore nella richiesta
+ */
+
+/**
+ * @swagger
+ * /api/playlist/analyze:  
+ *  post:
+ *      summary: Analizza una playlist di Spotify
+ *      tags: [Playlist]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          playlist_id:
+ *                              type: string
+ *                  example:
+ *                      {
+ *                          playlist_id: 37i9dQZF1DX2a5qdpzYkGY
+ *                      }    
+ *      responses:
+ *          200:
+ *              description: 
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Analysis'
+ *          400:
+ *              description: Errore nella richiesta
+ */
+
+/**
+ * @swagger
+ * /api/playlist/photo-song:  
+ *  post:
+ *      summary: Dall'url di una foto dato in input ne viene restituita una canzone dalla playlist data in input
+ *      tags: [Playlist]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          playlist_id:
+ *                              type: string
+ *                          url:
+ *                              type: string
+ *                  example:
+ *                      {
+ *                          playlist_id: 37i9dQZF1DX2a5qdpzYkGY,
+ *                          url: https://www.psicosocial.it/wp-content/uploads/2020/10/immagine-fissa-si-muove.jpg
+ *                      }         
+ *      responses:
+ *          200:
+ *              description: 
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Song'
+ *          400:
+ *              description: Errore nella richiesta
+ */
+
+/**
+ * @swagger
+ * /api/playlist/palette-song:  
+ *  post:
+ *      summary: Dalla palette di colori data in input ne viene restituita una canzone dalla playlist data in input
+ *      tags: [Playlist]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          colors:
+ *                              type: array
+ *                              items:
+ *                                   type: object
+ *                                   r:
+ *                                        type: integer
+ *                                   g:
+ *                                        type: integer
+ *                                   b:
+ *                                        type: integer
+ *                          playlist_id:
+ *                              type: string
+ *                  example:
+ *                       {
+ *                       colors:
+ *                           [
+ *                                {
+ *                                    r: 255,
+ *                                    g: 255,
+ *                                    b: 255
+ *                                }
+ *                           ],
+ *                       playlist_id: 37i9dQZF1DX2a5qdpzYkGY
+ *                       }           
+ *      responses:
+ *          200:
+ *              description: 
+ *              content:
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/Song'
