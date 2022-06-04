@@ -1,7 +1,8 @@
 # Pho2Song
 
 
-![alt text](_Diagramma vuoto.svg)
+![alt text](./architettura_di_riferimento.svg)
+<img src='./architettura_di_riferimento.svg'>
 
 ### Testing
 
