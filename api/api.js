@@ -162,16 +162,17 @@ async function setup(spotifyApi){
     var expires_in = (await data).expires_in
 
     spotifyApi.setAccessToken(accessToken);
-
-    setInterval(async () => {
-        let data = got.post(url, {
-            headers: headers,
-            form: form
-        }).json()
-        let accessToken = data.access_token;
-        spotifyApi.setAccessToken(accessToken);
-        console.log("refreshed access token")
-    }, expires_in / 2 * 1000);
+    if(!process.env.TEST){
+        setInterval(async () => {
+            let data = got.post(url, {
+                headers: headers,
+                form: form
+            }).json()
+            let accessToken = data.access_token;
+            spotifyApi.setAccessToken(accessToken);
+            console.log("refreshed access token")
+        }, expires_in / 2 * 1000);
+    }
 }
 
 function validate(schema, body) {
@@ -180,8 +181,6 @@ function validate(schema, body) {
 
 
 const got = require("got");
-const { func } = require("joi")
-const SpotifyWebApi = require("spotify-web-api-node");
 
 module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
     const Router = require("express").Router()

@@ -1,5 +1,6 @@
 //Dipendenze necessarie
 require('dotenv').config()
+process.env.TEST=true
 const got = require("got")
 const request = require('supertest');
 
