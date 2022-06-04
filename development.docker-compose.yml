@@ -21,9 +21,7 @@ services:
       - app-network
 
   couchdb:
-    build:
-      context: .
-      dockerfile: docker/couchdb/test.Dockerfile
+    image: docker.io/spyrogiants/pho2song-db:latest
     restart: always
     ports:
       - "5984:5984"
@@ -36,9 +34,7 @@ services:
       - ./docker/couchdb/db_data:/opt/couchdb/data:rw
 
   node1:
-    build:
-      context: .
-      dockerfile: docker/node/test.Dockerfile
+    image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node1
       - SOCKET_URI=https://localhost:8080/
@@ -53,9 +49,7 @@ services:
         - couchdb
   
   node2:
-    build:
-      context: .
-      dockerfile: docker/node/test.Dockerfile
+    image: spyrogiants/pho2song:latest
     environment:
       - INSTANCE=node2
       - SOCKET_URI=https://localhost:8080/
@@ -70,9 +64,7 @@ services:
         - couchdb
 
   api1:
-    build:
-      context: .
-      dockerfile: docker/api/test.Dockerfile
+    image: spyrogiants/pho2song-api:latest
     environment:
       - INSTANCE=api1
       - API_URI=https://localhost:8080/
@@ -85,9 +77,7 @@ services:
         - couchdb
 
   api2:
-    build:
-      context: .
-      dockerfile: docker/api/test.Dockerfile
+    image: spyrogiants/pho2song-api:latest
     environment:
       - INSTANCE=api2
       - API_URI=https://localhost:8080/
@@ -98,7 +88,6 @@ services:
       - backend-network
     links:
         - couchdb
-    
 
 networks:
   app-network:
