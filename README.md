@@ -2,7 +2,6 @@
 
 
 ![alt text](./architettura_di_riferimento.svg)
-<img src='./architettura_di_riferimento.svg'>
 
 ### Testing
 
