@@ -83,16 +83,10 @@ async function getFeaturesFromAlbum(spotifyApi, album_id) {
             ids.push(track.id)
             names.push(track.name)
         }
-    }
-    catch (e) {
-        res.status(400).send(e)
-    }
-
-    try {
         albumData = await spotifyApi.getAudioFeaturesForTracks(ids)
     }
     catch (e) {
-        res.status(400).send(e)
+        return e
     }
 
     let result = new Array()
@@ -125,16 +119,12 @@ async function getFeaturesFromPlaylist(spotifyApi, playlist_id) {
             ids.push(track.track.id)
             names.push(track.track.name)
         }
-    }
-    catch (e) {
-        res.status(400).send(e)
-    }
+    
 
-    try {
         playlistData = await spotifyApi.getAudioFeaturesForTracks(ids)
     }
     catch (e) {
-        res.status(400).send(e)
+        return e
     }
 
     let result = new Array()
@@ -234,8 +224,8 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
                     r: joi.number().min(0).max(255).required(),
                     g: joi.number().min(0).max(255).required(),
                     b: joi.number().min(0).max(255).required(),
-                })
-            )
+                }).required()
+            ).required()
         })
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
@@ -311,8 +301,8 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
                     r: joi.number().min(0).max(255).required(),
                     g: joi.number().min(0).max(255).required(),
                     b: joi.number().min(0).max(255).required(),
-                })
-            )
+                }).required()
+            ).required()
         })
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
