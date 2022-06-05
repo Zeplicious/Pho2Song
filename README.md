@@ -1,6 +1,6 @@
 # Pho2Song
 
-### Scopo del progetto
+## Scopo del progetto
 
 __Pho2Song__ è una web application che gira in un environment NodeJS che si occupa di __trasformare le foto in canzoni__. Attraverso la funzionalità principale, __Photo to Song__, 
 è infatti possibile inviare al server un numero arbitrario di foto, con 3 diversi metodi (tramite file scelti da file system, tramite link URL o tramite album fotografici presi da Google Photo)
@@ -18,24 +18,24 @@ Tutti i campi sono salvati per rendere di facile accesso i file in caso di inser
 
 ---
 
-### Architettura di riferimento
+## Architettura di riferimento
 ![alt text](./architettura_di_riferimento.svg)
 
 ---
 
-### Funzionalità principale
+## Funzionalità principale
 ![alt text](./funzionalità_principale.svg)
 
 ---
 
-### Installazione
+## Installazione
 Eseguire un `git clone` del repository:
 ```
 git clone https://github.com/Zeplicious/Pho2Song.git
 ```
 e posizionarsi nella root directory del git.
 
-#### Api/App
+### Api/App
 Creare un file `.env` da inserire nella directory `/app` strutturato come segue:
 ```
 IMAGGA_CLIENT_ID=****************************
@@ -63,7 +63,7 @@ npm start
 ```
 **_NOTA:_** Per api il processo è analogo
 
-#### CouchDB
+### CouchDB
 **_NOTA:_** Se si ha installato CouchDB è possibile saltare questa sezione. E' importante inserire le credenziali del proprio database nel file `.env` nei cambi `DB_USER` e `DB_PASSWORD` e mettere il database in ascolto sulla porta 5984 in localhost.
 
 Completare il file /docker/couchdb/test.Dockerfile inserendo le credenziali del database inserite nel file `.env`.
@@ -77,7 +77,7 @@ docker build -t pho2song:couchdb /docker/couchdb/test.Dockerfile
 docker run -p 5984:5984 pho2song:couchdb
 ```
 
-#### Docker environment
+### Docker environment
 Gestire il file `.env` come spiegato nella sezione Api/App.
 Completare il file `.env` come spiegato nella sezione CouchDB.
 Generare un certificato SSL.
@@ -89,9 +89,9 @@ docker-compose up
 
 ---
 
-### Istruzioni per il test
+## Istruzioni per il test
 
-##### Applicazione
+### Applicazione
 
 Per testare l'applicazione:
 
@@ -109,7 +109,7 @@ npm test
 
 Viene utilizzato il modulo `jest` per eseguire i test che hanno un tempo di esecuzione variabile. Lasciar andare il programma finchè non sono visibili i risultati dei test
 
-##### API
+### API
 
 Per testare le chiamate API:
 
