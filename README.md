@@ -74,7 +74,7 @@ e posizionarsi nella root directory del git.
 
 ### Api/App stand alone
 
--Creare un file `.env` da inserire nella directory `/app` strutturato come segue:
+- Creare un file `.env` da inserire nella directory `/app` strutturato come segue:
 
 ```
 IMAGGA_CLIENT_ID=****************************
