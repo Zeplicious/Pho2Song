@@ -33,7 +33,7 @@ Tutti i campi sono salvati per rendere di facile accesso i file in caso di inser
 ## Requisti
 
 1. __Il servizio REST che implementate (lo chiameremo SERV) deve offrire a terze parti delle API documentate.__ (requisito 1)
-    - La nostra webapp offre API (documentate di seguito), in particolare è possibile:
+    - La nostra webapp offre API su [a link](https://github.com/Zeplicious/Pho2Song/blob/main/api/docs/api.json), in particolare è possibile:
         1. analizzare un album o una playlist di spotify.
         2. a partire da un album o una playlist di spotify, richiedere una canzone da accoppiare ad una foto.
         3. a partire da un album o una playlist di spotify, richiedere una canzone da accoppiare ad una palette di colori.
