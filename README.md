@@ -15,15 +15,21 @@ E' ovviamente possibile utilizzare questa funzionalità anche sulle playlist gen
 
 Infine l'utente ha la possibilità di visualizzare uno storico delle playlist che ha creato grazie a Pho2Song nel corso del tempo. Questo è lo scopo della terza e ultima funzionalità, __Playlist History__, che sfrutta un database documentale
 come CouchDB per tenere traccia di tutte le playlist create da un utente. Ogni file contiene il nome della playlist creata su Pho2SOng, l'ID che la playlist ha su Spotify, l'ID Spotify dell'utente, la descrizione della playlist (campo opzionale), il numero di canzoni nella playlist e infine un array di oggetti `songs`, dove ogni oggetto è formato da un oggetto `song` e una stringa `photo`. All'interno dell'oggetto `song` troviamo una stringa che rappresenta l'uri della canzone e una stringa con il nome di quest'ultima
-Tutti i campi sono salvati per rendere di facile accesso i file in caso di inserzione, modifica o rimozione e per rendere comprensibile all'utente il processo che ha portato alla creazione di una playlist. Ad ogni canzone all'interno della playlist è infatti associata la foto dalla quale è stata generata, in modo che all'untente risulti tutto il più chiaro e trasparente possibile.  
+Tutti i campi sono salvati per rendere di facile accesso i file in caso di inserzione, modifica o rimozione e per rendere comprensibile all'utente il processo che ha portato alla creazione di una playlist. Ad ogni canzone all'interno della playlist è infatti associata la foto dalla quale è stata generata, in modo che all'untente risulti tutto il più chiaro e trasparente possibile.
+
+---
 
 ### Architettura di riferimento
 
 ![alt text](./architettura_di_riferimento.svg)
 
+---
+
 ### Funzionalità principale
 
 ![alt text](./funzionalità_principale.svg)
+
+---
 
 ### Installazione
 Eseguire un `git clone` del repository:
@@ -73,6 +79,9 @@ Successivamente è sufficente inserire in console i seguenti comandi:
 docker build -t pho2song:couchdb /docker/couchdb/test.Dockerfile
 docker run -p 5984:5984 pho2song:couchdb
 ```
+
+---
+
 #### Docker environment
 Gestire il file `.env` come spiegato nella sezione [api/app](#Api/App stand alone).
 Completare il file `.env` come spiegato nella sezione [couchdb](#CouchDB).
@@ -82,6 +91,9 @@ Per testare environment docker è sufficente inserire in console:
 ```
 docker-compose up
 ```
+
+---
+
 ### Testing
 
 ##### Docker
@@ -98,6 +110,8 @@ per cancellare i container:
 docker-compose down
 ``` 
 tenere conto del fatto che le immagini vengo create solo se non sono già presenti, dopo la creazione delle immagini docker NON ricreerà le immagini, neanche dopo modifiche ai file relativi ad essa. Per fare in modo di resettare le immagini runnare `docker images` e cancellare a mano le immagini necessarie. In alternativa utilizzare docker desktop per la cancellazione (altamente consigliato).
+
+--
 
 ##### Node Server
 
