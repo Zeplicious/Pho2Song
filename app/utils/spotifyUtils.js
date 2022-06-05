@@ -8,10 +8,10 @@ async function getUserTaste(spotifyApi) {
   ids = Array()
   names = Array()
 
-  try{
-    var data = await spotifyApi.getMyTopTracks({limit: 100})
-  
-  
+  try {
+    var data = await spotifyApi.getMyTopTracks({ limit: 100 })
+
+
     if (data.body.total < 50) {
       let response = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50 })
       for (let track of response.body.items) {
@@ -28,7 +28,7 @@ async function getUserTaste(spotifyApi) {
       }
     }
   }
-  catch (e){
+  catch (e) {
     let response = await spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF', { limit: 50 })
 
     for (let track of response.body.items) {
@@ -38,10 +38,10 @@ async function getUserTaste(spotifyApi) {
 
     console.log(e)
   }
-  try{
+  try {
     var data = await spotifyApi.getAudioFeaturesForTracks(ids)
   }
-  catch (e){
+  catch (e) {
     console.log(e)
   }
   ret = []
@@ -49,8 +49,8 @@ async function getUserTaste(spotifyApi) {
   //parse dei parametri utili
   var index = 0
   for (let track of data.body.audio_features) {
-    if(track === undefined || track==null)continue
-    console.log(index +" "+ track.id)
+    if (track === undefined || track == null) continue
+    console.log(index + " " + track.id)
     ret.push(
       {
         uri: ('spotify:track:' + track.id),
@@ -67,7 +67,14 @@ async function getUserTaste(spotifyApi) {
 
 async function getSongFromColors(colors, songs, songsChosen) {
 
-  if(colors === undefined || colors == null || colors.length == 0) {
+  if(songs === undefined){
+    return {
+      uri: "2WfaOiMkCvy7F5fcp2zZ8L",
+      name: "Take On Me"
+    }
+  }
+
+  if (colors === undefined || colors == null || colors.length == 0) {
     return {
       uri: songs[0].uri,
       name: songs[0].name
@@ -79,7 +86,7 @@ async function getSongFromColors(colors, songs, songsChosen) {
   var green = 0;
   var blue = 0;
 
-  
+
 
   for (colorIndex = 0; colorIndex < colors.length; colorIndex++) {
     red += colors[colorIndex].r
@@ -88,7 +95,7 @@ async function getSongFromColors(colors, songs, songsChosen) {
   }
   red = red / colors.length
   green = green / colors.length
-  blue =  blue / colors.length
+  blue = blue / colors.length
 
   var averageColor = {
     r: red,
@@ -98,20 +105,20 @@ async function getSongFromColors(colors, songs, songsChosen) {
 
   for (songIndex = 0; songIndex < songs.length; songIndex++) {
     //controllo se è stata già scelta la stessa canzone
-    for(chosenIndex = 0; chosenIndex < songsChosen.length; chosenIndex++){
+    for (chosenIndex = 0; chosenIndex < songsChosen.length; chosenIndex++) {
       if (songs[songIndex].uri == songsChosen[chosenIndex].uri) {
         alreadyChosen = true;
         break;
       }
     }
-    if (alreadyChosen == true){
+    if (alreadyChosen == true) {
       alreadyChosen = false;
       continue;
-    } 
+    }
 
-    if(max == null) max = songs[songIndex]
+    if (max == null) max = songs[songIndex]
 
-    
+
 
     //rosso
     if (averageColor.r > averageColor.b && averageColor.r > averageColor.g) {
@@ -177,7 +184,14 @@ async function getSongFromColors(colors, songs, songsChosen) {
 
 async function analyzePlaylist(spotifyApi, playlistId) {
 
-  var data = await spotifyApi.getPlaylistTracks(playlistId, { limit: 100 })
+  try {
+    var data = await spotifyApi.getPlaylistTracks(playlistId, { limit: 100 })
+  }
+  catch (e) {
+    return e;
+  }
+
+
   var ids = Array()
 
   for (let item of data.body.items) {
@@ -193,7 +207,12 @@ async function analyzePlaylist(spotifyApi, playlistId) {
   let averageSpeechiness = 0, countSpeechiness = 0
   let averageTempo = 0, countTempo = 0
 
-  var data2 = await spotifyApi.getAudioFeaturesForTracks(ids)
+  try {
+    var data2 = await spotifyApi.getAudioFeaturesForTracks(ids)
+  }
+  catch (e) {
+    return e;
+  }
 
   for (let track of data2.body.audio_features) {
     if (track !== undefined && track != null) {

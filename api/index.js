@@ -132,39 +132,6 @@ server.listen(process.env.PORT || 8080, () => {
 
 /**
  * @swagger
- * /api/album/photo-song:  
- *  post:
- *      summary: Dall'url di una foto dato in input ne viene restituita una canzone dall'album dato in input
- *      tags: [Album]
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          album_id:
- *                              type: string
- *                          url:
- *                              type: string
- *                  example:
- *                      {
- *                          album_id: 5Z9iiGl2FcIfa3BMiv6OIw,
- *                          url: https://via.placeholder.com/660x300/ebebeb/808080/?text=Immagine
- *                      }    
- *      responses:
- *          200:
- *              description: 
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Song'
- *          400:
- *              description: Errore nella richiesta
- */
-
-/**
- * @swagger
  * /api/album/palette-song:  
  *  post:
  *      summary: Dalla palette di colori data in input ne viene restituita una canzone dall'album dato in input
@@ -213,6 +180,39 @@ server.listen(process.env.PORT || 8080, () => {
 
 /**
  * @swagger
+ * /api/album/photo-song:  
+ *  post:
+ *      summary: Dall'url di una foto dato in input ne viene restituita una canzone dall'album dato in input
+ *      tags: [Album]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          album_id:
+ *                              type: string
+ *                          url:
+ *                              type: string
+ *                  example:
+ *                      {
+ *                          album_id: 5Z9iiGl2FcIfa3BMiv6OIw,
+ *                          url: https://via.placeholder.com/660x300/ebebeb/808080/?text=Immagine
+ *                      }    
+ *      responses:
+ *          200:
+ *              description: 
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Song'
+ *          400:
+ *              description: Errore nella richiesta
+ */
+
+/**
+ * @swagger
  * /api/playlist/analyze:  
  *  post:
  *      summary: Analizza una playlist di Spotify
@@ -237,39 +237,6 @@ server.listen(process.env.PORT || 8080, () => {
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/Analysis'
- *          400:
- *              description: Errore nella richiesta
- */
-
-/**
- * @swagger
- * /api/playlist/photo-song:  
- *  post:
- *      summary: Dall'url di una foto dato in input ne viene restituita una canzone dalla playlist data in input
- *      tags: [Playlist]
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          playlist_id:
- *                              type: string
- *                          url:
- *                              type: string
- *                  example:
- *                      {
- *                          playlist_id: 4InSVyiXzVO59xUQOAByT9,
- *                          url: https://via.placeholder.com/660x300/ebebeb/808080/?text=Immagine
- *                      }         
- *      responses:
- *          200:
- *              description: 
- *              content:
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Song'
  *          400:
  *              description: Errore nella richiesta
  */
@@ -311,6 +278,39 @@ server.listen(process.env.PORT || 8080, () => {
  *                           ],
  *                       playlist_id: 4InSVyiXzVO59xUQOAByT9
  *                       }           
+ *      responses:
+ *          200:
+ *              description: 
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Song'
+ *          400:
+ *              description: Errore nella richiesta
+ */
+
+/**
+ * @swagger
+ * /api/playlist/photo-song:  
+ *  post:
+ *      summary: Dall'url di una foto dato in input ne viene restituita una canzone dalla playlist data in input
+ *      tags: [Playlist]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          playlist_id:
+ *                              type: string
+ *                          url:
+ *                              type: string
+ *                  example:
+ *                      {
+ *                          playlist_id: 4InSVyiXzVO59xUQOAByT9,
+ *                          url: https://via.placeholder.com/660x300/ebebeb/808080/?text=Immagine
+ *                      }         
  *      responses:
  *          200:
  *              description: 

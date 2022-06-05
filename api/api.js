@@ -1,6 +1,12 @@
 async function analyzeAlbum(spotifyApi, albumId) {
 
-    var data = await spotifyApi.getAlbumTracks(albumId)
+    try {
+        var data = await spotifyApi.getAlbumTracks(albumId)
+    }
+    catch (e) {
+        return e;
+    }
+
     var ids = Array()
 
     for (let item of data.body.items) {
@@ -16,7 +22,12 @@ async function analyzeAlbum(spotifyApi, albumId) {
     let averageSpeechiness = 0, countSpeechiness = 0
     let averageTempo = 0, countTempo = 0
 
-    var data2 = await spotifyApi.getAudioFeaturesForTracks(ids)
+    try {
+        var data2 = await spotifyApi.getAudioFeaturesForTracks(ids)
+    }
+    catch (e) {
+        return e;
+    }
 
     for (let track of data2.body.audio_features) {
         if (track !== undefined && track != null) {
@@ -119,7 +130,7 @@ async function getFeaturesFromPlaylist(spotifyApi, playlist_id) {
             ids.push(track.track.id)
             names.push(track.track.name)
         }
-    
+
 
         playlistData = await spotifyApi.getAudioFeaturesForTracks(ids)
     }
@@ -147,12 +158,12 @@ async function getFeaturesFromPlaylist(spotifyApi, playlist_id) {
     return result
 }
 
-async function setup(spotifyApi){
+async function setup(spotifyApi) {
     let url = 'https://accounts.spotify.com/api/token'
     let headers = { 'Authorization': 'Basic ' + (Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')) }
     let form = { grant_type: 'client_credentials' }
 
-	let data = got.post(url, {
+    let data = got.post(url, {
         headers: headers,
         form: form
     }).json()
@@ -202,17 +213,25 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
 
-        if(spotifyApi.getAccessToken() == null){
-            await setup(spotifyApi);
+        try {
+            if (spotifyApi.getAccessToken() == null) {
+                await setup(spotifyApi);
+            }
+        }
+        catch (e) {
+            res.status(503).send(e)
         }
 
         try {
             analyzeAlbum(spotifyApi, req.body.album_id).then(data => {
-                res.send(data)
+                if (data.body !== undefined && data.statusCode != 200)
+                    res.status(data.statusCode).send(data.body.error)
+                else
+                    res.send(data)
             })
         }
         catch (e) {
-            res.status(400).send(e)
+            return res.status(503).send(e)
         }
     })
 
@@ -230,8 +249,13 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
 
-        if(spotifyApi.getAccessToken() == null){
-            await setup(spotifyApi);
+        try {
+            if (spotifyApi.getAccessToken() == null) {
+                await setup(spotifyApi);
+            }
+        }
+        catch (e) {
+            res.status(503).send(e)
         }
 
         let colors = new Array()
@@ -240,7 +264,11 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         }
 
         try {
-            song = await spotifyUtils.getSongFromColors(colors, await getFeaturesFromAlbum(spotifyApi, req.body.album_id), [])
+            var features = await getFeaturesFromAlbum(spotifyApi, req.body.album_id)
+            if (features.body !== undefined && features.statusCode != 200) {
+                return res.status(features.statusCode).send(features.body.error)
+            }
+            let song = await spotifyUtils.getSongFromColors(colors, features, [])
             res.send(song)
         }
         catch (e) {
@@ -256,12 +284,22 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
 
-        if(spotifyApi.getAccessToken() == null){
-            await setup(spotifyApi);
+        try {
+            if (spotifyApi.getAccessToken() == null) {
+                await setup(spotifyApi);
+            }
+        }
+        catch (e) {
+            res.status(503).send(e)
         }
 
         try {
-            song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(req.body.url), await getFeaturesFromAlbum(spotifyApi, req.body.album_id), [])
+            var features = await getFeaturesFromAlbum(spotifyApi, req.body.album_id)
+            if (features.body !== undefined && features.statusCode != 200) {
+                return res.status(features.statusCode).send(features.body.error)
+            }
+            var colors = await colorUtil.getColorsFromUrl(req.body.url)
+            let song = await spotifyUtils.getSongFromColors(colors, features, [])
             res.send(song)
         }
         catch (e) {
@@ -278,13 +316,21 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
 
-        if(spotifyApi.getAccessToken() == null){
-            await setup(spotifyApi);
+        try {
+            if (spotifyApi.getAccessToken() == null) {
+                await setup(spotifyApi);
+            }
+        }
+        catch (e) {
+            res.status(503).send(e)
         }
 
         try {
             spotifyUtils.analyzePlaylist(spotifyApi, req.body.playlist_id).then(data => {
-                res.send(data)
+                if (data.body !== undefined && data.statusCode != 200)
+                    res.status(data.statusCode).send(data.body.error)
+                else
+                    res.send(data)
             })
         }
         catch (e) {
@@ -307,8 +353,13 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
 
-        if(spotifyApi.getAccessToken() == null){
-            await setup(spotifyApi);
+        try {
+            if (spotifyApi.getAccessToken() == null) {
+                await setup(spotifyApi);
+            }
+        }
+        catch (e) {
+            res.status(503).send(e)
         }
 
         let colors = new Array()
@@ -317,7 +368,11 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         }
 
         try {
-            song = await spotifyUtils.getSongFromColors(colors, await getFeaturesFromPlaylist(spotifyApi, req.body.playlist_id), [])
+            var features = await getFeaturesFromPlaylist(spotifyApi, req.body.playlist_id)
+            if (features.body !== undefined && features.statusCode != 200) {
+                return res.status(features.statusCode).send(features.body.error)
+            }
+            let song = await spotifyUtils.getSongFromColors(colors, features, [])
             res.send(song)
         }
         catch (e) {
@@ -333,12 +388,22 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         const { error } = validate(schema, req.body)
         if (error) return res.status(400).send(error.details[0].message)
 
-        if(spotifyApi.getAccessToken() == null){
-            await setup(spotifyApi);
+        try {
+            if (spotifyApi.getAccessToken() == null) {
+                await setup(spotifyApi);
+            }
+        }
+        catch (e) {
+            res.status(503).send(e)
         }
 
         try {
-            song = await spotifyUtils.getSongFromColors(await colorUtil.getColorsFromUrl(req.body.url), await getFeaturesFromPlaylist(spotifyApi, req.body.playlist_id), [])
+            var features = await getFeaturesFromPlaylist(spotifyApi, req.body.playlist_id)
+            if (features.body !== undefined && features.statusCode != 200) {
+                return res.status(features.statusCode).send(features.body.error)
+            }
+            var colors = await colorUtil.getColorsFromUrl(req.body.url)
+            let song = await spotifyUtils.getSongFromColors(colors, features, [])
             res.send(song)
         }
         catch (e) {
@@ -346,7 +411,7 @@ module.exports = function build(joi, spotifyWebApi, spotifyUtils, colorUtil) {
         }
     })
 
-    
+
 
     return Router
 }
