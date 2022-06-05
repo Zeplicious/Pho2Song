@@ -19,12 +19,45 @@ Tutti i campi sono salvati per rendere di facile accesso i file in caso di inser
 ---
 
 ### Architettura di riferimento
+
 ![alt text](./architettura_di_riferimento.svg)
 
 ---
 
-### Funzionalità principale
+## Requisti
+
+1. __Il servizio REST che implementate (lo chiameremo SERV) deve offrire a terze parti delle API documentate.__ (requisito 1)
+    - La nostra webapp offre API (documentate di seguito), in particolare è possibile:
+        1. analizzare un album o una playlist di spotify.
+        2. a partire un album o una playlist di spotify, richiedere una canzone da accoppiare ad una foto.
+        3. a partire un album o una playlist di spotify, richiedere una canzone da accoppiare ad una palette di colori.
+
+2. __SERV si deve interfacciare con almeno due servizi REST di terze parti (e.g. google maps).__ (requisiti 2, 3, 4)
+    - La nostra webapp utilizza le seguenti API esterne:
+        1. Spotify: OAuth tramite passport, servizi tramite libreria SpotifyWebApi.
+        2. Google Foto: OAuth tramite passport
+        3. Imagga
+    - Flow della funzionalità principale:
 ![alt text](./funzionalità_principale.svg)
+
+3. __La soluzione deve prevedere l'uso di protocolli asincroni. Per esempio Websocket e/o AMQP (o simili es MQTT).__ (requisito 5)
+    - La nostra webapp utilizza implementa il protocollo Websocket tramite l'utilizo delle libreria Socket.io
+    - Ne fa utilizzo sia nella funzionalità principale per permette al server di mandare le canzoni scelte all'utente, sia nella funzionalità secondaria di analisi delle playlist ( l'utente manda l'id, il server risponde con l'analisi).
+
+4. __Il progetto deve prevedere l'uso di Docker e l'automazione del processo di lancio, configurazione e test.__ (requisito 6)
+    - La nostra webapp utilizza Docker:
+        - Ogni entità della nostra rete è dockerizzata.
+        - La creazione delle immagini e dei relativi container, e il setup di tutta la rete sono automatizzati tramite docker-compose.
+
+5. __Deve essere implementata una forma di CI/CD per esempio con le Github Actions__ (requisito 8)
+    - La nostra webapp implenta Github Actions per:
+        - Testing automatico delle funzionalità della web app.
+        - Testing automatico dei servizi API offerti
+        - Creazione e push su repository docker hub delle immagini relative a database, nodi app e nodi api (utilizzabili a pieno solo dal team di sviluppo photo2song) come fase deploy del CI/CD.
+
+6. __Requisiti minimi di sicurezza devono essere considerati e documentati. Self-signed certificate sono più che sufficienti per gli scopi del progetto.__ (requisito 9)
+    - La nostra webapp accetta solo richieste https autorizzate tramite l'utilizzo di Self-signed certificate.
+    - E' presente una regola firewall che reinstrada le richieste http in entrata al reverse proxy in https.
 
 ---
 
