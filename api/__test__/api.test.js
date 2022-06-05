@@ -22,6 +22,12 @@ describe("POST /analyze", () => {
             .send({playlist_id: ""})
             expect(response.statusCode).toBe(400)
         })
+        test("Status code should be 404",async()=>{
+            let response= await request(app)
+            .post('/api/playlist/analyze')
+            .send({playlist_id: "gennarobullo"})
+            expect(response.statusCode).toBe(404)
+        })
     })
     describe("POST album/analyze", () => {
         test("Status code should be 200 and response should be defined",async()=>{
@@ -36,6 +42,12 @@ describe("POST /analyze", () => {
             let response= await request(app)
             .post('/api/album/analyze')
             .send({album_id: ""})
+            expect(response.statusCode).toBe(400)
+        })
+        test("Status code should be 400",async()=>{
+            let response= await request(app)
+            .post('/api/album/analyze')
+            .send({album_id: "gennarobullo"})
             expect(response.statusCode).toBe(400)
         })
     })
@@ -75,6 +87,15 @@ describe("POST /photo-song", () => {
             let response=await temp
             expect(response.statusCode).toBe(400)
         })
+        test("Status code should be 404",async()=>{
+            
+            await temp
+            temp= request(app)
+            .post('/api/playlist/photo-song')
+            .send({url: url,playlist_id: "gennarobullo"})
+            let response=await temp
+            expect(response.statusCode).toBe(404)
+        })
     })
     describe("POST album/photo-song", () => {
         test("Status code should be 200 and response should be defined",async()=>{
@@ -104,6 +125,15 @@ describe("POST /photo-song", () => {
             let response=await temp
             .post('/api/album/photo-song')
             .send({url: url,album_id: ""})
+            expect(response.statusCode).toBe(400)
+        })
+        test("Status code should be 400",async()=>{
+            
+            await temp
+            temp=request(app)
+            let response=await temp
+            .post('/api/album/photo-song')
+            .send({url: url,album_id: "gennarobullo"})
             expect(response.statusCode).toBe(400)
         })
     })
@@ -150,6 +180,12 @@ describe("POST /palette-song", () => {
             .send({colors: temp,playlist_id: ""})
             expect(response.statusCode).toBe(400)
         })
+        test("Status code should be 404",async()=>{
+            let response= await request(app)
+            .post('/api/playlist/palette-song')
+            .send({colors: temp,playlist_id: "gennarobullo"})
+            expect(response.statusCode).toBe(404)
+        })
     })
     describe("POST album/palette-song", () => {
         test("Status code should be 200 and response should be defined",async()=>{
@@ -171,6 +207,12 @@ describe("POST /palette-song", () => {
             let response= await request(app)
             .post('/api/album/palette-song')
             .send({colors: temp,album_id: ""})
+            expect(response.statusCode).toBe(400)
+        })
+        test("Status code should be 400",async()=>{
+            let response= await request(app)
+            .post('/api/album/palette-song')
+            .send({colors: temp,album_id: "gennarobullo"})
             expect(response.statusCode).toBe(400)
         })
     })
