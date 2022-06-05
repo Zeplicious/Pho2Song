@@ -1,4 +1,3 @@
-
 # Pho2Song
 
 ### Scopo del progetto
@@ -20,13 +19,11 @@ Tutti i campi sono salvati per rendere di facile accesso i file in caso di inser
 ---
 
 ### Architettura di riferimento
-
 ![alt text](./architettura_di_riferimento.svg)
 
 ---
 
 ### Funzionalità principale
-
 ![alt text](./funzionalità_principale.svg)
 
 ---
@@ -38,7 +35,7 @@ git clone https://github.com/Zeplicious/Pho2Song.git
 ```
 e posizionarsi nella root directory del git.
 
-####Api/App stand alone
+#### Api/App
 Creare un file `.env` da inserire nella directory `/app` strutturato come segue:
 ```
 IMAGGA_CLIENT_ID=****************************
@@ -66,7 +63,7 @@ npm start
 ```
 **_NOTA:_** Per api il processo è analogo
 
-####CouchDB
+#### CouchDB
 **_NOTA:_** Se si ha installato CouchDB è possibile saltare questa sezione. E' importante inserire le credenziali del proprio database nel file `.env` nei cambi `DB_USER` e `DB_PASSWORD` e mettere il database in ascolto sulla porta 5984 in localhost.
 
 Completare il file /docker/couchdb/test.Dockerfile inserendo le credenziali del database inserite nel file `.env`.
@@ -83,8 +80,8 @@ docker run -p 5984:5984 pho2song:couchdb
 ---
 
 #### Docker environment
-Gestire il file `.env` come spiegato nella sezione [api/app](#Api/App stand alone).
-Completare il file `.env` come spiegato nella sezione [couchdb](#CouchDB).
+Gestire il file `.env` come spiegato nella sezione Api/App.
+Completare il file `.env` come spiegato nella sezione CouchDB.
 Generare un certificato SSL.
 Inserire in /docker/nginx/ssl `cert.pem` e `cert-key.pem`.
 Per testare environment docker è sufficente inserire in console:
@@ -97,7 +94,6 @@ docker-compose up
 ### Testing
 
 ##### Docker
-
 Per testare l'environment docker:
 
 per creare le immagini dal docker file e runnare i container:
@@ -114,7 +110,6 @@ tenere conto del fatto che le immagini vengo create solo se non sono già presen
 --
 
 ##### Node Server
-
 Per testare il server da solo:
 
 ```
