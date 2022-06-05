@@ -20,7 +20,7 @@ const router = require("express").Router();
 
 router.get('/playlist_history',  passportConfig.checkAuthenticated ,(req, res) => {
 	couch.get(dbName, viewUrl ).then(
-        (data/* , headers, status */) => {
+        (data) => {
 			res.render('./pages/playlist_history.ejs', {
 				p2sUser: {
 					username: req.session.user.name,
@@ -41,7 +41,7 @@ router.get('/playlist_history',  passportConfig.checkAuthenticated ,(req, res) =
 							}
 						  },
 						  "language": "javascript"
-					}).then((/* {data, headers, status} */) => {
+					}).then(() => {
 						res.redirect("/playlist_history")
 					}, err => {
 						res.send(err);
@@ -60,7 +60,7 @@ router.get('/playlist_history',  passportConfig.checkAuthenticated ,(req, res) =
 						}
 					  },
 					  "language": "javascript"
-				}).then((/* {data, headers, status} */) => {
+				}).then(() => {
 					res.redirect("/playlist_history")
 				}, err => {
 					res.send(err);
