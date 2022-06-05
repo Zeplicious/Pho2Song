@@ -172,7 +172,7 @@ module.exports = function build(userData,users){
 									}
 								},
 								"language": "javascript"
-							}).then(({data, headers, status}) => {
+							}).then((/* {data, headers, status} */) => {
 								couch.insert(dbName, {
 									_id: id,
 									name: req.body.name||'Il mio album in musica',

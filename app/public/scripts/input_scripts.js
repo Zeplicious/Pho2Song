@@ -137,7 +137,7 @@ function addImage() {
         display(urlInput)
     }
     urlListItemId++
-};
+}
 
 
 function display(urlInput) {

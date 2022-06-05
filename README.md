@@ -3,6 +3,7 @@
 ![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/node.js.yml/badge.svg)
 ![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/dockerAPI.yml/badge.svg)
 ![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/dockerDB.yml/badge.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/zeplicious/pho2song/badge/main)](https://www.codefactor.io/repository/github/zeplicious/pho2song/overview/main)
 
 
 ## Scopo del progetto
@@ -69,13 +70,20 @@ Tutti i campi sono salvati per rendere di facile accesso i file in caso di inser
 
 ## Installazione
 
-Eseguire un `git clone` del repository:
+- Sono necessari:
+    - node.js
+    - docker
+
+- Eseguire un `git clone` del repository:
 
 ```
 git clone https://github.com/Zeplicious/Pho2Song.git
 ```
 
 e posizionarsi nella root directory del git.
+
+- Creare una applicazione su [a link](https://console.cloud.google.com), inserire tra i callback uri `http://localhost:8080/google-login/callback` e `https://localhost:8080/google-login/callback` ed inserire tra i servizi abilitati Photos Library API.
+- Creare una applicazione su [a link](https://developer.spotify.com/dashboard/applications) ed inserire tra i callback uri `http://localhost:8080/spotify/callback` e `https://localhost:8080/spotify/callback`.
 
 ### Api/App stand alone
 
@@ -109,12 +117,13 @@ npm install
 ```
 npm start
 ```
+- Per utilizzare l'app visitare `http://localhost:8080/`
 
-**_NOTA:_** Per api il processo è analogo.
+**_NOTA:_** Per api il processo è analogo. (visitare l'endpoint `http://localhost:8080/api-docs`)
 
 ### CouchDB
 
-**_NOTA:_** Se si ha installato CouchDB è possibile saltare questa sezione. E' importante inserire le credenziali del proprio database nel file `.env` nei cambi `DB_USER` e `DB_PASSWORD` e mettere il database in ascolto sulla porta 5984 in localhost.
+**_NOTA:_** Se si ha installato CouchDB è possibile saltare questa sezione. E' importante inserire le credenziali del proprio database nel file `.env` nei campi `DB_USER` e `DB_PASSWORD` e mettere il database in ascolto sulla porta 5984 in localhost.
 
 
 - Completare il file /docker/couchdb/test.Dockerfile inserendo le credenziali del database inserite nel file `.env`.
@@ -133,7 +142,7 @@ docker run -p 5984:5984 pho2song:couchdb
 ### Docker environment
 
 - Gestire il file `.env` come spiegato nella sezione [api/app](#### Api/App stand alone).
-- Completare il file `.env` come spiegato nella sezione [couchdb](#### CouchDB).
+- Completare il file `/docker/couchdb/test.Dockerfile` come spiegato nella sezione [couchdb](#### CouchDB).
 - Generare un certificato SSL.
 - Inserire in /docker/nginx/ssl `cert.pem` e `cert-key.pem`.
 - Per testare environment docker è sufficente inserire in console:
@@ -149,7 +158,7 @@ docker-compose up
 - Per testare environment docker è sufficente inserire in console:
 
 ```
-development.docker-compose up
+docker-compose -f <nome-file> up
 ```
 
 ---
