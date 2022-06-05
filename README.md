@@ -94,30 +94,41 @@ docker-compose up
 development.docker-compose up
 ```
 ---
-### Testing
 
-##### Docker
-Per testare l'environment docker:
+### Istruzioni per il test
 
-per creare le immagini dal docker file e runnare i container:
-```
-docker-compose up
-```
+##### Applicazione
 
-per cancellare i container:
-```
-docker-compose down
-``` 
-tenere conto del fatto che le immagini vengo create solo se non sono già presenti, dopo la creazione delle immagini docker NON ricreerà le immagini, neanche dopo modifiche ai file relativi ad essa. Per fare in modo di resettare le immagini runnare `docker images` e cancellare a mano le immagini necessarie. In alternativa utilizzare docker desktop per la cancellazione (altamente consigliato).
+Per testare l'applicazione:
 
---
-
-##### Node Server
-Per testare il server da solo:
+partendo dalla directory root `Pho2Song` spostarsi nella cartella `app`
 
 ```
-cd /app
+cd app
+```
+
+e digitare in console il comando:
+
+```
+npm test
+```
+
+Viene utilizzato il modulo `jest` per eseguire i test che hanno un tempo di esecuzione variabile. Lasciar andare il programma finchè non sono visibili i risultati dei test
+
+##### API
+
+Per testare le chiamate API:
+
+partendo dalla directory root `Pho2Song` spostarsi nella cartella `api`
+
+```
+cd api
+```
+
+e digitare in console il comando:
+
+```
 npm start
 ```
 
-nel dubbio runnare un `npm install` prima di fare eventuali test
+Anche in questo caso viene utilizzato il modulo `jest` per eseguire i test che hanno un tempo di esecuzione variabile. Lasciar andare il programma finchè non sono visibili i risultati dei test
