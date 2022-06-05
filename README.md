@@ -38,6 +38,7 @@ Tutti i campi sono salvati per rendere di facile accesso i file in caso di inser
         2. Google Foto: OAuth tramite passport
         3. Imagga
     - Flow della funzionalità principale:
+
 ![alt text](./funzionalità_principale.svg)
 
 3. __La soluzione deve prevedere l'uso di protocolli asincroni. Per esempio Websocket e/o AMQP (o simili es MQTT).__ (requisito 5)
@@ -73,7 +74,7 @@ e posizionarsi nella root directory del git.
 
 ### Api/App stand alone
 
--Creare un file `.env` da inserire nella directory `/app` strutturato come segue:
+- Creare un file `.env` da inserire nella directory `/app` strutturato come segue:
 
 ```
 IMAGGA_CLIENT_ID=****************************
