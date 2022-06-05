@@ -77,8 +77,6 @@ docker build -t pho2song:couchdb /docker/couchdb/test.Dockerfile
 docker run -p 5984:5984 pho2song:couchdb
 ```
 
----
-
 #### Docker environment
 Gestire il file `.env` come spiegato nella sezione Api/App.
 Completare il file `.env` come spiegato nella sezione CouchDB.
