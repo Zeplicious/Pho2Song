@@ -3,7 +3,7 @@
 ### Architettura di riferimento
 ![alt text](./architettura_di_riferimento.svg)
 ### Funzionalità principale
-![alt text](./funzionalità_principale.svg)
+![alt text](./funzionalità principale.svg)
 
 ### Testing
 
