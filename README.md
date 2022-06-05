@@ -1,5 +1,10 @@
 # Pho2Song
 
+![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/node.js.yml/badge.svg)
+![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/dockerAPI.yml/badge.svg)
+![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/dockerDB.yml/badge.svg)
+
+
 ## Scopo del progetto
 
 __Pho2Song__ è una web application che gira in un environment NodeJS che si occupa di __trasformare le foto in canzoni__. Attraverso la funzionalità principale, __Photo to Song__, 
