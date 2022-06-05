@@ -11,7 +11,7 @@ git clone https://github.com/Zeplicious/Pho2Song.git
 ```
 e posizionarsi nella root directory del git.
 
-#### Api/App stand alone
+####Api/App stand alone
 Creare un file `.env` da inserire nella directory `/app` strutturato come segue:
 ```
 IMAGGA_CLIENT_ID=****************************
@@ -39,7 +39,7 @@ npm start
 ```
 **_NOTA:_** Per api il processo è analogo
 
-#### CouchDB
+####CouchDB
 **_NOTA:_** Se si ha installato CouchDB è possibile saltare questa sezione. E' importante inserire le credenziali del proprio database nel file `.env` nei cambi `DB_USER` e `DB_PASSWORD` e mettere il database in ascolto sulla porta 5984 in localhost.
 
 Completare il file /docker/couchdb/test.Dockerfile inserendo le credenziali del database inserite nel file `.env`.
@@ -53,8 +53,8 @@ docker build -t pho2song:couchdb /docker/couchdb/test.Dockerfile
 docker run -p 5984:5984 pho2song:couchdb
 ```
 #### Docker environment
-Gestire il file `.env` come spiegato nella sezione [api/app](#### Api/App stand alone).
-Completare il file `.env` come spiegato nella sezione [couchdb](#### CouchDB).
+Gestire il file `.env` come spiegato nella sezione [api/app](#Api/App stand alone).
+Completare il file `.env` come spiegato nella sezione [couchdb](#CouchDB).
 Generare un certificato SSL.
 Inserire in /docker/nginx/ssl `cert.pem` e `cert-key.pem`.
 Per testare environment docker è sufficente inserire in console:
