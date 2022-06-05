@@ -158,7 +158,7 @@ docker-compose up
 - Per testare environment docker è sufficente inserire in console:
 
 ```
-development.docker-compose up
+docker-compose -f <nome-file> up
 ```
 
 ---
