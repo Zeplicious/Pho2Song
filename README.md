@@ -1,3 +1,7 @@
+![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/node.js.yml/badge.svg)
+![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/dockerAPI.yml/badge.svg)
+![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/dockerDB.yml/badge.svg)
+
 # Pho2Song
 
 ## Scopo del progetto
