@@ -23,7 +23,7 @@ Tutti i campi sono salvati per rendere di facile accesso i file in caso di inser
 
 ### Funzionalità principale
 
-![alt text](./funzionalità principale.svg)
+![alt text](./funzionalità_principale.svg)
 
 ### Installazione
 Eseguire un `git clone` del repository:
