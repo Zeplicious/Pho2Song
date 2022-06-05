@@ -3,6 +3,7 @@
 ![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/node.js.yml/badge.svg)
 ![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/dockerAPI.yml/badge.svg)
 ![example workflow](https://github.com/Zeplicious/Pho2Song/actions/workflows/dockerDB.yml/badge.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/zeplicious/pho2song/badge/main)](https://www.codefactor.io/repository/github/zeplicious/pho2song/overview/main)
 
 
 ## Scopo del progetto
