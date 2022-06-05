@@ -38,6 +38,7 @@ Tutti i campi sono salvati per rendere di facile accesso i file in caso di inser
         2. Google Foto: OAuth tramite passport
         3. Imagga
     - Flow della funzionalità principale:
+
 ![alt text](./funzionalità_principale.svg)
 
 3. __La soluzione deve prevedere l'uso di protocolli asincroni. Per esempio Websocket e/o AMQP (o simili es MQTT).__ (requisito 5)
