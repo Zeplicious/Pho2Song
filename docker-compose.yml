@@ -3,7 +3,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: docker/nginx/Dockerfile
+      dockerfile: docker/nginx/test.Dockerfile
     ports:
       - "8080:443"
 
