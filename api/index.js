@@ -9,15 +9,8 @@ var server = http.createServer(app);
 const swaggerJsDocs = require('./docs/api.json')
 
 if(process.env.API_URI !== undefined){
-	swaggerJsDocs.servers = [
-		{
-			url : process.env.API_URI 
-		}
-	]
+	swaggerJsDocs.servers[0].url = process.env.API_URI
 }
-
-
-console.log(swaggerJsDocs.servers)
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs))
 server.listen(process.env.PORT || 8080, () => {
