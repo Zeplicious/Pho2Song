@@ -1,8 +1,6 @@
 FROM nginx:latest
 
-WORKDIR /etc/nginx
-
-COPY docker/nginx/nginx_app.conf /nginx.conf
+COPY docker/nginx/nginx_app.conf etc/nginx/nginx.conf
 
 RUN apt-get update -y
 RUN apt-get install tcpdump -y
@@ -13,12 +11,13 @@ ENV SSL_CERT=${SSL_CERT}
 ARG SSL_CERT_KEY
 ENV SSL_CERT_KEY=${SSL_CERT_KEY}
 
+RUN cd etc/nginx
 RUN mkdir ssl
 RUN cd ssl
 
 RUN echo SSL_CERT >> /cert.pem
 RUN echo SSL_CERT_KEY >> /cert-key.pem
 
-RUN cd ../
+RUN cd ../../..
 
 EXPOSE 443
