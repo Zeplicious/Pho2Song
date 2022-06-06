@@ -82,8 +82,8 @@ git clone https://github.com/Zeplicious/Pho2Song.git
 
 e posizionarsi nella root directory del git.
 
-- Creare una applicazione su [a link](https://console.cloud.google.com), inserire tra i callback uri `http://localhost:8080/google-login/callback` e `https://localhost:8080/google-login/callback` ed inserire tra i servizi abilitati Photos Library API.
-- Creare una applicazione su [a link](https://developer.spotify.com/dashboard/applications) ed inserire tra i callback uri `http://localhost:8080/spotify/callback` e `https://localhost:8080/spotify/callback`.
+- Creare una applicazione su [Google Cloud Platformm](https://console.cloud.google.com), inserire tra i callback uri `http://localhost:8080/google-login/callback` e `https://localhost:8080/google-login/callback` ed inserire tra i servizi abilitati Photos Library API.
+- Creare una applicazione su [Spotfy for Developers](https://developer.spotify.com/dashboard/applications) ed inserire tra i callback uri `http://localhost:8080/spotify/callback` e `https://localhost:8080/spotify/callback`.
 
 ### Api/App stand alone
 
