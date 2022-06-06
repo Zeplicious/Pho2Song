@@ -153,12 +153,10 @@ docker-compose up
 
 #### Docker environment (developers)
 
-- Generare un certificato SSL.
-- Inserire in /docker/nginx/ssl `cert.pem` e `cert-key.pem`.
 - Per testare environment docker è sufficente inserire in console:
 
 ```
-docker-compose -f <nome-file> up
+docker-compose -f "development.docker-compose.yml" up
 ```
 
 ---
