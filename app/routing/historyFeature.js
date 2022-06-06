@@ -27,7 +27,7 @@ router.get('/playlist_history',  passportConfig.checkAuthenticated ,(req, res) =
 					user_image: req.session.user.prof_pic
 				},
 				p2suser: req.session.user.id,
-				p2splaylists: data.data.rows
+				p2splaylists: data.data.rows.reverse()
 			})
 		},
 		(err) => {

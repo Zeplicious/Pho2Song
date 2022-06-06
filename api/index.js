@@ -13,7 +13,7 @@ console.log(swaggerJsDocs)
 console.log(process.env.API_URI)
 
 if(process.env.API_URI !== undefined){
-	swaggerJsDocs.servers[0].set(url, process.env.API_URI )
+	swaggerJsDocs.servers[0].url =  process.env.API_URI
 }
 
 
