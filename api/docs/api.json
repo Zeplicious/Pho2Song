@@ -125,7 +125,7 @@
             }
           },
           "400": {
-            "description": "Errore nella richiesta"
+            "description": "Errore nella richiesta."
           }
         }
       }
@@ -191,6 +191,9 @@
           },
           "400": {
             "description": "Errore nella richiesta"
+          },
+          "503": {
+            "description": "Errore nella risposta del server."
           }
         }
       }
@@ -235,7 +238,10 @@
             }
           },
           "400": {
-            "description": "Errore nella richiesta"
+            "description": "Errore nella richiesta."
+          },
+          "503": {
+            "description": "Errore nella risposta del server."
           }
         }
       }
@@ -276,7 +282,13 @@
             }
           },
           "400": {
-            "description": "Errore nella richiesta"
+            "description": "Errore nella richiesta."
+          },
+          "404": {
+            "description": "Playlist non trovata."
+          },
+          "503": {
+            "description": "Errore nella risposta del server."
           }
         }
       }
@@ -342,6 +354,12 @@
           },
           "400": {
             "description": "Errore nella richiesta"
+          },
+          "404": {
+            "description": "Playlist non trovata."
+          },
+          "503": {
+            "description": "Errore nella risposta del server."
           }
         }
       }
@@ -386,7 +404,13 @@
             }
           },
           "400": {
-            "description": "Errore nella richiesta"
+            "description": "Errore nella richiesta."
+          },
+          "404": {
+            "description": "Playlist non trovata."
+          },
+          "503": {
+            "description": "Errore nella risposta del server."
           }
         }
       }
