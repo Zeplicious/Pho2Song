@@ -1,7 +1,7 @@
 version: '3'
 services:
   nginx:
-    image: spyrogiants/pho2song-nginx:latest
+    image: spyrogiants/pho2song-nginx
     ports:
       - "8080:443"
 
