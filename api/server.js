@@ -11,8 +11,6 @@ const colorUtil = require((process.env.UTILS_PATH||"../app/utils")+"/getColors.j
 
 const bodyParser = require('body-parser');
 
-
-
 const app = require('express')();	
 
 /**************  ***************/
@@ -20,8 +18,6 @@ const app = require('express')();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", require("./api") (joi, spotifyWebApi, spotifyUtils, colorUtil))
-
-
 
 /************** Server Listening ************ */
 module.exports =app
