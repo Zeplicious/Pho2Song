@@ -14,8 +14,7 @@ RUN cd etc/nginx
 RUN mkdir ssl
 RUN cd ssl
 
-RUN echo ${SSL_CERT} | base64 --decode >> /cert.pem
-RUN echo ${SSL_CERT_KEY} | base64 --decode >> /cert-key.pem
+RUN echo ${SSL_CERT} | base64 --decode >> /cert.pem && echo ${SSL_CERT_KEY} | base64 --decode >> /cert-key.pem
 
 RUN cd ../../..
 
