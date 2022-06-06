@@ -1,9 +1,7 @@
 version: '3'
 services:
   nginx:
-    build:
-      context: .
-      dockerfile: docker/nginx/Dockerfile
+    image: spyrogiants/pho2song-nginx
     ports:
       - "8080:443"
 
@@ -72,9 +70,6 @@ services:
       - "8888"
     networks:
       - app-network
-      - backend-network
-    links:
-        - couchdb
 
   api2:
     image: spyrogiants/pho2song-api:latest
@@ -85,9 +80,6 @@ services:
       - "8888"
     networks:
       - app-network
-      - backend-network
-    links:
-        - couchdb
 
 networks:
   app-network:
