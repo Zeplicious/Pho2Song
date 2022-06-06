@@ -150,7 +150,8 @@ docker run -p 5984:5984 pho2song:couchdb
 ```
 docker-compose up
 ```
-
+- Per utilizzare l'app visitare `https://localhost:8080/`
+- 
 #### Docker environment (developers)
 
 - Per testare environment docker è sufficente inserire in console:
@@ -158,6 +159,7 @@ docker-compose up
 ```
 docker-compose -f "development.docker-compose.yml" up
 ```
+- Per utilizzare l'app visitare `https://localhost:8080/`
 
 ---
 
