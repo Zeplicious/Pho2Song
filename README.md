@@ -82,8 +82,8 @@ git clone https://github.com/Zeplicious/Pho2Song.git
 
 e posizionarsi nella root directory del git.
 
-- Creare una applicazione su [a link](https://console.cloud.google.com), inserire tra i callback uri `http://localhost:8080/google-login/callback` e `https://localhost:8080/google-login/callback` ed inserire tra i servizi abilitati Photos Library API.
-- Creare una applicazione su [a link](https://developer.spotify.com/dashboard/applications) ed inserire tra i callback uri `http://localhost:8080/spotify/callback` e `https://localhost:8080/spotify/callback`.
+- Creare una applicazione su [Google Cloud Platformm](https://console.cloud.google.com), inserire tra i callback uri `http://localhost:8080/google-login/callback` e `https://localhost:8080/google-login/callback` ed inserire tra i servizi abilitati Photos Library API.
+- Creare una applicazione su [Spotfy for Developers](https://developer.spotify.com/dashboard/applications) ed inserire tra i callback uri `http://localhost:8080/spotify/callback` e `https://localhost:8080/spotify/callback`.
 
 ### Api/App stand alone
 
@@ -150,16 +150,16 @@ docker run -p 5984:5984 pho2song:couchdb
 ```
 docker-compose up
 ```
-
+- Per utilizzare l'app visitare `https://localhost:8080/`
+- 
 #### Docker environment (developers)
 
-- Generare un certificato SSL.
-- Inserire in /docker/nginx/ssl `cert.pem` e `cert-key.pem`.
 - Per testare environment docker è sufficente inserire in console:
 
 ```
-docker-compose -f <nome-file> up
+docker-compose -f "development.docker-compose.yml" up
 ```
+- Per utilizzare l'app visitare `https://localhost:8080/`
 
 ---
 
